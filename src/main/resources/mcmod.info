@@ -1,0 +1,18 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "magicarsenal",
+    "name": "Magic Arsenal",
+    "description": "Creative Industrial Automation",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [ "Falkreon" ],
+    "credits": "Made by Falkreon",
+    "logoFile": "",
+    "requiredMods": [ "forge" ],
+    "dependencies": [ ],
+    "useDependencyInformation": true
+  }]
+}
