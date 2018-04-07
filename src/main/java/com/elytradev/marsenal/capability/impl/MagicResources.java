@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.capability.impl;
+package com.elytradev.marsenal.capability.impl;
 
 import java.util.function.ObjIntConsumer;
 
-import com.elytradev.marsinal.capability.IMagicResources;
+import com.elytradev.marsenal.capability.IMagicResources;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;

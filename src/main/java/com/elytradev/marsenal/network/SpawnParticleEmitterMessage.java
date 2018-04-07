@@ -22,13 +22,31 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.item;
+package com.elytradev.marsenal.network;
 
-public enum EnumSpellFocus {
-	STAM_HEAL_OTHER,    //Healing Wave     uses Stamina to grant health to friendly look-target
-	STAM_REGEN_AREA,    //Healing Circle   uses Stamina to grant regen to nearby friendly targets
-	STAM_HEAL_SELF,     //Recovery         uses Stamina to grant health to the caster
-	OTHER_HEAL_AREA,    //Drain Life       Drains life from hostile look-target to grant health to nearby friendly targets
-	SELF_HEAL_OTHER,    //Oblation         Drains life from the caster and grants it to friendly look-target
-	;
+import com.elytradev.concrete.network.Message;
+import com.elytradev.concrete.network.annotation.field.MarshalledAs;
+import com.elytradev.concrete.network.annotation.type.ReceivedOn;
+import com.elytradev.marsenal.MagicArsenal;
+
+import net.minecraftforge.fml.relauncher.Side;
+
+import net.minecraft.entity.player.EntityPlayer;
+
+@ReceivedOn(Side.CLIENT)
+public class SpawnParticleEmitterMessage extends Message {
+	@MarshalledAs(value = "uint8")
+	private int id;
+	@MarshalledAs(value = "uint32")
+	private int entityId;
+	
+	public SpawnParticleEmitterMessage() {
+		super(MagicArsenal.CONTEXT);
+	}
+
+	@Override
+	protected void handle(EntityPlayer player) {
+		
+	}
+
 }

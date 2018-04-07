@@ -22,8 +22,26 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.client;
+package com.elytradev.marsenal.item;
 
-public class ParticleEmitters {
+import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
+
+public class ArsenalItems {
+	public static ItemSpellFocus SPELL_FOCUS = null;
 	
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> r = event.getRegistry();
+		
+		SPELL_FOCUS = item(r, new ItemSpellFocus());
+	}
+	
+	public static <T extends Item> T item(IForgeRegistry<Item> registry, T t) {
+		registry.register(t);
+		//???.needModelRegistration.add(t);
+		return t;
+	}
 }

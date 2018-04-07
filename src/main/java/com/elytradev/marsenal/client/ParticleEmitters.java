@@ -22,26 +22,8 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.item;
+package com.elytradev.marsenal.client;
 
-import com.elytradev.marsinal.MagicArsenal;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-
-public class ItemSpellFocus extends Item {
-	public ItemSpellFocus() {
-		this.setUnlocalizedName("marsinal.spellfocus");
-		this.setRegistryName(new ResourceLocation(MagicArsenal.MODID, "spellfocus"));
-		
-		this.setHasSubtypes(true);
-	}
+public class ParticleEmitters {
 	
-	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		
-	}
 }

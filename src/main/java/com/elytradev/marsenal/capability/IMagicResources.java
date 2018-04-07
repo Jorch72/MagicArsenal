@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.capability;
+package com.elytradev.marsenal.capability;
 
 import net.minecraft.util.ResourceLocation;
 

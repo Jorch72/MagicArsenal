@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.capability.impl;
+package com.elytradev.marsenal.capability.impl;
 
-import com.elytradev.marsinal.capability.IMagicResources;
+import com.elytradev.marsenal.capability.IMagicResources;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

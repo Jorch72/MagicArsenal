@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.magic;
+package com.elytradev.marsenal.magic;
 
 import java.util.EnumSet;
 
@@ -35,6 +35,9 @@ public class SpellDamageSource extends EntityDamageSource {
 	
 	public SpellDamageSource(Entity caster, String spell, Element... elements) {
 		super( spell, caster );
+		//Enforced loosely, but explained comprehensively.
+		if(elements.length < 1) throw new IllegalArgumentException("Spell damage must have at least one 'classical' element and one 'governing' element.");
+		
 		for(Element element : elements) {
 			this.elements.add(element);
 		}
@@ -58,6 +61,10 @@ public class SpellDamageSource extends EntityDamageSource {
 	 */
 	public EnumSet<Element> getElements() {
 		return elements;
+	}
+	
+	public boolean hasElement(Element element) {
+		return elements.contains(element);
 	}
 	
 	/**

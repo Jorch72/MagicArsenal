@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal;
+package com.elytradev.marsenal;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.elytradev.concrete.network.NetworkContext;
-import com.elytradev.marsinal.capability.IMagicResources;
-import com.elytradev.marsinal.capability.impl.DefaultMagicResourcesSerializer;
-import com.elytradev.marsinal.capability.impl.MagicResources;
-import com.elytradev.marsinal.network.SpawnParticleEmitterMessage;
+import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
+import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;

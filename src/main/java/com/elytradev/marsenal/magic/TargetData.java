@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.magic;
+package com.elytradev.marsenal.magic;
 
 import java.util.ArrayList;
 import java.util.List;

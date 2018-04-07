@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.magic;
+package com.elytradev.marsenal.magic;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;

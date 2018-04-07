@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal;
+package com.elytradev.marsenal;
 
 import java.io.BufferedWriter;
 import java.io.File;

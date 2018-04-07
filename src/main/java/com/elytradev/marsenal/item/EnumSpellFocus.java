@@ -22,26 +22,13 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.item;
+package com.elytradev.marsenal.item;
 
-import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-
-public class ArsenalItems {
-	public static ItemSpellFocus SPELL_FOCUS = null;
-	
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		IForgeRegistry<Item> r = event.getRegistry();
-		
-		SPELL_FOCUS = item(r, new ItemSpellFocus());
-	}
-	
-	public static <T extends Item> T item(IForgeRegistry<Item> registry, T t) {
-		registry.register(t);
-		//???.needModelRegistration.add(t);
-		return t;
-	}
+public enum EnumSpellFocus {
+	STAM_HEAL_OTHER,    //Healing Wave     uses Stamina to grant health to friendly look-target
+	STAM_REGEN_AREA,    //Healing Circle   uses Stamina to grant regen to nearby friendly targets
+	STAM_HEAL_SELF,     //Recovery         uses Stamina to grant health to the caster
+	OTHER_HEAL_AREA,    //Drain Life       Drains life from hostile look-target to grant health to nearby friendly targets
+	SELF_HEAL_OTHER,    //Oblation         Drains life from the caster and grants it to friendly look-target
+	;
 }

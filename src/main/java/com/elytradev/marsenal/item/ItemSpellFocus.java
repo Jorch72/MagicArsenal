@@ -22,31 +22,26 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.network;
+package com.elytradev.marsenal.item;
 
-import com.elytradev.concrete.network.Message;
-import com.elytradev.concrete.network.annotation.field.MarshalledAs;
-import com.elytradev.concrete.network.annotation.type.ReceivedOn;
-import com.elytradev.marsinal.MagicArsenal;
+import com.elytradev.marsenal.MagicArsenal;
 
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
-import net.minecraft.entity.player.EntityPlayer;
-
-@ReceivedOn(Side.CLIENT)
-public class SpawnParticleEmitterMessage extends Message {
-	@MarshalledAs(value = "uint8")
-	private int id;
-	@MarshalledAs(value = "uint32")
-	private int entityId;
-	
-	public SpawnParticleEmitterMessage() {
-		super(MagicArsenal.CONTEXT);
+public class ItemSpellFocus extends Item {
+	public ItemSpellFocus() {
+		this.setUnlocalizedName("marsinal.spellfocus");
+		this.setRegistryName(new ResourceLocation(MagicArsenal.MODID, "spellfocus"));
+		
+		this.setHasSubtypes(true);
 	}
-
+	
 	@Override
-	protected void handle(EntityPlayer player) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		
 	}
-
 }
