@@ -22,24 +22,26 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsinal.network;
+package com.elytradev.marsinal.item;
 
-import com.elytradev.concrete.network.Message;
 import com.elytradev.marsinal.MagicArsenal;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
-public class SpawnParticleEmitterMessage extends Message {
-	private int id;
-	private int entityId;
-	
-	public SpawnParticleEmitterMessage() {
-		super(MagicArsenal.CONTEXT);
+public class ItemSpellFocus extends Item {
+	public ItemSpellFocus() {
+		this.setUnlocalizedName("marsinal.spellfocus");
+		this.setRegistryName(new ResourceLocation(MagicArsenal.MODID, "spellfocus"));
+		
+		this.setHasSubtypes(true);
 	}
-
+	
 	@Override
-	protected void handle(EntityPlayer player) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		
 	}
-
 }

@@ -24,6 +24,7 @@
 
 package com.elytradev.marsinal;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.elytradev.concrete.network.NetworkContext;
@@ -35,8 +36,9 @@ import com.elytradev.marsinal.network.SpawnParticleEmitterMessage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @Mod(modid=MagicArsenal.MODID, version="@VERSION@", name="Thermionics|Core")
 public class MagicArsenal {
@@ -45,11 +47,21 @@ public class MagicArsenal {
 	public static Configuration CONFIG;
 	public static NetworkContext CONTEXT;
 	
-	@EventHandler
+	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
+		LOG = LogManager.getLogger("MagicArsenal");
+		CONFIG = new Configuration(e.getSuggestedConfigurationFile());
+		
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");
 		CONTEXT.register(SpawnParticleEmitterMessage.class);
+		
+		
+	}
+	
+	@SubscribeEvent
+	public void onTick(TickEvent event) {
+		
 	}
 }
