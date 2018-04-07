@@ -24,22 +24,25 @@
 
 package com.elytradev.marsinal;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import org.hjson.JsonValue;
+
+import com.google.gson.GsonBuilder;
 
 /** Configuration options. Before connecting to a server, such as in the main menu, only LOCAL will be available. But
  * once a player is connected to the world, *RESOLVED should be used for everything* except cosmetic tweaks. This will
  * allow network resolution of the config later on.
  * 
  * <p>In the network-resolution scheme, the following possibilities could arise:
- * <li> We're playing SSP, and LOCAL represents the clientside config file. RESOLVED is a copy of the clientside config.
- * <li> We're playing a network game as the host (multiplayer using integrated server). LOCAL is the clientside
- *      config file, and RESOLVED was sent to ourselves in a packet, but is functionally just an extremely roundabout
- *      copy of the local config.
+ * <li> We're playing SSP or a network game as the host. LOCAL is the clientside config file, and RESOLVED was sent to
+ *      ourselves in a packet, but is functionally just an extremely roundabout copy of the local config.
  * <li> We're a dedicated SMP server. RESOLVED is the same reference as LOCAL.
  * <li> We're a SMP client. LOCAL is loaded from our own config file, but RESOLVED is received as a packet from the
  *      server when we connect.
@@ -49,17 +52,55 @@ public class ArsenalConfig {
 	public static ArsenalConfig RESOLVED = null;
 	
 	
-	public static void load(File f) {
+	public static ArsenalConfig load(File f) {
 		try {
 			if (!f.exists()) {
+				ArsenalConfig result = new ArsenalConfig();
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+				out.write("# Default config file generated for version "+MagicArsenal.VERSION+"\n");
+				out.write("# This file is hjson. Commas are optional, and comments can be added in #config format, //java format, or /* c format */\n");
+				new GsonBuilder()
+					.setPrettyPrinting()
+					.create()
+					.toJson(result, out);
+				out.close();
 				
+				return result;
 			} else {
-				JsonValue value = JsonValue.readHjson(new InputStreamReader(new FileInputStream(f)));
+				String value = JsonValue.readHjson(new InputStreamReader(new FileInputStream(f))).toString();
 				
-				value.asObject();
+				return new GsonBuilder()
+					
+					.create()
+					.fromJson(value, ArsenalConfig.class);
 			}
 		} catch (IOException e) {
 			MagicArsenal.LOG.error("There was trouble reading the config file.", e);
+			return new ArsenalConfig();
 		}
 	}
+	
+	public static class SpellEntry {
+		public int potency = 10;
+		public int cost = 10;
+		public int cooldown = 10;
+		
+		public SpellEntry() {}
+		
+		public SpellEntry(int potency, int cost, int cooldown) {
+			this.potency = potency;
+			this.cost = cost;
+			this.cooldown = cooldown;
+		}
+	}
+	
+	public static class SpellsSection {
+		public SpellEntry healingWave = new SpellEntry(10, 10, 20*1);
+		public SpellEntry regenArea   = new SpellEntry(10, 10, 20*5);
+		public SpellEntry recovery    = new SpellEntry( 5,  5, 20*3);
+		public SpellEntry drainLife   = new SpellEntry( 5,  5, 20*3);
+		public SpellEntry oblation    = new SpellEntry( 5,  5, 20*3);
+	}
+	
+	public SpellsSection spells = new SpellsSection();
 }

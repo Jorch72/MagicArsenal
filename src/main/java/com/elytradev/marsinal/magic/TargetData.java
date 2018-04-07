@@ -43,10 +43,19 @@ public class TargetData {
 		this.caster = caster;
 	}
 	
+	public void clearTargets() {
+		targets.clear();
+	}
+	
 	/** Adds entities along the caster's line of sight to the target list. */
-	public void targetLine(Predicate<Entity> shouldAdd) {
-		TargetData result = new TargetData(caster);
-		
+	public void targetLine(Predicate<Entity> shouldAdd, int range, int maxTargets) {
+		List<Entity> found = caster.getEntityWorld().getEntitiesInAABBexcluding(caster, caster.getCollisionBoundingBox().expand(range, range, range), (entity)->shouldAdd.test(entity) && isLookingAt(caster, entity));
+		int count = 0;
+		for(Entity entity : found) {
+			count++;
+			if (count>maxTargets) break;
+			targets.add(entity);
+		}
 	}
 	
 	
@@ -55,7 +64,6 @@ public class TargetData {
 		
 		Vec3d lookVec = entity.getLook(1.0F).normalize();
 		double targetHalfHeight = target.height / 2D;
-		
 		//Vector from the *eye position* of the caster to the *center of mass* of the target.
 		//This is different from the "eye to eye" test that endermen do!
         Vec3d lookStraightAtEntityVec = new Vec3d(

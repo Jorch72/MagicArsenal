@@ -34,24 +34,22 @@ import com.elytradev.marsinal.capability.impl.MagicResources;
 import com.elytradev.marsinal.network.SpawnParticleEmitterMessage;
 
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid=MagicArsenal.MODID, version="@VERSION@", name="Thermionics|Core")
+@Mod(modid=MagicArsenal.MODID, version=MagicArsenal.VERSION, name="Magic Arsenal")
 public class MagicArsenal {
 	public static final String MODID = "magicarsenal";
+	public static final String VERSION = "@VERSION@";
 	public static Logger LOG;
-	public static Configuration CONFIG;
 	public static NetworkContext CONTEXT;
 	
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
 		LOG = LogManager.getLogger("MagicArsenal");
-		CONFIG = new Configuration(e.getSuggestedConfigurationFile());
-		
+		ArsenalConfig.LOCAL = ArsenalConfig.load(e.getSuggestedConfigurationFile());
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");

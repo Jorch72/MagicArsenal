@@ -25,12 +25,19 @@
 package com.elytradev.marsinal.network;
 
 import com.elytradev.concrete.network.Message;
+import com.elytradev.concrete.network.annotation.field.MarshalledAs;
+import com.elytradev.concrete.network.annotation.type.ReceivedOn;
 import com.elytradev.marsinal.MagicArsenal;
+
+import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+@ReceivedOn(Side.CLIENT)
 public class SpawnParticleEmitterMessage extends Message {
+	@MarshalledAs(value = "uint8")
 	private int id;
+	@MarshalledAs(value = "uint32")
 	private int entityId;
 	
 	public SpawnParticleEmitterMessage() {
