@@ -1,0 +1,18 @@
+itemGroup.magicarsenal=Magic Arsenal
+
+#Ingredients
+
+#Spell Focus Items
+item.magicarsenal.spellfocus.name=Unattuned Spell Focus
+item.magicarsenal.spellfocus.healing_wave.name=Healing Wave Spell Focus
+item.magicarsenal.spellfocus.healing_circle.name=Healing Circle Spell Focus
+item.magicarsenal.spellfocus.recovery.name=Recovery Spell Focus
+item.magicarsenal.spellfocus.drain_life.name=Drain Life Spell Focus
+item.magicarsenal.spellfocus.oblation.name=Oblation Spell Focus
+
+#Spell Damage Sources
+death.attack.spell.drainlife=%2$s stole %1$s's life essence.
+
+#Potion Effects
+
+

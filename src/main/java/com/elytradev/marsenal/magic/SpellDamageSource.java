@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
+ * Copyright (c) 2018 Isaac Ellingson (Falkreon) and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ public class SpellDamageSource extends EntityDamageSource {
 	private String spell;
 	
 	public SpellDamageSource(Entity caster, String spell, Element... elements) {
-		super( spell, caster );
+		super( "spell."+spell, caster );
 		//Enforced loosely, but explained comprehensively.
 		if(elements.length < 1) throw new IllegalArgumentException("Spell damage must have at least one 'classical' element and one 'governing' element.");
 		

@@ -24,11 +24,11 @@
 
 package com.elytradev.marsenal.item;
 
-public enum EnumSpellFocus {
-	HEALING_WAVE,   //uses Stamina to grant health to friendly look-target
-	HEALING_CIRCLE, //uses Stamina to grant regen to nearby friendly targets
-	RECOVERY,       //uses Stamina to grant health to the caster
-	DRAIN_LIFE,     //Drains life from hostile look-target to grant health to nearby friendly targets
-	OBLATION,       //Drains life from the caster and grants it to friendly look-target
-	;
+/** Represents an item which is aware of the names of its models */
+public interface IMetaItemModel {
+	/**
+	 * Each element in the returned array should be a valid item-model path.
+	 * The item will be registered with <code>meta 0 -> getModelLocations()[0]</code> and so on.
+	 **/
+	public String[] getModelLocations();
 }

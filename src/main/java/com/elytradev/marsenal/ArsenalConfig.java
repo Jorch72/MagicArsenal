@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
+ * Copyright (c) 2018 Isaac Ellingson (Falkreon) and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -103,4 +103,9 @@ public class ArsenalConfig {
 	}
 	
 	public SpellsSection spells = new SpellsSection();
+	
+	public static class ResourcesSection {
+		public int maxRage = 10;
+	}
+	public ResourcesSection resources = new ResourcesSection();
 }

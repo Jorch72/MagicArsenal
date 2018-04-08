@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
+ * Copyright (c) 2018 Isaac Ellingson (Falkreon) and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,28 @@
 
 package com.elytradev.marsenal.item;
 
-import com.elytradev.marsenal.MagicArsenal;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-
-public class ItemSpellFocus extends Item {
+public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMetaItemModel {
 	public ItemSpellFocus() {
-		this.setUnlocalizedName("marsinal.spellfocus");
-		this.setRegistryName(new ResourceLocation(MagicArsenal.MODID, "spellfocus"));
-		
-		this.setHasSubtypes(true);
+		super("spellfocus", EnumSpellFocus.values(), true);
 	}
 	
+	/*
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		
+		if (tab!=MagicArsenal.TAB_MARSENAL) return;
+		for(EnumSpellFocus focus : EnumSpellFocus.values()) {
+			ItemStack item = new ItemStack(this, 1, focus.ordinal());
+			items.add(item);
+		}
 	}
+
+	@Override
+	public String[] getModelLocations() {
+		String[] result = new String[EnumSpellFocus.values().length];
+		for(int i=0; i<EnumSpellFocus.values().length; i++) {
+			EnumSpellFocus focus = EnumSpellFocus.values()[i];
+			result[i] = "spellfocus."+focus.name().toLowerCase(Locale.ENGLISH);
+		}
+		return result;
+	}*/
 }

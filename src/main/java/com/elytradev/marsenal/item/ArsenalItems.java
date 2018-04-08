@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Isaac Ellingson (Falkreon) and contributors
+ * Copyright (c) 2018 Isaac Ellingson (Falkreon) and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,16 @@
 
 package com.elytradev.marsenal.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ArsenalItems {
+	private static List<Item> itemsForModels = new ArrayList<>();
 	public static ItemSpellFocus SPELL_FOCUS = null;
 	
 	@SubscribeEvent
@@ -39,9 +43,13 @@ public class ArsenalItems {
 		SPELL_FOCUS = item(r, new ItemSpellFocus());
 	}
 	
+	public static Iterable<Item> itemsForModels() {
+		return itemsForModels;
+	}
+	
 	public static <T extends Item> T item(IForgeRegistry<Item> registry, T t) {
 		registry.register(t);
-		//???.needModelRegistration.add(t);
+		itemsForModels.add(t);
 		return t;
 	}
 }
