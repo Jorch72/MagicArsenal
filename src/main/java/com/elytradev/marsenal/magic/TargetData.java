@@ -28,9 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.elytradev.marsenal.MagicArsenal;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 public class TargetData {
 	EntityLivingBase caster;
@@ -49,13 +56,57 @@ public class TargetData {
 	
 	/** Adds entities along the caster's line of sight to the target list. */
 	public void targetLine(Predicate<Entity> shouldAdd, int range, int maxTargets) {
-		List<Entity> found = caster.getEntityWorld().getEntitiesInAABBexcluding(caster, caster.getCollisionBoundingBox().expand(range, range, range), (entity)->shouldAdd.test(entity) && isLookingAt(caster, entity));
+		List<Entity> found = caster
+				.getEntityWorld()
+				.getEntitiesInAABBexcluding(
+						caster,
+						caster.getEntityBoundingBox().expand(range, range, range),
+						(entity)->shouldAdd.test(entity) && isLookingAt(caster, entity)
+						);
+		
 		int count = 0;
 		for(Entity entity : found) {
 			count++;
 			if (count>maxTargets) break;
 			targets.add(entity);
 		}
+	}
+	
+	public void targetEntity(int range) {
+        World world = caster.world;
+        Vec3d pos = new Vec3d(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ);
+        Vec3d lookTarget = pos.add(caster.getLookVec().normalize().scale(range));
+        RayTraceResult raytraceresult = world.rayTraceBlocks(pos, lookTarget, false, true, false);
+
+        if (raytraceresult != null) {
+        	MagicArsenal.LOG.info("Raytrace from {} hit block {}", pos, raytraceresult.getBlockPos());
+        	lookTarget = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
+        }
+
+        Entity result = null;
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(caster, caster.getEntityBoundingBox().expand(range, range, range).expand(-range, -range, -range).grow(1.0D));
+        MagicArsenal.LOG.info("Entities in AABB: {}", list.size());
+        double nearestDistanceSq = 0.0D;
+
+        for (Entity target : list) {
+
+            AxisAlignedBB axisalignedbb = target.getEntityBoundingBox().grow(0.30000001192092896D);
+            RayTraceResult raytraceresult1 = axisalignedbb.calculateIntercept(pos, lookTarget);
+
+            if (raytraceresult1 != null) {
+                double distanceSq = pos.squareDistanceTo(raytraceresult1.hitVec);
+
+                if (distanceSq < nearestDistanceSq || nearestDistanceSq == 0.0D) {
+                    result = target;
+                    nearestDistanceSq = distanceSq;
+                }
+            }
+        }
+
+        if (result != null) {
+        	MagicArsenal.LOG.info("Targeted "+result.getClass().getSimpleName());
+            targets.add(result);
+        }
 	}
 	
 	

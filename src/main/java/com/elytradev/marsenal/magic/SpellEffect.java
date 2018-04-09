@@ -28,29 +28,23 @@ import com.elytradev.marsenal.capability.IMagicResources;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- * Represents an effect which can be activated and maintained. Implementors must supply a no-arg constructor; A new
- * instance will be created when the effect is activated, and {@link #activate(EntityLivingBase)} will be called.
- */
-public interface ISpellEffect extends IScheduledTickable {
-	/**
-	 * Computes targeting data and anything else that should only happen once at the start of a spell. One-tick effects
-	 * should still go into {@link #tick(Object)} and return 0 to end immediately.
-	 */
-	void activate(EntityLivingBase caster, IMagicResources res);
+public class SpellEffect implements ISpellEffect {
+	TargetData targets;
 	
-	/**
-	 * Runs one tick of this spell effect. The spell will continue until this method returns false, or 
-	 * @param data The object returned by {@link #activate(EntityLivingBase)} at the beginning of this spell activation
-	 * @return     The number of ticks until the next activation, or 0 if this effect should end immediately.
-	 */
-	int tick();
-	
-	/** Not sure whether this is a bright idea, but we may be able to simplify spells for users if the spell API if
-	 * spells can send activation effect messages to their clientside counterparts. */
-	@SideOnly(Side.CLIENT)
-	int tickEffect(Entity src, Entity target);
+	@Override
+	public void activate(EntityLivingBase caster, IMagicResources res) {
+		targets = new TargetData(caster);
+	}
+
+	@Override
+	public int tick() {
+		return 0;
+	}
+
+	@Override
+	public int tickEffect(Entity src, Entity target) {
+		return 0;
+	}
+
 }

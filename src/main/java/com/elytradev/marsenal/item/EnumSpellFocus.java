@@ -24,11 +24,39 @@
 
 package com.elytradev.marsenal.item;
 
+import com.elytradev.marsenal.MagicArsenal;
+import com.elytradev.marsenal.magic.DrainLifeSpell;
+import com.elytradev.marsenal.magic.ISpellEffect;
+import com.elytradev.marsenal.magic.SpellEffect;
+
+import com.google.common.base.Throwables;
+
 public enum EnumSpellFocus {
-	HEALING_WAVE,   //uses Stamina to grant health to friendly look-target
-	HEALING_CIRCLE, //uses Stamina to grant regen to nearby friendly targets
-	RECOVERY,       //uses Stamina to grant health to the caster
-	DRAIN_LIFE,     //Drains life from hostile look-target to grant health to nearby friendly targets
-	OBLATION,       //Drains life from the caster and grants it to friendly look-target
+	HEALING_WAVE(SpellEffect.class),   //uses Stamina to grant health to friendly look-target
+	HEALING_CIRCLE(SpellEffect.class), //uses Stamina to grant regen to nearby friendly targets
+	RECOVERY(SpellEffect.class),       //uses Stamina to grant health to the caster
+	DRAIN_LIFE(DrainLifeSpell.class),     //Drains life from hostile look-target to grant health to nearby friendly targets
+	OBLATION(SpellEffect.class),       //Drains life from the caster and grants it to friendly look-target
 	;
+	
+	private Class<? extends ISpellEffect> effectClass;
+	
+	EnumSpellFocus(Class<? extends ISpellEffect> clazz) {
+		effectClass = clazz;
+	}
+	
+	public ISpellEffect createEffect() {
+		try {
+			return effectClass.getDeclaredConstructor().newInstance();
+		} catch (Throwable t) {
+			MagicArsenal.LOG.warn("Couldn't create the instance.");
+			//Throwables::propagate is deprecated and scheduled for removal for some stupid reason
+			Throwables.throwIfUnchecked(t);
+			throw new RuntimeException(t);
+		}
+	}
+	
+	public static EnumSpellFocus fromMeta(int meta) {
+		return values()[meta%values().length];
+	}
 }

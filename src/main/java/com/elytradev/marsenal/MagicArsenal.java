@@ -32,6 +32,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
+import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
@@ -130,20 +131,24 @@ public class MagicArsenal {
 	private static final int MAX_TICK_COUNTER = 20;
 	@SubscribeEvent
 	public void onTick(TickEvent.WorldTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) return;
 		if (event.world.isRemote) return;
-		if (event.world.getWorldType().getId()==0) {
-			tickCounter++;
-		}
+		//if (event.world.provider.getDimension()==0) {
+		//	tickCounter++;
+		//	SpellScheduler.tick();
+		//}
 		
 		for(EntityPlayer player : event.world.playerEntities) {
 			if (player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) {
 				IMagicResources res = player.getCapability(CAPABILTIY_MAGIC_RESOURCES, null);
+				if (res instanceof MagicResources) {
+					((MagicResources)res).reduceGlobalCooldown(1);
+				}
 				
-				
-				if (res.getGlobalCooldown()>0) {
+				if (res.getGlobalCooldown()<=0) {
 					//Regen Stamina
 					int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, 100);
-					res.set(IMagicResources.RESOURCE_STAMINA, Math.min(100, stamina+100));
+					res.set(IMagicResources.RESOURCE_STAMINA, Math.min(100, stamina+1));
 				}
 				
 				//Waste Vengeance
@@ -161,6 +166,13 @@ public class MagicArsenal {
 		}
 		
 		if (tickCounter>=MAX_TICK_COUNTER) tickCounter = 0;
+	}
+	
+	@SubscribeEvent
+	public void onServerTick(TickEvent.ServerTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) return;
+		tickCounter++;
+		SpellScheduler.tick();
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
