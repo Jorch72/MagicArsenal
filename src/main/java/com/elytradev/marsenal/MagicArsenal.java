@@ -32,6 +32,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
+import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -79,11 +80,12 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
 		LOG = LogManager.getLogger("MagicArsenal");
-		ArsenalConfig.LOCAL = ArsenalConfig.load(e.getSuggestedConfigurationFile());
+		ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");
 		CONTEXT.register(SpawnParticleEmitterMessage.class);
+		CONTEXT.register(ConfigMessage.class);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);
@@ -95,7 +97,8 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent e) {
 		if (e.getSide()==Side.SERVER) {
-			ArsenalConfig.RESOLVED = ArsenalConfig.LOCAL;
+			//Only gets called this way on dedicated server(!!!)
+			ArsenalConfig.resolve(ArsenalConfig.local().toString());
 		}
 	}
 	
@@ -123,9 +126,14 @@ public class MagicArsenal {
 		}
 	}
 	
+	private int tickCounter = 0;
+	private static final int MAX_TICK_COUNTER = 20;
 	@SubscribeEvent
 	public void onTick(TickEvent.WorldTickEvent event) {
 		if (event.world.isRemote) return;
+		if (event.world.getWorldType().getId()==0) {
+			tickCounter++;
+		}
 		
 		for(EntityPlayer player : event.world.playerEntities) {
 			if (player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) {
@@ -143,8 +151,16 @@ public class MagicArsenal {
 				
 				//Waste Rage
 				res.spend(IMagicResources.RESOURCE_RAGE, 1, 0, false);
+				
+				if (tickCounter>=MAX_TICK_COUNTER && res instanceof MagicResources && ((MagicResources)res).isDirty()) {
+					((MagicResources)res).clearDirty();
+					MagicArsenal.LOG.info("Syncing magic for player "+player.getName());
+					//TODO: Send a MagicResources packet to the owner!
+				}
 			}
 		}
+		
+		if (tickCounter>=MAX_TICK_COUNTER) tickCounter = 0;
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
@@ -161,6 +177,6 @@ public class MagicArsenal {
 	
 	@SubscribeEvent
 	public void onConnect(PlayerEvent.PlayerLoggedInEvent evt) {
-		//TODO: Send them a prefs packet
+		new ConfigMessage(ArsenalConfig.local()).sendTo(evt.player);
 	}
 }

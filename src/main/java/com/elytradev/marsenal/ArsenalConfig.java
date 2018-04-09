@@ -48,9 +48,30 @@ import com.google.gson.GsonBuilder;
  *      server when we connect.
  */
 public class ArsenalConfig {
-	public static ArsenalConfig LOCAL = null;
-	public static ArsenalConfig RESOLVED = null;
+	private static ArsenalConfig LOCAL = null;
+	private static ArsenalConfig RESOLVED = new ArsenalConfig(); //Use defaults until the server sends a packet
 	
+	public static ArsenalConfig get() {
+		return RESOLVED;
+	}
+	
+	public static ArsenalConfig local() {
+		if (LOCAL==null) {
+			MagicArsenal.LOG.error("Somehow we requested the local config before it gets loaded in PreInit!");
+			LOCAL = new ArsenalConfig();
+		}
+		
+		return LOCAL;
+	}
+	
+	public static void setLocal(ArsenalConfig config) {
+		LOCAL = config;
+	}
+	
+	public static void resolve(String config) {
+		MagicArsenal.LOG.info("Resolving config settings");
+		RESOLVED = load(config);
+	}
 	
 	public static ArsenalConfig load(File f) {
 		try {
@@ -80,6 +101,21 @@ public class ArsenalConfig {
 		}
 	}
 	
+	public static ArsenalConfig load(String s) {
+		String value = JsonValue.readHjson(s).toString(); //Unnecessary in most cases, but best for completeness
+		
+		return new GsonBuilder()
+			.create()
+			.fromJson(value, ArsenalConfig.class);
+	}
+	
+	public String toString() {
+		return new GsonBuilder()
+				.setPrettyPrinting()
+				.create()
+				.toJson(this);
+	}
+	
 	public static class SpellEntry {
 		public int potency = 10;
 		public int cost = 10;
@@ -105,7 +141,13 @@ public class ArsenalConfig {
 	public SpellsSection spells = new SpellsSection();
 	
 	public static class ResourcesSection {
-		public int maxRage = 10;
+		public int maxStamina   =  100;
+		public int maxBlood     =  100;
+		public int maxRage      =  100;
+		public int maxChaos     = 1000;
+		public int maxVengeance =  100;
 	}
 	public ResourcesSection resources = new ResourcesSection();
+
+	
 }
