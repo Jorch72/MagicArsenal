@@ -48,7 +48,7 @@ import com.google.gson.GsonBuilder;
  *      server when we connect.
  */
 public class ArsenalConfig {
-	private static ArsenalConfig LOCAL = null;
+	private static ArsenalConfig LOCAL = new ArsenalConfig();
 	private static ArsenalConfig RESOLVED = new ArsenalConfig(); //Use defaults until the server sends a packet
 	
 	public static ArsenalConfig get() {
@@ -130,12 +130,12 @@ public class ArsenalConfig {
 		}
 	}
 	
-	public static class SpellsSection {
-		public SpellEntry healingWave = new SpellEntry(10, 10, 20*1);
-		public SpellEntry regenArea   = new SpellEntry(10, 10, 20*5);
-		public SpellEntry recovery    = new SpellEntry( 5,  5, 20*3);
-		public SpellEntry drainLife   = new SpellEntry( 5,  5, 20*3);
-		public SpellEntry oblation    = new SpellEntry( 5,  5, 20*3);
+	public static class SpellsSection { //            str  cost    CD
+		public SpellEntry healingWave = new SpellEntry(10,   10, 20*1);
+		public SpellEntry regenArea   = new SpellEntry(10,   10, 20*5);
+		public SpellEntry recovery    = new SpellEntry( 5,    5, 20*3);
+		public SpellEntry drainLife   = new SpellEntry( 2,   30, 20*6);
+		public SpellEntry oblation    = new SpellEntry( 5,    5, 20*3);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

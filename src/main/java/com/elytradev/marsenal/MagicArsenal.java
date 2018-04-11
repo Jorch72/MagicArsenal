@@ -31,11 +31,14 @@ import com.elytradev.concrete.network.NetworkContext;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.client.ClientProxy;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
+import com.elytradev.marsenal.network.MagicResourcesMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -87,6 +90,7 @@ public class MagicArsenal {
 		CONTEXT = NetworkContext.forChannel("mafx");
 		CONTEXT.register(SpawnParticleEmitterMessage.class);
 		CONTEXT.register(ConfigMessage.class);
+		CONTEXT.register(MagicResourcesMessage.class);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);
@@ -128,15 +132,11 @@ public class MagicArsenal {
 	}
 	
 	private int tickCounter = 0;
-	private static final int MAX_TICK_COUNTER = 20;
+	private static final int MAX_TICK_COUNTER = 10;
 	@SubscribeEvent
 	public void onTick(TickEvent.WorldTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) return;
 		if (event.world.isRemote) return;
-		//if (event.world.provider.getDimension()==0) {
-		//	tickCounter++;
-		//	SpellScheduler.tick();
-		//}
 		
 		for(EntityPlayer player : event.world.playerEntities) {
 			if (player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) {
@@ -161,18 +161,61 @@ public class MagicArsenal {
 					((MagicResources)res).clearDirty();
 					MagicArsenal.LOG.info("Syncing magic for player "+player.getName());
 					//TODO: Send a MagicResources packet to the owner!
+					new MagicResourcesMessage(res).sendTo(player);
+					tickCounter = 0;
 				}
 			}
 		}
 		
-		if (tickCounter>=MAX_TICK_COUNTER) tickCounter = 0;
+		//if (tickCounter>=MAX_TICK_COUNTER) tickCounter = 0;
 	}
 	
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) return;
 		tickCounter++;
+		if (tickCounter>MAX_TICK_COUNTER) tickCounter = 0;
 		SpellScheduler.tick();
+	}
+	
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) return;
+		if (Minecraft.getMinecraft().player==null) return;
+		if (!Minecraft.getMinecraft().player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) return;
+		
+		IMagicResources res = Minecraft.getMinecraft().player.getCapability(CAPABILTIY_MAGIC_RESOURCES, null);
+		//Scramble towards each resource value
+		ClientProxy.scrambleTargets.forEach((resource, val)->{
+			int oldValue = res.getResource(resource, 0);
+			int dist = Math.abs(val-oldValue);
+			dist /= 2;
+			if (dist<1) dist=1;
+			
+			
+			if (val>oldValue) {
+				res.set(resource, oldValue+dist);
+			} else if (val<oldValue) {
+				res.set(resource, oldValue-dist);
+			}
+		});
+		
+		//Scramble towards the GCD target
+		res.setMaxCooldown(ClientProxy.scrambleTargets.getMaxCooldown());
+		int cur = res.getGlobalCooldown();
+		int target = ClientProxy.scrambleTargets.getGlobalCooldown();
+		int delta = Math.abs(cur - target) / 2;
+		if (delta<1) delta=1;
+		if (cur<target) {
+			if (res instanceof MagicResources) {
+				((MagicResources)res)._setGlobalCooldown(cur+delta);
+			} else {
+				res.setGlobalCooldown(cur+delta);
+			}
+		} else if (cur>target) {
+			res.reduceGlobalCooldown(delta);
+		}
+		
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)

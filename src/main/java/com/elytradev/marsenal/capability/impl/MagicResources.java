@@ -39,12 +39,12 @@ public class MagicResources implements IMagicResources {
 	private boolean dirty = false;
 	
 	@Override
-	public int getResource(ResourceLocation id, int defaultAmount) {
+	public synchronized int getResource(ResourceLocation id, int defaultAmount) {
 		return data.getOrDefault(id, defaultAmount);
 	}
 
 	@Override
-	public int spend(ResourceLocation id, int amount, int defaultAmount, boolean requireAmount) {
+	public synchronized int spend(ResourceLocation id, int amount, int defaultAmount, boolean requireAmount) {
 		if (amount==0) return 0;
 		int before = getResource(id, defaultAmount);
 		if (before==0) return 0;
@@ -70,13 +70,18 @@ public class MagicResources implements IMagicResources {
 	}
 	
 	@Override
-	public void set(ResourceLocation id, int amount) {
+	public synchronized void set(ResourceLocation id, int amount) {
 		if (data.containsKey(id) && data.getInt(id)==amount) return;
 		
 		data.put(id, amount);
 		markDirty();
 	}
 
+	public void _setGlobalCooldown(int gcd) {
+		this.gcd = gcd;
+	}
+	
+	
 	@Override
 	public int getMaxCooldown() {
 		return maxGcd;
@@ -104,11 +109,14 @@ public class MagicResources implements IMagicResources {
 	public void reduceGlobalCooldown(int ticks) {
 		if (gcd==0) return;
 		gcd -= ticks;
-		if (gcd<0) gcd = 0;
+		if (gcd<=0) {
+			gcd = 0;
+			maxGcd = 0;
+		}
 		markDirty();
 	}
 
-	public void forEach(ObjIntConsumer<ResourceLocation> consumer) {
+	public synchronized void forEach(ObjIntConsumer<ResourceLocation> consumer) {
 		for(Object2IntMap.Entry<ResourceLocation> entry : data.object2IntEntrySet()) {
 			consumer.accept(entry.getKey(), entry.getIntValue());
 		}

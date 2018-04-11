@@ -49,7 +49,7 @@ public class DrainLifeSpell implements ISpellEffect {
 				targets.getTargets().clear();
 				return;
 			}
-			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, 100, true);
+			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, ArsenalConfig.get().resources.maxStamina, true);
 			if (spent<=0) {
 				targets.getTargets().clear();
 				return;
