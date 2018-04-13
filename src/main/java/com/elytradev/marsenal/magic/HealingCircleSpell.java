@@ -24,33 +24,37 @@
 
 package com.elytradev.marsenal.magic;
 
+import java.util.List;
+import java.util.Random;
+
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class OblationSpell implements ISpellEffect {
+public class HealingCircleSpell implements ISpellEffect {
 	private TargetData targets;
 	private int ticksRemaining;
+	private World world;
+	private BlockPos epicenter;
+	private Random rnd = new Random();
+	
+	private int radius = 5;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		targets = new TargetData(caster);
-		targets.targetEntity(20);
-		if (targets.targets.isEmpty()) return;
-		Entity target = targets.targets.get(0);
-		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
-			targets.targets.clear();
-			return;
-		}
+		world = caster.getEntityWorld();
+		epicenter = caster.getPosition();
 		
-		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.oblation.cost)) {
-			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.oblation.cooldown);
+		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.healingCircle.cost)) {
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingCircle.cooldown);
 			
-			this.ticksRemaining = 5;
+			this.ticksRemaining = 10;
 		} else {
 			//activation failure
 		}
@@ -58,30 +62,32 @@ public class OblationSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		if (targets.targets.isEmpty()) return 0;
+		//TODO: Cache targets for a couple ticks?
+		List<EntityLivingBase> withinCircle = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
+				epicenter.getX()-radius,
+				epicenter.getY()-radius,
+				epicenter.getZ()-radius,
+				epicenter.getX()+radius,
+				epicenter.getY()+radius,
+				epicenter.getZ()+radius),
+				(it)->it.getDistanceSq(epicenter.getX(), epicenter.getY(), epicenter.getZ()) < radius*radius
+				);
 		
-		targets.caster.attackEntityFrom(
-				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE).setDamageIsAbsolute(),
-				ArsenalConfig.get().spells.oblation.potency);
-		
-		for(Entity entity : targets.targets) {
-			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
-				//TODO: Fire spell visual effect to client
-			}
+		//EntityLivingBase target = withinCircle.get(rnd.nextInt(withinCircle.size()));
+		for(EntityLivingBase target: withinCircle) {
+			target.heal(ArsenalConfig.get().spells.healingCircle.potency);
 		}
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) {
 			return 0;
 		} else {
-			return 10;
+			return 40;
 		}
 	}
 
 	@Override
 	public int tickEffect(Entity src, Entity target) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

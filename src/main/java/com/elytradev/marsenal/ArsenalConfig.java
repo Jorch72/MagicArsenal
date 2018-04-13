@@ -133,11 +133,11 @@ public class ArsenalConfig {
 	}
 	
 	public static class SpellsSection { //            str  cost     CD
-		public SpellEntry healingWave = new SpellEntry(10,   30, 20* 1);
-		public SpellEntry regenArea   = new SpellEntry(10,   30, 20* 5);
-		public SpellEntry recovery    = new SpellEntry( 1,   30, 20*10);
-		public SpellEntry drainLife   = new SpellEntry( 2,   30, 20* 6);
-		public SpellEntry oblation    = new SpellEntry( 1,   10, 20* 2);
+		public SpellEntry healingWave    = new SpellEntry( 1,   80, 20* 2);
+		public SpellEntry healingCircle  = new SpellEntry( 1,   30, 20* 5);
+		public SpellEntry recovery       = new SpellEntry( 1,   30, 20*10);
+		public SpellEntry drainLife      = new SpellEntry( 2,   30, 20* 6);
+		public SpellEntry oblation       = new SpellEntry( 1,   10, 20* 2);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

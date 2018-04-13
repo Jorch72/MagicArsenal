@@ -26,13 +26,12 @@ package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 
-public class OblationSpell implements ISpellEffect {
+public class HealingWaveSpell implements ISpellEffect {
 	private TargetData targets;
 	private int ticksRemaining;
 	
@@ -47,8 +46,8 @@ public class OblationSpell implements ISpellEffect {
 			return;
 		}
 		
-		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.oblation.cost)) {
-			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.oblation.cooldown);
+		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.healingWave.cost)) {
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingWave.cooldown);
 			
 			this.ticksRemaining = 5;
 		} else {
@@ -59,14 +58,9 @@ public class OblationSpell implements ISpellEffect {
 	@Override
 	public int tick() {
 		if (targets.targets.isEmpty()) return 0;
-		
-		targets.caster.attackEntityFrom(
-				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE).setDamageIsAbsolute(),
-				ArsenalConfig.get().spells.oblation.potency);
-		
 		for(Entity entity : targets.targets) {
 			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
+				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.healingWave.potency);
 				//TODO: Fire spell visual effect to client
 			}
 		}
@@ -75,13 +69,12 @@ public class OblationSpell implements ISpellEffect {
 		if (ticksRemaining<=0) {
 			return 0;
 		} else {
-			return 10;
+			return 20;
 		}
 	}
 
 	@Override
 	public int tickEffect(Entity src, Entity target) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

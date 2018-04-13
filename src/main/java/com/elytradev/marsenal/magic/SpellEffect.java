@@ -31,6 +31,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
+/** Dummy spell effect for testing. Can also be used as an ancestor for spells requiring a caster. */
 public class SpellEffect implements ISpellEffect {
 	TargetData targets;
 	
@@ -49,6 +50,10 @@ public class SpellEffect implements ISpellEffect {
 		return 0;
 	}
 
+	
+	//STATIC UTILITY METHODS
+	
+	
 	public static boolean canActivate(IMagicResources caster) {
 		return caster.getGlobalCooldown()<=0;
 	}

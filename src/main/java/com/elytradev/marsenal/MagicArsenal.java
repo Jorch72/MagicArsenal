@@ -85,7 +85,7 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
 		LOG = LogManager.getLogger("MagicArsenal");
-		//ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
+		ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");
