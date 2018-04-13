@@ -24,25 +24,41 @@
 
 package com.elytradev.marsenal.item;
 
+import java.util.Set;
+
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.magic.DrainLifeSpell;
+import com.elytradev.marsenal.magic.RecoverySpell;
 import com.elytradev.marsenal.magic.ISpellEffect;
 import com.elytradev.marsenal.magic.SpellEffect;
+import com.elytradev.marsenal.capability.IMagicResources;
 
 import com.google.common.base.Throwables;
 
-public enum EnumSpellFocus {
-	HEALING_WAVE(SpellEffect.class),   //uses Stamina to grant health to friendly look-target
-	HEALING_CIRCLE(SpellEffect.class), //uses Stamina to grant regen to nearby friendly targets
-	RECOVERY(SpellEffect.class),       //uses Stamina to grant health to the caster
-	DRAIN_LIFE(DrainLifeSpell.class),     //Drains life from hostile look-target to grant health to nearby friendly targets
-	OBLATION(SpellEffect.class),       //Drains life from the caster and grants it to friendly look-target
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+public enum EnumSpellFocus implements ISpellFocus {
+	HEALING_WAVE  (SpellEffect.class,    IMagicResources.RESOURCE_STAMINA, true,  false), //uses Stamina to grant health to friendly look-target
+	HEALING_CIRCLE(SpellEffect.class,    IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant regen to nearby friendly targets
+	RECOVERY      (RecoverySpell.class,  IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant health to the caster
+	DRAIN_LIFE    (DrainLifeSpell.class, IMagicResources.RESOURCE_STAMINA, false, true ), //Drains life from hostile look-target to grant health to the caster
+	OBLATION      (SpellEffect.class,    null,                             true,  false), //Drains life from the caster and grants it to friendly look-target
 	;
 	
 	private Class<? extends ISpellEffect> effectClass;
+	private ResourceLocation applicableResource;
+	private boolean showFriendlyHealth;
+	private boolean showHostileHealth;
 	
-	EnumSpellFocus(Class<? extends ISpellEffect> clazz) {
+	EnumSpellFocus(Class<? extends ISpellEffect> clazz, ResourceLocation applicableResource, boolean showFriendlyHealth, boolean showHostileHealth) {
 		effectClass = clazz;
+		this.applicableResource = applicableResource;
+		this.showFriendlyHealth = showFriendlyHealth;
+		this.showHostileHealth = showHostileHealth;
 	}
 	
 	public ISpellEffect createEffect() {
@@ -56,7 +72,39 @@ public enum EnumSpellFocus {
 		}
 	}
 	
+	/** @nullable */
+	public ResourceLocation getApplicableResource() {
+		return applicableResource;
+	}
+	
+	/**
+	 * Returns true if this spell affects a friendly look-target's HP, so we should show its health as a resource.
+	 */
+	public boolean shouldShowFriendlyHealth() {
+		return showFriendlyHealth;
+	}
+	
+	public boolean shouldShowHostileHealth() {
+		return showHostileHealth;
+	}
+	
 	public static EnumSpellFocus fromMeta(int meta) {
 		return values()[meta%values().length];
+	}
+
+	@Override
+	public void addResources(EntityLivingBase caster, ItemStack stack, Set<ResourceLocation> set) {
+		if (applicableResource!=null) set.add(applicableResource);
+	}
+
+	@Override
+	public EnumTarget classify(EntityLivingBase caster, ItemStack stack, Entity target) {
+		if (target instanceof EntityMob && showHostileHealth) {
+			return ISpellFocus.EnumTarget.HOSTILE;
+		} else if (target instanceof EntityLivingBase && showFriendlyHealth) {
+			return ISpellFocus.EnumTarget.FRIENDLY;
+		}
+		
+		return ISpellFocus.EnumTarget.NONE;
 	}
 }

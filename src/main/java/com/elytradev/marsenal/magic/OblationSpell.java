@@ -29,56 +29,57 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 
-public class DrainLifeSpell implements ISpellEffect {
-	TargetData targets;
-	private int counter = 5;
+public class OblationSpell implements ISpellEffect {
+	private TargetData targets;
+	private int ticksRemaining;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		targets = new TargetData(caster);
-		//Find a victim
-		if (res.getGlobalCooldown()<=0) {
-			targets.targetEntity(8);
-			if (targets.getTargets().isEmpty()) return;
-			if (!(targets.getTargets().get(0) instanceof EntityLiving)) {
-				//Don't try to activate for inert entities
-				targets.getTargets().clear();
-				return;
-			}
-			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, ArsenalConfig.get().resources.maxStamina, true);
-			if (spent<=0) {
-				targets.getTargets().clear();
-				return;
-			}
+		targets.targetEntity(20);
+		if (targets.targets.isEmpty()) return;
+		Entity target = targets.targets.get(0);
+		if (target instanceof EntityMob) {
+			targets.targets.clear();
+			return;
+		}
+		
+		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.oblation.cost)) {
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.oblation.cooldown);
 			
-			res.setGlobalCooldown(ArsenalConfig.get().spells.drainLife.cooldown);
+			this.ticksRemaining = 5;
 		} else {
-			//Fizz?
+			System.out.println("Spell activation failure.");
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (targets.getTargets().isEmpty()) return 0;
+		targets.caster.attackEntityFrom(
+				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE),
+				ArsenalConfig.get().spells.oblation.potency);
 		
-		//TODO: Drain life
-		for(Entity target : targets.getTargets()) {
-			if (target instanceof EntityLiving) {
-				EntityLiving living = (EntityLiving)target;
-				boolean success = living.attackEntityFrom(new SpellDamageSource(targets.caster, "drain_life", Element.UNDEATH,  Element.NATURE), ArsenalConfig.get().spells.drainLife.potency);
-				if (success) targets.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
+		for(Entity entity : targets.targets) {
+			if (entity instanceof EntityLivingBase) {
+				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
+				//TODO: Fire spell visual effect to client
 			}
 		}
 		
-		counter--;
-		return (counter<=0) ? 0 : 20*2;
+		ticksRemaining--;
+		if (ticksRemaining<=0) {
+			return 0;
+		} else {
+			return 10;
+		}
 	}
 
 	@Override
 	public int tickEffect(Entity src, Entity target) {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 

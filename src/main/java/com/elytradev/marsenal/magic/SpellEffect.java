@@ -24,6 +24,8 @@
 
 package com.elytradev.marsenal.magic;
 
+import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.capability.IMagicResources;
 
 import net.minecraft.entity.Entity;
@@ -47,4 +49,34 @@ public class SpellEffect implements ISpellEffect {
 		return 0;
 	}
 
+	public static boolean canActivate(IMagicResources caster) {
+		return caster.getGlobalCooldown()<=0;
+	}
+	
+	public static boolean spendStaminaOrFail(IMagicResources caster, int amount) {
+		return caster.spend(IMagicResources.RESOURCE_STAMINA, amount, ArsenalConfig.get().resources.maxStamina, true)>0;
+	}
+	
+	/**
+	 * Handles the common case of checking the GCD, and if the caster is ready, spending stamina to activate the ability.
+	 * If for any reason the caster is unable to activate this ability with the full spell cost, this method returns
+	 * false.
+	 * @param caster  The player holding the spell focus
+	 * @param amount  The amount of stamina required for the spell
+	 * @return        True if the player can cast the spell, and the stamina cost was successfully deducted.
+	 */
+	public static boolean activateWithStamina(EntityLivingBase caster, int amount) {
+		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return false;
+		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
+		System.out.println(res.getResource(IMagicResources.RESOURCE_STAMINA, 100));
+		return
+				canActivate(res) &&
+				spendStaminaOrFail(res, amount);
+	}
+	
+	public static void activateCooldown(EntityLivingBase caster, int amount) {
+		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
+		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
+		res.setGlobalCooldown(amount);
+	}
 }

@@ -34,6 +34,7 @@ import java.io.OutputStreamWriter;
 
 import org.hjson.JsonValue;
 
+import com.elytradev.marsenal.capability.IMagicResources;
 import com.google.gson.GsonBuilder;
 
 /** Configuration options. Before connecting to a server, such as in the main menu, only LOCAL will be available. But
@@ -56,11 +57,6 @@ public class ArsenalConfig {
 	}
 	
 	public static ArsenalConfig local() {
-		if (LOCAL==null) {
-			MagicArsenal.LOG.error("Somehow we requested the local config before it gets loaded in PreInit!");
-			LOCAL = new ArsenalConfig();
-		}
-		
 		return LOCAL;
 	}
 	
@@ -71,6 +67,12 @@ public class ArsenalConfig {
 	public static void resolve(String config) {
 		MagicArsenal.LOG.info("Resolving config settings");
 		RESOLVED = load(config);
+		
+		IMagicResources.defaultValues.put(IMagicResources.RESOURCE_STAMINA, RESOLVED.resources.maxStamina);
+		IMagicResources.defaultValues.put(IMagicResources.RESOURCE_RAGE, 0);
+		IMagicResources.defaultValues.put(IMagicResources.RESOURCE_BLOOD, 0);
+		IMagicResources.defaultValues.put(IMagicResources.RESOURCE_CHAOS, 0);
+		IMagicResources.defaultValues.put(IMagicResources.RESOURCE_VENGEANCE, 0);
 	}
 	
 	public static ArsenalConfig load(File f) {
@@ -130,12 +132,12 @@ public class ArsenalConfig {
 		}
 	}
 	
-	public static class SpellsSection { //            str  cost    CD
-		public SpellEntry healingWave = new SpellEntry(10,   10, 20*1);
-		public SpellEntry regenArea   = new SpellEntry(10,   10, 20*5);
-		public SpellEntry recovery    = new SpellEntry( 5,    5, 20*3);
-		public SpellEntry drainLife   = new SpellEntry( 2,   30, 20*6);
-		public SpellEntry oblation    = new SpellEntry( 5,    5, 20*3);
+	public static class SpellsSection { //            str  cost     CD
+		public SpellEntry healingWave = new SpellEntry(10,   30, 20* 1);
+		public SpellEntry regenArea   = new SpellEntry(10,   30, 20* 5);
+		public SpellEntry recovery    = new SpellEntry( 1,   30, 20*10);
+		public SpellEntry drainLife   = new SpellEntry( 2,   30, 20* 6);
+		public SpellEntry oblation    = new SpellEntry( 1,   10, 20* 2);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

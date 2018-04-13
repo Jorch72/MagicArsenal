@@ -24,17 +24,24 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
+import com.elytradev.marsenal.item.EnumSpellFocus;
 import com.elytradev.marsenal.item.IMetaItemModel;
+import com.elytradev.marsenal.item.ISpellFocus;
+import com.elytradev.marsenal.item.ItemSpellFocus;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -87,12 +94,27 @@ public class ClientProxy extends Proxy {
 		}
 	}
 	
+	private static void checkForResources(EntityLivingBase caster, ItemStack stack, Set<ResourceLocation> set) {
+		if (stack==null || stack.isEmpty()) return;
+		if (stack.getItem() instanceof ISpellFocus) {
+			((ISpellFocus)stack.getItem()).addResources(caster, stack, set);
+		}
+	}
+	
 	@SubscribeEvent
 	public void onRenderScreen(RenderGameOverlayEvent.Post evt) {
-		if (!Minecraft.getMinecraft().player.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
-		IMagicResources res = Minecraft.getMinecraft().player.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
+		EntityLivingBase player = Minecraft.getMinecraft().player;
+		if (!player.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
 		
 		if (evt.getType()==ElementType.CROSSHAIRS) {
+			
+			IMagicResources res = player.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
+			HashSet<ResourceLocation> relevantResources = new HashSet<ResourceLocation>();
+			
+			ItemStack focusMainStack = player.getHeldItemMainhand();
+			checkForResources(player, player.getHeldItemMainhand(), relevantResources);
+			checkForResources(player, player.getHeldItemOffhand(), relevantResources);
+			
 			int width = evt.getResolution().getScaledWidth();
 			int height = evt.getResolution().getScaledHeight();
 			int centerX = width/2;
@@ -100,19 +122,13 @@ public class ClientProxy extends Proxy {
 			if (res.getGlobalCooldown()>0) {
 				drawBar(centerX-15, centerY+20, 32, 2, res.getGlobalCooldown(), res.getMaxCooldown(), 0xFF333333, 0xFF777777);
 			}
-			if (res.getResource(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().resources.maxStamina)<ArsenalConfig.get().resources.maxStamina) {
+			if (relevantResources.contains(IMagicResources.RESOURCE_STAMINA) && res.getResource(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().resources.maxStamina)<ArsenalConfig.get().resources.maxStamina) {
 				drawBar(centerX-15, centerY+23, 32, 2, res.getResource(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().resources.maxStamina), ArsenalConfig.get().resources.maxStamina, 0xFF333333, 0xFF333399);
 			}
 			
-			/*if (res.getResource(IMagicResources.RESOURCE_RAGE, ArsenalConfig.get().resources.maxRage)<ArsenalConfig.get().resources.maxRage) {
-				//TODO: Figure out if the player's holding a totem that cares
+			if (relevantResources.contains(IMagicResources.RESOURCE_RAGE) && res.getResource(IMagicResources.RESOURCE_RAGE, ArsenalConfig.get().resources.maxRage)<ArsenalConfig.get().resources.maxRage) {
 				drawBar(centerX-15, centerY+26, 32, 2, res.getResource(IMagicResources.RESOURCE_RAGE, ArsenalConfig.get().resources.maxRage), ArsenalConfig.get().resources.maxRage, 0xFF333333, 0xFF993333);
-			}*/
+			}
 		}
-	}
-	
-	
-	public void registerItemModel(Item item) {
-		
 	}
 }

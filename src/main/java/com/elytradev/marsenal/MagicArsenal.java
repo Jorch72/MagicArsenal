@@ -50,6 +50,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -84,7 +85,7 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
 		LOG = LogManager.getLogger("MagicArsenal");
-		ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
+		//ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");
@@ -110,25 +111,51 @@ public class MagicArsenal {
 	@SubscribeEvent
 	public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> e) {
 		if (e.getObject() instanceof EntityPlayer) {
-			e.addCapability(new ResourceLocation("magicarsenal", "magicresources"), new ICapabilityProvider() {
-				private IMagicResources info = new MagicResources();
-				
-				@Override
-				public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-					return (capability==CAPABILTIY_MAGIC_RESOURCES);
-				}
-	
-				@SuppressWarnings("unchecked")
-				@Override
-				public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-					if (capability==CAPABILTIY_MAGIC_RESOURCES) {
-						return (T) info;
-					} else {
-						return null;
+			/* FakePlayers are kept weakly, and can disappear and reappear at any time. It's STRONGLY reccommended that
+			 * if you're implementing an autocaster, you forward the capability up from your block so that it's
+			 * partitioned from other blocks, gets ticks reliably, and doesn't reset its values to defaults randomly.
+			 */
+			if (!(e.getObject() instanceof FakePlayer)) {
+					e.addCapability(new ResourceLocation("magicarsenal", "magicresources"), new ICapabilityProvider() {
+					private IMagicResources info = new MagicResources();
+					
+					@Override
+					public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+						return (capability==CAPABILTIY_MAGIC_RESOURCES);
 					}
-				}
-			});
+		
+					@SuppressWarnings("unchecked")
+					@Override
+					public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+						if (capability==CAPABILTIY_MAGIC_RESOURCES) {
+							return (T) info;
+						} else {
+							return null;
+						}
+					}
+				});
+			}
 		}
+	}
+	
+	/**
+	 * This method is safe to call for any synthetic MagicResources to update per-tick effects like GCD reduction. Note
+	 * that double-calling this isn't necessarily better, as it causes rage to bleed away faster too!
+	 */
+	public static void tickResources(IMagicResources res) {
+		res.reduceGlobalCooldown(1);
+		
+		if (res.getGlobalCooldown()<=0) {
+			//Regen Stamina
+			int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, 100);
+			res.set(IMagicResources.RESOURCE_STAMINA, Math.min(100, stamina+1));
+		}
+		
+		//Waste Vengeance
+		res.spend(IMagicResources.RESOURCE_VENGEANCE, 1, 0, false);
+		
+		//Waste Rage
+		res.spend(IMagicResources.RESOURCE_RAGE, 1, 0, false);
 	}
 	
 	private int tickCounter = 0;
@@ -139,30 +166,17 @@ public class MagicArsenal {
 		if (event.world.isRemote) return;
 		
 		for(EntityPlayer player : event.world.playerEntities) {
-			if (player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) {
+			if (!(player instanceof FakePlayer) && player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) {
 				IMagicResources res = player.getCapability(CAPABILTIY_MAGIC_RESOURCES, null);
-				if (res instanceof MagicResources) {
-					((MagicResources)res).reduceGlobalCooldown(1);
-				}
 				
-				if (res.getGlobalCooldown()<=0) {
-					//Regen Stamina
-					int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, 100);
-					res.set(IMagicResources.RESOURCE_STAMINA, Math.min(100, stamina+1));
-				}
-				
-				//Waste Vengeance
-				res.spend(IMagicResources.RESOURCE_VENGEANCE, 1, 0, false);
-				
-				//Waste Rage
-				res.spend(IMagicResources.RESOURCE_RAGE, 1, 0, false);
+				tickResources(res);
 				
 				if (tickCounter>=MAX_TICK_COUNTER && res instanceof MagicResources && ((MagicResources)res).isDirty()) {
 					((MagicResources)res).clearDirty();
 					MagicArsenal.LOG.info("Syncing magic for player "+player.getName());
 					//TODO: Send a MagicResources packet to the owner!
 					new MagicResourcesMessage(res).sendTo(player);
-					tickCounter = 0;
+					//tickCounter = 0;
 				}
 			}
 		}

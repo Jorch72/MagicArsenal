@@ -24,11 +24,15 @@
 
 package com.elytradev.marsenal.item;
 
+import java.util.Set;
+
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.magic.ISpellEffect;
 import com.elytradev.marsenal.magic.SpellScheduler;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -36,9 +40,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMetaItemModel {
+public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMetaItemModel, ISpellFocus {
 	public ItemSpellFocus() {
 		super("spellfocus", EnumSpellFocus.values(), true);
 	}
@@ -77,24 +82,19 @@ public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMet
 	public EnumAction getItemUseAction(ItemStack stack) {
         return EnumAction.BOW;
     }
-	
-	/*
+
 	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if (tab!=MagicArsenal.TAB_MARSENAL) return;
-		for(EnumSpellFocus focus : EnumSpellFocus.values()) {
-			ItemStack item = new ItemStack(this, 1, focus.ordinal());
-			items.add(item);
-		}
+	public void addResources(EntityLivingBase caster, ItemStack stack, Set<ResourceLocation> set) {
+		getFocus(stack).addResources(caster, stack, set);
 	}
 
 	@Override
-	public String[] getModelLocations() {
-		String[] result = new String[EnumSpellFocus.values().length];
-		for(int i=0; i<EnumSpellFocus.values().length; i++) {
-			EnumSpellFocus focus = EnumSpellFocus.values()[i];
-			result[i] = "spellfocus."+focus.name().toLowerCase(Locale.ENGLISH);
-		}
-		return result;
-	}*/
+	public EnumTarget classify(EntityLivingBase caster, ItemStack stack, Entity target) {
+		return getFocus(stack).classify(caster, stack, target);
+	}
+	
+	public EnumSpellFocus getFocus(ItemStack stack) {
+		if (stack.isEmpty() || stack.getItem()!=this) return EnumSpellFocus.HEALING_WAVE;
+		return EnumSpellFocus.values()[getDamage(stack) % EnumSpellFocus.values().length];
+	}
 }

@@ -26,60 +26,48 @@ package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-public class DrainLifeSpell implements ISpellEffect {
-	TargetData targets;
-	private int counter = 5;
+public class RecoverySpell implements ISpellEffect {
+	private EntityLivingBase caster = null;
+	private int ticksRemaining;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
-		targets = new TargetData(caster);
-		//Find a victim
-		if (res.getGlobalCooldown()<=0) {
-			targets.targetEntity(8);
-			if (targets.getTargets().isEmpty()) return;
-			if (!(targets.getTargets().get(0) instanceof EntityLiving)) {
-				//Don't try to activate for inert entities
-				targets.getTargets().clear();
-				return;
-			}
-			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, ArsenalConfig.get().resources.maxStamina, true);
-			if (spent<=0) {
-				targets.getTargets().clear();
-				return;
-			}
+		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.recovery.cost)) {
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.recovery.cooldown);
 			
-			res.setGlobalCooldown(ArsenalConfig.get().spells.drainLife.cooldown);
+			this.caster = caster;
+			this.ticksRemaining = 5;
 		} else {
-			//Fizz?
+			System.out.println("Spell activation failure.");
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (targets.getTargets().isEmpty()) return 0;
-		
-		//TODO: Drain life
-		for(Entity target : targets.getTargets()) {
-			if (target instanceof EntityLiving) {
-				EntityLiving living = (EntityLiving)target;
-				boolean success = living.attackEntityFrom(new SpellDamageSource(targets.caster, "drain_life", Element.UNDEATH,  Element.NATURE), ArsenalConfig.get().spells.drainLife.potency);
-				if (success) targets.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
+		if (caster!=null) {
+			System.out.println("Recovery Tick");
+			caster.heal(ArsenalConfig.get().spells.recovery.potency);
+			//TODO: Trigger visual effect on clients
+			
+			ticksRemaining--;
+			if (ticksRemaining<=0) {
+				return 0;
+			} else {
+				return 20;
 			}
+		} else {
+			return 0;
 		}
-		
-		counter--;
-		return (counter<=0) ? 0 : 20*2;
 	}
 
 	@Override
 	public int tickEffect(Entity src, Entity target) {
+		// TODO Auto-generated method stub
 		return 0;
-	}
-
+	} 
+	
 }

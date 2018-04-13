@@ -24,6 +24,7 @@
 
 package com.elytradev.marsenal.capability;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.util.ResourceLocation;
 
 public interface IMagicResources {
@@ -40,6 +41,8 @@ public interface IMagicResources {
 	 * and attacking while any Vengeance is present will consume it all and guarantee a critical hit. */
 	public static final ResourceLocation RESOURCE_VENGEANCE = new ResourceLocation("magicarsenal", "vengeance");
 	
+	public static final Object2IntOpenHashMap<ResourceLocation> defaultValues = new Object2IntOpenHashMap<>();
+
 	/**
 	 * Gets the current amount of the magic resource. If the resource is unknown or does not exist, returns defaultAmount.
 	 */
