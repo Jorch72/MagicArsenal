@@ -192,45 +192,7 @@ public class MagicArsenal {
 		SpellScheduler.tick();
 	}
 	
-	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase != TickEvent.Phase.END) return;
-		if (Minecraft.getMinecraft().player==null) return;
-		if (!Minecraft.getMinecraft().player.hasCapability(CAPABILTIY_MAGIC_RESOURCES, null)) return;
-		
-		IMagicResources res = Minecraft.getMinecraft().player.getCapability(CAPABILTIY_MAGIC_RESOURCES, null);
-		//Scramble towards each resource value
-		ClientProxy.scrambleTargets.forEach((resource, val)->{
-			int oldValue = res.getResource(resource, 0);
-			int dist = Math.abs(val-oldValue);
-			dist /= 2;
-			if (dist<1) dist=1;
-			
-			
-			if (val>oldValue) {
-				res.set(resource, oldValue+dist);
-			} else if (val<oldValue) {
-				res.set(resource, oldValue-dist);
-			}
-		});
-		
-		//Scramble towards the GCD target
-		res.setMaxCooldown(ClientProxy.scrambleTargets.getMaxCooldown());
-		int cur = res.getGlobalCooldown();
-		int target = ClientProxy.scrambleTargets.getGlobalCooldown();
-		int delta = Math.abs(cur - target) / 2;
-		if (delta<1) delta=1;
-		if (cur<target) {
-			if (res instanceof MagicResources) {
-				((MagicResources)res)._setGlobalCooldown(cur+delta);
-			} else {
-				res.setGlobalCooldown(cur+delta);
-			}
-		} else if (cur>target) {
-			res.reduceGlobalCooldown(delta);
-		}
-		
-	}
+	
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void onPlayerAttack(AttackEntityEvent evt) {

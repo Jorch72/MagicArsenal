@@ -24,6 +24,52 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+
 public class ParticleEmitters {
+	private static List<Emitter> emitters = new ArrayList<>();
+	private static List<Emitter> dead = new ArrayList<>();
+	
+	public static void spawn(World world, float x, float y, float z, Entity entity, String key) {
+		Emitter emitter = Emitter.create(key);
+		if (emitter==null) return;
+		emitter.init(world, x, y, z, entity);
+		synchronized(emitters) {
+			emitters.add(emitter);
+		}
+	}
+	
+	public static void tick() {
+		synchronized(emitters) {
+			for(Emitter emitter : emitters) {
+				emitter.tick();
+				if (emitter.isDead()) dead.add(emitter);
+			}
+			for(Emitter emitter : dead) emitters.remove(emitter);
+			dead.clear();
+		}
+	}
+	
+	public static void draw(float partialTicks, EntityLivingBase player) {
+		float frameTime = PartialTickTime.getFrameTime();
+		Vec3d partialPos = player.getPositionEyes(partialTicks);
+		
+		synchronized(emitters) {
+			
+			for(Emitter emitter : emitters) {
+				emitter.draw(frameTime, partialPos.x, partialPos.y, partialPos.z);
+			}
+			
+			
+		}
+		
+		PartialTickTime.endFrame();
+	}
 	
 }

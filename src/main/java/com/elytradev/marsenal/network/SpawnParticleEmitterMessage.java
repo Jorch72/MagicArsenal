@@ -28,25 +28,60 @@ import com.elytradev.concrete.network.Message;
 import com.elytradev.concrete.network.annotation.field.MarshalledAs;
 import com.elytradev.concrete.network.annotation.type.ReceivedOn;
 import com.elytradev.marsenal.MagicArsenal;
+import com.elytradev.marsenal.client.ParticleEmitters;
 
 import net.minecraftforge.fml.relauncher.Side;
-
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 @ReceivedOn(Side.CLIENT)
 public class SpawnParticleEmitterMessage extends Message {
-	@MarshalledAs(value = "uint8")
-	private int id;
-	@MarshalledAs(value = "uint32")
-	private int entityId;
+	private String key;
+	@MarshalledAs("int32")
+	private int worldId = 0;
+	@MarshalledAs("f32")
+	private float x = 0;
+	@MarshalledAs("f32")
+	private float y = 0;
+	@MarshalledAs("f32")
+	private float z = 0;
+	@MarshalledAs("int32")
+	private int entityId = -1;
 	
 	public SpawnParticleEmitterMessage() {
 		super(MagicArsenal.CONTEXT);
 	}
+	
+	public SpawnParticleEmitterMessage(String key) {
+		super(MagicArsenal.CONTEXT);
+		this.key = key;
+	}
 
 	@Override
 	protected void handle(EntityPlayer player) {
+		if (player.getEntityWorld().provider.getDimension()!=worldId) return; //No sense spawning fx for worlds we're not in
+		Entity entity = null;
+		if (entityId!=-1) entity = player.getEntityWorld().getEntityByID(entityId);
+		ParticleEmitters.spawn(player.getEntityWorld(), x, y, z, entity, key);
+	}
+
+	public SpawnParticleEmitterMessage at(Entity entity) {
+		worldId = entity.getEntityWorld().provider.getDimension();
+		entityId = entity.getEntityId();
+		x = (float)entity.posX;
+		y = (float)entity.posY+2f;
+		z = (float)entity.posZ;
 		
+		return this;
+	}
+	
+	public SpawnParticleEmitterMessage atLocationOf(Entity entity) {
+		worldId = entity.getEntityWorld().provider.getDimension();
+		x = (float)entity.posX;
+		y = (float)entity.posY+2f;
+		z = (float)entity.posZ;
+		
+		return this;
 	}
 
 }

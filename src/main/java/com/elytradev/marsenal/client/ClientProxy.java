@@ -33,10 +33,8 @@ import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
-import com.elytradev.marsenal.item.EnumSpellFocus;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
-import com.elytradev.marsenal.item.ItemSpellFocus;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -49,15 +47,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ClientProxy extends Proxy {
 	public static MagicResources scrambleTargets = new MagicResources();
 	
 	@Override
 	public void preInit() {
-		
+		Emitter.register("healingSphere", HealingSphereEmitter.class);
 	}
 	
 	@SubscribeEvent
@@ -102,6 +103,49 @@ public class ClientProxy extends Proxy {
 	}
 	
 	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) return;
+		if (Minecraft.getMinecraft().player==null) return;
+		
+		ParticleEmitters.tick();
+		
+		if (!Minecraft.getMinecraft().player.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
+		
+		IMagicResources res = Minecraft.getMinecraft().player.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
+		//Scramble towards each resource value
+		ClientProxy.scrambleTargets.forEach((resource, val)->{
+			int oldValue = res.getResource(resource, 0);
+			int dist = Math.abs(val-oldValue);
+			dist /= 2;
+			if (dist<1) dist=1;
+			
+			
+			if (val>oldValue) {
+				res.set(resource, oldValue+dist);
+			} else if (val<oldValue) {
+				res.set(resource, oldValue-dist);
+			}
+		});
+		
+		//Scramble towards the GCD target
+		res.setMaxCooldown(ClientProxy.scrambleTargets.getMaxCooldown());
+		int cur = res.getGlobalCooldown();
+		int target = ClientProxy.scrambleTargets.getGlobalCooldown();
+		int delta = Math.abs(cur - target) / 2;
+		if (delta<1) delta=1;
+		if (cur<target) {
+			if (res instanceof MagicResources) {
+				((MagicResources)res)._setGlobalCooldown(cur+delta);
+			} else {
+				res.setGlobalCooldown(cur+delta);
+			}
+		} else if (cur>target) {
+			res.reduceGlobalCooldown(delta);
+		}
+		
+	}
+	
+	@SubscribeEvent
 	public void onRenderScreen(RenderGameOverlayEvent.Post evt) {
 		EntityLivingBase player = Minecraft.getMinecraft().player;
 		if (!player.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
@@ -130,5 +174,10 @@ public class ClientProxy extends Proxy {
 				drawBar(centerX-15, centerY+26, 32, 2, res.getResource(IMagicResources.RESOURCE_RAGE, ArsenalConfig.get().resources.maxRage), ArsenalConfig.get().resources.maxRage, 0xFF333333, 0xFF993333);
 			}
 		}
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOW)
+	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		ParticleEmitters.draw(event.getPartialTicks(), Minecraft.getMinecraft().player);
 	}
 }
