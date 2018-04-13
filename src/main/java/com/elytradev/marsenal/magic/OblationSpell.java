@@ -59,7 +59,7 @@ public class OblationSpell implements ISpellEffect {
 	@Override
 	public int tick() {
 		targets.caster.attackEntityFrom(
-				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE),
+				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE).setDamageIsAbsolute(),
 				ArsenalConfig.get().spells.oblation.potency);
 		
 		for(Entity entity : targets.targets) {
