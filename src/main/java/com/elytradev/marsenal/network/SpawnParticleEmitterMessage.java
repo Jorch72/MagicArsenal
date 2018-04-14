@@ -33,6 +33,8 @@ import com.elytradev.marsenal.client.ParticleEmitters;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 @ReceivedOn(Side.CLIENT)
 public class SpawnParticleEmitterMessage extends Message {
@@ -59,9 +61,14 @@ public class SpawnParticleEmitterMessage extends Message {
 
 	@Override
 	protected void handle(EntityPlayer player) {
+		System.out.println("Spawning "+key+" emitter");
 		if (player.getEntityWorld().provider.getDimension()!=worldId) return; //No sense spawning fx for worlds we're not in
 		Entity entity = null;
-		if (entityId!=-1) entity = player.getEntityWorld().getEntityByID(entityId);
+		if (entityId!=-1) {
+			entity = player.getEntityWorld().getEntityByID(entityId);
+			if (entity==null) System.out.println("Unable to acquire entity with ID "+entityId);
+			if (entity.isDead) System.out.println("Targeted dead entity? O_o");
+		}
 		ParticleEmitters.spawn(player.getEntityWorld(), x, y, z, entity, key);
 	}
 
@@ -71,6 +78,15 @@ public class SpawnParticleEmitterMessage extends Message {
 		x = (float)entity.posX;
 		y = (float)entity.posY+2f;
 		z = (float)entity.posZ;
+		
+		return this;
+	}
+	
+	public SpawnParticleEmitterMessage at(World world, BlockPos pos) {
+		worldId = world.provider.getDimension();
+		x = pos.getX()+0.5f;
+		y = pos.getY()+0.5f;
+		z = pos.getZ()+0.5f;
 		
 		return this;
 	}

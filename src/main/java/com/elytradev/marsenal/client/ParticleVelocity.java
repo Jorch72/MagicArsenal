@@ -24,36 +24,15 @@
 
 package com.elytradev.marsenal.client;
 
-import com.elytradev.marsenal.magic.HealingCircleSpell;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.world.World;
 
-import net.minecraft.client.renderer.GlStateManager;
+public class ParticleVelocity extends Particle {
 
-public class HealingSphereEmitter extends Emitter {
-	public static final float RADIUS = HealingCircleSpell.RADIUS;
-	private int ticksRemaining = 400;
-	private float wubTime = 0f;
-	
-	@Override
-	public void tick() {
-		ticksRemaining--;
-		if (ticksRemaining<=0) kill();
+	public ParticleVelocity(World world, float x, float y, float z, float vx, float vy, float vz) {
+		super(world, x, y, z, vx, vy, vz);
+		this.motionX = vx;
+		this.motionY = vy;
+		this.motionZ = vz;
 	}
-
-	@Override
-	public void draw(float partialFrameTime, double dx, double dy, double dz) {
-		GlStateManager.disableLighting();
-		GlStateManager.disableTexture2D();
-		
-		wubTime += partialFrameTime*128f;
-		double wub = Math.sin(wubTime) * 0.3d;
-		double wub2 = Math.sin(wubTime+(Draw.TAU/4f)*1) * 0.3d;
-		double wub3 = Math.sin(wubTime+(Draw.TAU/4f)*2) * 0.3d;
-		Draw.circle(this.x-dx, this.y-dy, this.z-dz, RADIUS+wub, Draw.TAU/32f, 0.20f, 0x3333FF33);
-		Draw.circle(this.x-dx, (this.y-dy)+0.5d, this.z-dz, RADIUS+wub2, Draw.TAU/32f, 0.15f, 0x3333FF33);
-		Draw.circle(this.x-dx, (this.y-dy)+1.0d, this.z-dz, RADIUS+wub3, Draw.TAU/32f, 0.10f, 0x3333FF33);
-		
-		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
-	}
-
 }

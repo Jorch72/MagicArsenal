@@ -29,7 +29,6 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ParticleEmitters {
@@ -58,12 +57,14 @@ public class ParticleEmitters {
 	
 	public static void draw(float partialTicks, EntityLivingBase player) {
 		float frameTime = PartialTickTime.getFrameTime();
-		Vec3d partialPos = player.getPositionEyes(partialTicks);
+		double dx = player.prevPosX + (player.posX - player.prevPosX) * partialTicks;
+		double dy = player.prevPosY + (player.posY - player.prevPosY) * partialTicks;
+		double dz = player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
 		
 		synchronized(emitters) {
 			
 			for(Emitter emitter : emitters) {
-				emitter.draw(frameTime, partialPos.x, partialPos.y, partialPos.z);
+				emitter.draw(frameTime, dx, dy, dz);
 			}
 			
 			

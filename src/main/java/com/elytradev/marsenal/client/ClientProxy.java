@@ -59,6 +59,8 @@ public class ClientProxy extends Proxy {
 	@Override
 	public void preInit() {
 		Emitter.register("healingSphere", HealingSphereEmitter.class);
+		Emitter.register("drainLife", DrainLifeEmitter.class);
+		Emitter.register("infuseLife", InfuseLifeEmitter.class);
 	}
 	
 	@SubscribeEvent
@@ -155,7 +157,6 @@ public class ClientProxy extends Proxy {
 			IMagicResources res = player.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
 			HashSet<ResourceLocation> relevantResources = new HashSet<ResourceLocation>();
 			
-			ItemStack focusMainStack = player.getHeldItemMainhand();
 			checkForResources(player, player.getHeldItemMainhand(), relevantResources);
 			checkForResources(player, player.getHeldItemOffhand(), relevantResources);
 			

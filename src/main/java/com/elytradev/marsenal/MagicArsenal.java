@@ -173,10 +173,7 @@ public class MagicArsenal {
 				
 				if (tickCounter>=MAX_TICK_COUNTER && res instanceof MagicResources && ((MagicResources)res).isDirty()) {
 					((MagicResources)res).clearDirty();
-					MagicArsenal.LOG.info("Syncing magic for player "+player.getName());
-					//TODO: Send a MagicResources packet to the owner!
 					new MagicResourcesMessage(res).sendTo(player);
-					//tickCounter = 0;
 				}
 			}
 		}

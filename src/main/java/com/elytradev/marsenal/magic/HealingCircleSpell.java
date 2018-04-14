@@ -57,7 +57,7 @@ public class HealingCircleSpell implements ISpellEffect {
 			
 			this.ticksRemaining = 10;
 			
-			new SpawnParticleEmitterMessage("healingSphere").atLocationOf(caster).sendToAllAround(world, caster, 16*7);
+			new SpawnParticleEmitterMessage("healingSphere").at(world, epicenter).sendToAllAround(world, caster, 16*7);
 		} else {
 			//activation failure
 		}
