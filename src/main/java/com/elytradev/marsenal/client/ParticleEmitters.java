@@ -35,10 +35,10 @@ public class ParticleEmitters {
 	private static List<Emitter> emitters = new ArrayList<>();
 	private static List<Emitter> dead = new ArrayList<>();
 	
-	public static void spawn(World world, float x, float y, float z, Entity entity, String key) {
+	public static void spawn(World world, float x, float y, float z, Entity caster, Entity target, String key) {
 		Emitter emitter = Emitter.create(key);
 		if (emitter==null) return;
-		emitter.init(world, x, y, z, entity);
+		emitter.init(world, x, y, z, caster, target);
 		synchronized(emitters) {
 			emitters.add(emitter);
 		}

@@ -58,15 +58,17 @@ public abstract class Emitter {
 	public float x = 0;
 	public float y = 0;
 	public float z = 0;
+	public Entity source = null;
 	public Entity entity = null;
 	private boolean dead = false;
 	
-	public void init(World world, float x, float y, float z, Entity entity) {
+	public void init(World world, float x, float y, float z, Entity source, Entity target) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.entity = entity;
+		this.source = source;
+		this.entity = target;
 	}
 	
 	public void kill() {

@@ -24,21 +24,55 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.Random;
+
 import com.elytradev.marsenal.magic.HealingCircleSpell;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class HealingSphereEmitter extends Emitter {
 	public static final float RADIUS = HealingCircleSpell.RADIUS;
+	private Random random = new Random();
 	private int ticksRemaining = 400;
 	private float wubTime = 0f;
 	
+	
+	
 	@Override
 	public void tick() {
+		for(int i=0; i<12; i++) {
+			Vec3d pt = rndPolar().scale(random.nextFloat()*RADIUS);
+			float px = (float)(x + pt.x);
+			float py = (float)(y + 0.05f);
+			float pz = (float)(z + pt.z);
+			
+			Particle particle = new ParticleVelocity(world,
+					px, py, pz,
+					0f, 0.02f, 0f
+					);
+			particle.setParticleTextureIndex(5); //Midway through redstone
+			particle.setRBGColorF(0.2f, 0.7f, 0.2f);
+			
+			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		}
+		
+		
 		ticksRemaining--;
 		if (ticksRemaining<=0) kill();
 	}
 
+	private Vec3d rndPolar() {
+		float theta = random.nextFloat()*Draw.TAU;
+		return new Vec3d(
+				MathHelper.cos(theta),
+				0,
+				MathHelper.sin(theta));
+	}
+	
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
 		GlStateManager.disableLighting();

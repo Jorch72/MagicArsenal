@@ -34,38 +34,55 @@ import net.minecraft.util.math.Vec3d;
 
 public class DrainLifeEmitter extends Emitter {
 	Random random = new Random();
-	private int ticksRemaining = 7;
+	private int ticksRemaining = 20;
 	//private float partialTicks = 0f;
 	
 	private ArrayList<Star> dead = new ArrayList<>();
 	private ArrayList<Star> stars = new ArrayList<>();
-	//                      still
+	private boolean         still = true;
 	//                      burn
 	
 	@Override
 	public void tick() {
-		if (entity.isDead) {
-			ticksRemaining = 0;
+		if (entity==null || source==null || entity.isDead) {
 			kill();
 			return;
 		}
 		
-		for(int i=0; i<2; i++) {
-			if (entity==null) return;
+		if (still) for(int i=0; i<32; i++) {
+			double startX = entity.posX + random.nextGaussian()*entity.width;
+			double startY = entity.posY - (entity.height/2) + random.nextGaussian()*entity.height;
+			double startZ = entity.posZ + random.nextGaussian()*entity.width;
+			//Vec3d towardsEntity = new Vec3d(source.posX - startX, source.posY + (source.height/2) - startY, source.posZ - startZ)
+			//		.normalize().scale(1024f);
+			/*
 			double startX = entity.posX + random.nextGaussian()*1.0d;
 			double startY = entity.posY + (entity.height/2) + random.nextGaussian()*1.0d;
 			double startZ = entity.posZ + random.nextGaussian()*1.0d;
 			Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
-					.normalize().scale(512.0f);
+					.normalize().scale(512.0f);*/
+			Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
+					.normalize().scale(-128.0f);
 		
 			Star star = new Star();
 			star.width = 0.05f;
 			star.move((float)startX, (float)startY, (float)startZ);
 			star.color = 0xFFCC2222;
-			star.lifetime = 2;
+			star.lifetime = 15;
+			star.intercept = true;
+			star.tx = (float) source.posX;
+			star.ty = (float) (source.posY + (source.height/2));
+			star.tz = (float) source.posZ;
+			star.interceptRange=1.5f*1.5f;
+			star.taild2=0.5f*0.5f;
+			star.onIntercept = (it) -> {
+					it.lifetime = 0;
+					//TODO: Spawn a green puff?
+				};
 			star.setAcceleration(towardsEntity);
 			stars.add(star);
 		}
+		still = false;
 		
 		for(int i=0; i<12; i++) {
 			float px = (float)(entity.posX + random.nextGaussian()*0.2d);
@@ -94,6 +111,10 @@ public class DrainLifeEmitter extends Emitter {
 		//this.partialTicks += partialFrameTime*1.5f;
 		
 		for(Star star : stars) {
+			star.tx = (float) source.posX;
+			star.ty = (float) (source.posY + (source.height/2));
+			star.tz = (float) source.posZ;
+			
 			star.tick(partialFrameTime);
 			star.paint(dx, dy, dz);
 			if (star.lifetime<=0) dead.add(star);

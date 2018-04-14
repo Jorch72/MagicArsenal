@@ -24,6 +24,8 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.function.Consumer;
+
 import net.minecraft.util.math.Vec3d;
 
 public strictfp class Star {
@@ -39,11 +41,15 @@ public strictfp class Star {
 	public float taild2 = 2f;
 	public float width = 0.1f;
 	public int color = 0xFFFFFFFF;
+	public float acceleration = 80_000f;
+	public float limit = 1024f;
 	
 	public boolean intercept;
 	public float tx;
 	public float ty;
 	public float tz;
+	public float interceptRange;
+	public Consumer<Star> onIntercept;
 	
 	public float lifetime = 20*1;
 	
@@ -61,6 +67,31 @@ public strictfp class Star {
 			tailx+=movement.x;
 			taily+=movement.y;
 			tailz+=movement.z;
+		}
+		
+		//check for intercepts
+		if (intercept) {
+			float dx = tx-x;
+			float dy = ty-y;
+			float dz = tz-z;
+			float delta2 = dx*dx+dy*dy+dz*dz;
+			if (delta2<interceptRange) {
+				if (onIntercept!=null) onIntercept.accept(this);
+				lifetime-=partial;
+				return;
+			}
+			
+			//Accelerate towards intercept
+			//System.out.println("Accelerating towards intercept- delta:"+dx+","+dy+","+dz+" vel:"+vx+","+vy+","+vz);
+			if (dx<-interceptRange) vx-= acceleration*partial; if (vx<-limit) vx=-limit;
+			if (dx>interceptRange) vx+= acceleration*partial;  if (vx> limit) vx= limit;
+			
+			if (dy<-interceptRange) vy-= acceleration*partial; if (vy<-limit) vy=-limit;
+			if (dy>interceptRange) vy+= acceleration*partial;  if (vy> limit) vy= limit;
+			
+			if (dz<-interceptRange) vz-= acceleration*partial; if (vz<-limit) vz=-limit;
+			if (dz>interceptRange) vz+= acceleration*partial;  if (vz> limit) vz= limit;
+			//System.out.println("Resulting vel:"+vx+","+vy+","+vz);
 		}
 		
 		lifetime-=partial;

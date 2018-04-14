@@ -49,6 +49,8 @@ public class SpawnParticleEmitterMessage extends Message {
 	private float z = 0;
 	@MarshalledAs("int32")
 	private int entityId = -1;
+	@MarshalledAs("int32")
+	private int sourceId = -1;
 	
 	public SpawnParticleEmitterMessage() {
 		super(MagicArsenal.CONTEXT);
@@ -61,22 +63,31 @@ public class SpawnParticleEmitterMessage extends Message {
 
 	@Override
 	protected void handle(EntityPlayer player) {
-		System.out.println("Spawning "+key+" emitter");
 		if (player.getEntityWorld().provider.getDimension()!=worldId) return; //No sense spawning fx for worlds we're not in
-		Entity entity = null;
-		if (entityId!=-1) {
-			entity = player.getEntityWorld().getEntityByID(entityId);
-			if (entity==null) System.out.println("Unable to acquire entity with ID "+entityId);
-			if (entity.isDead) System.out.println("Targeted dead entity? O_o");
+		Entity source = null;
+		if (sourceId!=-1) {
+			source = player.getEntityWorld().getEntityByID(sourceId);
+			if (source.isDead) source = null;
 		}
-		ParticleEmitters.spawn(player.getEntityWorld(), x, y, z, entity, key);
+		
+		Entity target = null;
+		if (entityId!=-1) {
+			target = player.getEntityWorld().getEntityByID(entityId);
+			if (target.isDead) target = null;
+		}
+		ParticleEmitters.spawn(player.getEntityWorld(), x, y, z, source, target, key);
 	}
 
+	public SpawnParticleEmitterMessage from(Entity entity) {
+		sourceId = entity.getEntityId();
+		return this;
+	}
+	
 	public SpawnParticleEmitterMessage at(Entity entity) {
 		worldId = entity.getEntityWorld().provider.getDimension();
 		entityId = entity.getEntityId();
 		x = (float)entity.posX;
-		y = (float)entity.posY+2f;
+		y = (float)entity.posY-(entity.height/2);
 		z = (float)entity.posZ;
 		
 		return this;
