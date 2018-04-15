@@ -27,6 +27,7 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,11 +43,6 @@ public class SpellEffect implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		return 0;
-	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
 		return 0;
 	}
 
@@ -73,7 +69,6 @@ public class SpellEffect implements ISpellEffect {
 	public static boolean activateWithStamina(EntityLivingBase caster, int amount) {
 		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return false;
 		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
-		System.out.println(res.getResource(IMagicResources.RESOURCE_STAMINA, 100));
 		return
 				canActivate(res) &&
 				spendStaminaOrFail(res, amount);
@@ -83,5 +78,9 @@ public class SpellEffect implements ISpellEffect {
 		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
 		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
 		res.setGlobalCooldown(amount);
+	}
+	
+	public static void spawnEmitter(String key, EntityLivingBase source, Entity target) {
+		new SpawnParticleEmitterMessage(key).at(target).from(source).sendToAllWatchingAndSelf(target);
 	}
 }

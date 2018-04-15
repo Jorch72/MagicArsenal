@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.magic;
+package com.elytradev.marsenal.item;
 
-import com.elytradev.marsenal.capability.IMagicResources;
+import net.minecraft.util.IStringSerializable;
 
-import net.minecraft.entity.EntityLivingBase;
-
-/**
- * Represents an effect which can be activated and maintained. Implementors must supply a no-arg constructor; A new
- * instance will be created when the effect is activated, and {@link #activate(EntityLivingBase)} will be called.
- */
-public interface ISpellEffect extends IScheduledTickable {
-	/**
-	 * Computes targeting data and anything else that should only happen once at the start of a spell. One-tick effects
-	 * should still go into {@link #tick(Object)} and return 0 to end immediately.
-	 */
-	void activate(EntityLivingBase caster, IMagicResources res);
+public enum EnumIngredient implements IStringSerializable {
+	FOCUS_CORE("focuscore");
 	
-	/**
-	 * Runs one tick of this spell effect. The spell will continue until this method returns false, or 
-	 * @param data The object returned by {@link #activate(EntityLivingBase)} at the beginning of this spell activation
-	 * @return     The number of ticks until the next activation, or 0 if this effect should end immediately.
-	 */
-	int tick();
+	private final String name;
+	
+	EnumIngredient(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
 }

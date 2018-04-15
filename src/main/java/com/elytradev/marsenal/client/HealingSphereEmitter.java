@@ -55,7 +55,7 @@ public class HealingSphereEmitter extends Emitter {
 					0f, 0.02f, 0f
 					);
 			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.2f, 0.7f, 0.2f);
+			particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
 			
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		}
@@ -82,9 +82,9 @@ public class HealingSphereEmitter extends Emitter {
 		double wub = Math.sin(wubTime) * 0.3d;
 		double wub2 = Math.sin(wubTime+(Draw.TAU/4f)*1) * 0.3d;
 		double wub3 = Math.sin(wubTime+(Draw.TAU/4f)*2) * 0.3d;
-		Draw.circle(this.x-dx, this.y-dy, this.z-dz, RADIUS+wub, Draw.TAU/32f, 0.20f, 0x3333FF33);
-		Draw.circle(this.x-dx, (this.y-dy)+0.5d, this.z-dz, RADIUS+wub2, Draw.TAU/32f, 0.15f, 0x3333FF33);
-		Draw.circle(this.x-dx, (this.y-dy)+1.0d, this.z-dz, RADIUS+wub3, Draw.TAU/32f, 0.10f, 0x3333FF33);
+		Draw.circle(this.x-dx, this.y-dy, this.z-dz, RADIUS+wub, Draw.TAU/32f, 0.20f, 0xFF74aa00);
+		Draw.circle(this.x-dx, (this.y-dy)+0.5d, this.z-dz, RADIUS+wub2, Draw.TAU/32f, 0.15f, 0xFF74aa00);
+		Draw.circle(this.x-dx, (this.y-dy)+1.0d, this.z-dz, RADIUS+wub3, Draw.TAU/32f, 0.10f, 0xFF74aa00);
 		
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();

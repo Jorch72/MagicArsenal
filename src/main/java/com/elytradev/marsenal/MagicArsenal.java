@@ -147,8 +147,8 @@ public class MagicArsenal {
 		
 		if (res.getGlobalCooldown()<=0) {
 			//Regen Stamina
-			int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, 100);
-			res.set(IMagicResources.RESOURCE_STAMINA, Math.min(100, stamina+1));
+			int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().resources.maxStamina);
+			res.set(IMagicResources.RESOURCE_STAMINA, Math.min(ArsenalConfig.get().resources.maxStamina, stamina+1));
 		}
 		
 		//Waste Vengeance

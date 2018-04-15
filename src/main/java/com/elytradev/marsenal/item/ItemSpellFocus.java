@@ -46,6 +46,7 @@ import net.minecraft.world.World;
 public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMetaItemModel, ISpellFocus {
 	public ItemSpellFocus() {
 		super("spellfocus", EnumSpellFocus.values(), true);
+		setMaxStackSize(1);
 	}
 	
 	//@Override

@@ -44,7 +44,6 @@ public class HealingCircleSpell implements ISpellEffect {
 	private int ticksRemaining;
 	private World world;
 	private BlockPos epicenter;
-	private Random rnd = new Random();
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
@@ -88,10 +87,4 @@ public class HealingCircleSpell implements ISpellEffect {
 			return 40;
 		}
 	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
-		return 0;
-	}
-
 }

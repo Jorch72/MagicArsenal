@@ -27,21 +27,86 @@ package com.elytradev.marsenal.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.marsenal.MagicArsenal;
+
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionHelper;
+import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ArsenalItems {
 	private static List<Item> itemsForModels = new ArrayList<>();
-	public static ItemSpellFocus SPELL_FOCUS = null;
+	public static ItemSpellFocus               SPELL_FOCUS = null;
+	public static ItemSubtyped<EnumIngredient> INGREDIENT  = null;
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> r = event.getRegistry();
 		
 		SPELL_FOCUS = item(r, new ItemSpellFocus());
+		INGREDIENT  = item(r, new ItemSubtyped<>("ingredient", EnumIngredient.values(), false));
 	}
+	
+	@SubscribeEvent
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+		IForgeRegistry<IRecipe> r = event.getRegistry();
+		
+		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "focuscore"), new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				"qrq", "rLr", "qrq",
+				'q', "gemQuartz",
+				'r', "dustRedstone",
+				'L', "blockLapis"
+				).setRegistryName("magicarsenal_focus_core"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.HEALING_WAVE.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				"treeSapling",
+				"gemEmerald"
+				).setRegistryName("magicarsenal_spellfocus_healing_wave"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.DRAIN_LIFE.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.SKULL,
+				"feather"
+				).setRegistryName("magicarsenal_spellfocus_drain_life"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.OBLATION.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				"ingotGold",
+				Items.FERMENTED_SPIDER_EYE
+				).setRegistryName("magicarsenal_spellfocus_oblation"));
+		
+		ItemStack healingPotion = new ItemStack(Items.POTIONITEM);
+		PotionUtils.addPotionToItemStack(healingPotion, PotionTypes.STRONG_HEALING);
+		IngredientNBT potionIngredient = new IngredientNBT(healingPotion);
+		
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.RECOVERY.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				"gemEmerald",
+				potionIngredient
+				).setRegistryName("magicarsenal_spellfocus_recovery"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.HEALING_CIRCLE.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Blocks.IRON_BARS,
+				Blocks.GLOWSTONE
+				).setRegistryName("magicarsenal_spellfocus_healing_circle"));
+	}
+	
+	
 	
 	public static Iterable<Item> itemsForModels() {
 		return itemsForModels;

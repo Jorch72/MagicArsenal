@@ -81,10 +81,4 @@ public class DrainLifeSpell implements ISpellEffect {
 		counter--;
 		return (counter<=0) ? 0 : 20*2;
 	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
-		return 0;
-	}
-
 }

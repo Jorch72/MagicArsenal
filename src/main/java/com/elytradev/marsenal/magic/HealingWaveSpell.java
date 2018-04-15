@@ -42,7 +42,7 @@ public class HealingWaveSpell implements ISpellEffect {
 		if (targets.targets.isEmpty()) return;
 		Entity target = targets.targets.get(0);
 		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
-			targets.targets.clear();
+			targets.clearTargets();
 			return;
 		}
 		
@@ -52,6 +52,8 @@ public class HealingWaveSpell implements ISpellEffect {
 			this.ticksRemaining = 5;
 		} else {
 			//activation failure
+			this.ticksRemaining = 0;
+			this.targets.clearTargets();
 		}
 	}
 
@@ -61,7 +63,7 @@ public class HealingWaveSpell implements ISpellEffect {
 		for(Entity entity : targets.targets) {
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.healingWave.potency);
-				//TODO: Fire spell visual effect to client
+				SpellEffect.spawnEmitter("infuseLife", targets.caster, entity);
 			}
 		}
 		
@@ -72,10 +74,4 @@ public class HealingWaveSpell implements ISpellEffect {
 			return 20;
 		}
 	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
-		return 0;
-	}
-
 }

@@ -27,6 +27,7 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.magic.SpellDamageSource.Element;
+import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -67,7 +68,7 @@ public class OblationSpell implements ISpellEffect {
 		for(Entity entity : targets.targets) {
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
-				//TODO: Fire spell visual effect to client
+				new SpawnParticleEmitterMessage("drainLife").at(targets.caster).from(entity).sendToAllWatchingAndSelf(targets.caster);
 			}
 		}
 		
@@ -78,11 +79,4 @@ public class OblationSpell implements ISpellEffect {
 			return 10;
 		}
 	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

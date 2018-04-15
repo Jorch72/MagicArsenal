@@ -26,8 +26,8 @@ package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 public class RecoverySpell implements ISpellEffect {
@@ -42,16 +42,15 @@ public class RecoverySpell implements ISpellEffect {
 			this.caster = caster;
 			this.ticksRemaining = 5;
 		} else {
-			System.out.println("Spell activation failure.");
+			//Spell activation failure
 		}
 	}
 
 	@Override
 	public int tick() {
 		if (caster!=null) {
-			System.out.println("Recovery Tick");
 			caster.heal(ArsenalConfig.get().spells.recovery.potency);
-			//TODO: Trigger visual effect on clients
+			new SpawnParticleEmitterMessage("infuseLife").at(caster).from(caster).sendToAllWatchingAndSelf(caster);
 			
 			ticksRemaining--;
 			if (ticksRemaining<=0) {
@@ -63,11 +62,4 @@ public class RecoverySpell implements ISpellEffect {
 			return 0;
 		}
 	}
-
-	@Override
-	public int tickEffect(Entity src, Entity target) {
-		// TODO Auto-generated method stub
-		return 0;
-	} 
-	
 }

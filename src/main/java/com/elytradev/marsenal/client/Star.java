@@ -41,7 +41,7 @@ public strictfp class Star {
 	public float taild2 = 2f;
 	public float width = 0.1f;
 	public int color = 0xFFFFFFFF;
-	public float acceleration = 80_000f;
+	public float acceleration = 60_000f;
 	public float limit = 1024f;
 	
 	public boolean intercept;
@@ -75,7 +75,7 @@ public strictfp class Star {
 			float dy = ty-y;
 			float dz = tz-z;
 			float delta2 = dx*dx+dy*dy+dz*dz;
-			if (delta2<interceptRange) {
+			if (delta2<interceptRange*interceptRange) {
 				if (onIntercept!=null) onIntercept.accept(this);
 				lifetime-=partial;
 				return;

@@ -22,27 +22,25 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.magic;
+package com.elytradev.marsenal.item;
 
-import com.elytradev.marsenal.capability.IMagicResources;
+import javax.annotation.Nullable;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 
-/**
- * Represents an effect which can be activated and maintained. Implementors must supply a no-arg constructor; A new
- * instance will be created when the effect is activated, and {@link #activate(EntityLivingBase)} will be called.
- */
-public interface ISpellEffect extends IScheduledTickable {
-	/**
-	 * Computes targeting data and anything else that should only happen once at the start of a spell. One-tick effects
-	 * should still go into {@link #tick(Object)} and return 0 to end immediately.
-	 */
-	void activate(EntityLivingBase caster, IMagicResources res);
+public class IngredientNBT extends Ingredient {
+	protected final ItemStack stack;
 	
-	/**
-	 * Runs one tick of this spell effect. The spell will continue until this method returns false, or 
-	 * @param data The object returned by {@link #activate(EntityLivingBase)} at the beginning of this spell activation
-	 * @return     The number of ticks until the next activation, or 0 if this effect should end immediately.
-	 */
-	int tick();
+	public IngredientNBT(ItemStack stack) {
+		super(stack);
+		this.stack = stack;
+	}
+	
+	public boolean apply(@Nullable ItemStack stack) {
+		if (!super.apply(stack)) return false; //also scrubs nulls
+        if (stack.getTagCompound()==null ^ this.stack.getTagCompound()==null) return false; //is one and only one Tag null?
+		if (stack.getTagCompound()==null && this.stack.getTagCompound()==null) return true; //both null works out fine
+		return stack.getTagCompound().equals(this.stack.getTagCompound()); //both nonnull, must be equal
+	}
 }

@@ -61,14 +61,14 @@ public class InfuseLifeEmitter extends Emitter {
 			Star star = new Star();
 			star.width = 0.05f;
 			star.move((float)startX, (float)startY, (float)startZ);
-			star.color = 0xFF22CC22;
+			star.color = 0xFF74aa00;
 			star.lifetime = 2;
 			//star.setAcceleration(towardsEntity);
 			star.setAcceleration(0, -512, 0);
 			stars.add(star);
 		}
 		
-		for(int i=0; i<12; i++) {
+		for(int i=0; i<6; i++) {
 			float px = (float)(entity.posX + random.nextGaussian()*0.2d);
 			float py = (float)(entity.posY + entity.height + 0.1f);
 			float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
@@ -78,7 +78,7 @@ public class InfuseLifeEmitter extends Emitter {
 					0f, -0.6f, 0f
 					);
 			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.0f, 0.7f, 0.2f);
+			particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
 			
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		}

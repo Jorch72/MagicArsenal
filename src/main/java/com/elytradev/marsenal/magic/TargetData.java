@@ -79,13 +79,11 @@ public class TargetData {
         RayTraceResult raytraceresult = world.rayTraceBlocks(pos, lookTarget, false, true, false);
 
         if (raytraceresult != null) {
-        	MagicArsenal.LOG.info("Raytrace from {} hit block {}", pos, raytraceresult.getBlockPos());
         	lookTarget = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
         }
 
         Entity result = null;
         List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(caster, caster.getEntityBoundingBox().expand(range, range, range).expand(-range, -range, -range).grow(1.0D));
-        MagicArsenal.LOG.info("Entities in AABB: {}", list.size());
         double nearestDistanceSq = 0.0D;
 
         for (Entity target : list) {
@@ -104,7 +102,6 @@ public class TargetData {
         }
 
         if (result != null) {
-        	MagicArsenal.LOG.info("Targeted "+result.getClass().getSimpleName());
             targets.add(result);
         }
 	}

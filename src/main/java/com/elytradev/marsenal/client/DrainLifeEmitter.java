@@ -49,7 +49,7 @@ public class DrainLifeEmitter extends Emitter {
 			return;
 		}
 		
-		if (still) for(int i=0; i<32; i++) {
+		if (still) for(int i=0; i<64; i++) {
 			double startX = entity.posX + random.nextGaussian()*entity.width;
 			double startY = entity.posY - (entity.height/2) + random.nextGaussian()*entity.height;
 			double startZ = entity.posZ + random.nextGaussian()*entity.width;
@@ -67,8 +67,8 @@ public class DrainLifeEmitter extends Emitter {
 			Star star = new Star();
 			star.width = 0.05f;
 			star.move((float)startX, (float)startY, (float)startZ);
-			star.color = 0xFFCC2222;
-			star.lifetime = 15;
+			star.color = 0xFF8b0722;
+			star.lifetime = 8;
 			star.intercept = true;
 			star.tx = (float) source.posX;
 			star.ty = (float) (source.posY + (source.height/2));
@@ -84,17 +84,17 @@ public class DrainLifeEmitter extends Emitter {
 		}
 		still = false;
 		
-		for(int i=0; i<12; i++) {
+		for(int i=0; i<6; i++) {
 			float px = (float)(entity.posX + random.nextGaussian()*0.2d);
 			float py = (float)(entity.posY + 0.1f);
 			float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
 			
 			Particle particle = new ParticleVelocity(world,
 					px, py, pz,
-					0f, 0.3f, 0f
+					0f, 0.01f, 0f
 					);
 			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.7f, 0.2f, 0.2f);
+			particle.setRBGColorF(0.545f, 0.0274f, 0.130f);
 			
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		}
