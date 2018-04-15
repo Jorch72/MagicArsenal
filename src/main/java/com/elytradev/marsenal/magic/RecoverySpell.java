@@ -25,10 +25,12 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.common.MinecraftForge;
 
 public class RecoverySpell implements ISpellEffect {
 	private EntityLivingBase caster = null;
@@ -36,6 +38,16 @@ public class RecoverySpell implements ISpellEffect {
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
+		if (res.getGlobalCooldown()>0) return;
+		
+		SpellEvent event = new SpellEvent.CastOnEntity("recovery", caster, caster, EnumElement.NATURE, EnumElement.ARCANE);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled()) {
+			caster = null;
+			ticksRemaining = 0;
+			return;
+		}
+		
 		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.recovery.cost)) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.recovery.cooldown);
 			

@@ -25,12 +25,14 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.common.MinecraftForge;
 
 public class DrainLifeSpell implements ISpellEffect {
 	TargetData targets;
@@ -48,6 +50,13 @@ public class DrainLifeSpell implements ISpellEffect {
 				targets.getTargets().clear();
 				return;
 			}
+			SpellEvent event = new SpellEvent.CastOnEntity("drainLife", targets.caster, targets.getTargets().get(0), EnumElement.UNDEATH, EnumElement.NATURE);
+			MinecraftForge.EVENT_BUS.post(event);
+			if (event.isCanceled()) {
+				targets.getTargets().clear();
+				return;
+			}
+			
 			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, ArsenalConfig.get().resources.maxStamina, true);
 			if (spent<=0) {
 				targets.getTargets().clear();

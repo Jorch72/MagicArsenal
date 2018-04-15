@@ -25,11 +25,13 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraftforge.common.MinecraftForge;
 
 public class HealingWaveSpell implements ISpellEffect {
 	private TargetData targets;
@@ -37,12 +39,22 @@ public class HealingWaveSpell implements ISpellEffect {
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
+		if (res.getGlobalCooldown()>0) return;
+		
 		targets = new TargetData(caster);
 		targets.targetEntity(20);
 		if (targets.targets.isEmpty()) return;
 		Entity target = targets.targets.get(0);
 		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
 			targets.clearTargets();
+			return;
+		}
+		
+		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets.caster, targets.getTargets().get(0), EnumElement.NATURE, EnumElement.HOLY);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled()) {
+			targets.clearTargets();
+			ticksRemaining = 0;
 			return;
 		}
 		
@@ -59,7 +71,7 @@ public class HealingWaveSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		if (targets.targets.isEmpty()) return 0;
+		if (targets==null || targets.targets.isEmpty()) return 0;
 		for(Entity entity : targets.targets) {
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.healingWave.potency);

@@ -25,17 +25,17 @@
 package com.elytradev.marsenal.magic;
 
 import java.util.List;
-import java.util.Random;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class HealingCircleSpell implements ISpellEffect {
 	public static final int RADIUS = 5;
@@ -47,9 +47,19 @@ public class HealingCircleSpell implements ISpellEffect {
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
+		if (res.getGlobalCooldown()>0) return;
+		
 		targets = new TargetData(caster);
 		world = caster.getEntityWorld();
 		epicenter = caster.getPosition();
+		
+		SpellEvent event = new SpellEvent.CastOnArea("healingCircle", targets.caster, targets.caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled()) {
+			targets.getTargets().clear();
+			ticksRemaining = 0;
+			return;
+		}
 		
 		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.healingCircle.cost)) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingCircle.cooldown);
@@ -64,6 +74,7 @@ public class HealingCircleSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
+		if (ticksRemaining<=0) return 0;
 		//TODO: Cache targets for a couple ticks?
 		List<EntityLivingBase> withinCircle = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
 				epicenter.getX()-RADIUS,

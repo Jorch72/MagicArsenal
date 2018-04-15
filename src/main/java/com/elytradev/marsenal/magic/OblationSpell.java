@@ -25,12 +25,14 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraftforge.common.MinecraftForge;
 
 public class OblationSpell implements ISpellEffect {
 	private TargetData targets;
@@ -38,12 +40,22 @@ public class OblationSpell implements ISpellEffect {
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
+		if (res.getGlobalCooldown()>0) return;
+		
 		targets = new TargetData(caster);
 		targets.targetEntity(20);
 		if (targets.targets.isEmpty()) return;
 		Entity target = targets.targets.get(0);
 		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
 			targets.targets.clear();
+			return;
+		}
+		
+		SpellEvent event = new SpellEvent.CastOnEntity("drainLife", targets.caster, targets.targets.get(0), EnumElement.HOLY, EnumElement.AIR);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled()) {
+			targets.getTargets().clear();
+			ticksRemaining = 0;
 			return;
 		}
 		
@@ -58,7 +70,7 @@ public class OblationSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		if (targets.targets.isEmpty()) return 0;
+		if (targets==null || targets.targets.isEmpty()) return 0;
 		
 		targets.caster.attackEntityFrom(
 				new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
@@ -68,6 +80,7 @@ public class OblationSpell implements ISpellEffect {
 			if (entity instanceof EntityLivingBase) {
 				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
 				new SpawnParticleEmitterMessage("drainLife").at(targets.caster).from(entity).sendToAllWatchingAndSelf(targets.caster);
+				new SpawnParticleEmitterMessage("infuseLife").at(entity).from(targets.caster).sendToAllWatchingAndSelf(entity);
 			}
 		}
 		
