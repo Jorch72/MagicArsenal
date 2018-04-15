@@ -26,7 +26,6 @@ package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
@@ -62,7 +61,7 @@ public class OblationSpell implements ISpellEffect {
 		if (targets.targets.isEmpty()) return 0;
 		
 		targets.caster.attackEntityFrom(
-				new SpellDamageSource(targets.caster, "drain_life", Element.CHAOS,  Element.NATURE).setDamageIsAbsolute(),
+				new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
 				ArsenalConfig.get().spells.oblation.potency);
 		
 		for(Entity entity : targets.targets) {

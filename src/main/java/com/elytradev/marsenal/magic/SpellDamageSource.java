@@ -30,15 +30,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.EntityDamageSource;
 
 public class SpellDamageSource extends EntityDamageSource {
-	private EnumSet<Element> elements = EnumSet.noneOf(Element.class);
+	private EnumSet<EnumElement> elements = EnumSet.noneOf(EnumElement.class);
 	private String spell;
 	
-	public SpellDamageSource(Entity caster, String spell, Element... elements) {
+	public SpellDamageSource(Entity caster, String spell, EnumElement... elements) {
 		super( "spell."+spell, caster );
 		//Enforced loosely, but explained comprehensively.
 		if(elements.length < 1) throw new IllegalArgumentException("Spell damage must have at least one 'classical' element and one 'governing' element.");
 		
-		for(Element element : elements) {
+		for(EnumElement element : elements) {
 			this.elements.add(element);
 		}
 		this.spell = spell;
@@ -59,11 +59,11 @@ public class SpellDamageSource extends EntityDamageSource {
 	/**
 	 * Gets the full set of elements which govern this spell or ability.
 	 */
-	public EnumSet<Element> getElements() {
+	public EnumSet<EnumElement> getElements() {
 		return elements;
 	}
 	
-	public boolean hasElement(Element element) {
+	public boolean hasElement(EnumElement element) {
 		return elements.contains(element);
 	}
 	
@@ -72,32 +72,5 @@ public class SpellDamageSource extends EntityDamageSource {
 	 */
 	public String getSpell() {
 		return spell;
-	}
-
-	/**
-	 * Typically a spell has two Elements: One from the first four "classical" elements, and one from the next four
-	 * "governing" elements. This includes spells which do not cause damage, and even passive anti-elemental wards.
-	 * 
-	 * Anti-elemental wards, conversely, tend to only target the classical elements, especially as the convenience and
-	 * operational lifetime goes up.
-	 */
-	public enum Element {
-		/** Governs most straightforward, direct damage spells. Should be mitigated by fire resistance or eliminated by wyvern armor */
-		FIRE,
-		/** Governs most stun/sleep/cc and passive auras */
-		FROST,
-		/** Governs most poisons and bleeds, and about half of all healing spells */
-		NATURE,
-		/** Governs most remote or location-based spells */
-		AIR,
-		
-		/** Governs most lifedrain and damage from artificial creatures */
-		UNDEATH,
-		/** Governs most far-reaching or global-effect spells */
-		HOLY,
-		/** Governs most spells which exclusively benefit the caster */
-		ARCANE,
-		/** Governs most uncontrollable effects and unintended spell consequences */
-		CHAOS;
 	}
 }

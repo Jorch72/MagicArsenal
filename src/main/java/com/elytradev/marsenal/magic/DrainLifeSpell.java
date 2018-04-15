@@ -26,7 +26,6 @@ package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.magic.SpellDamageSource.Element;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
@@ -70,7 +69,7 @@ public class DrainLifeSpell implements ISpellEffect {
 				new SpawnParticleEmitterMessage("drainLife").at(target).from(targets.caster).sendToAllWatchingAndSelf(target);
 				
 				EntityLiving living = (EntityLiving)target;
-				boolean success = living.attackEntityFrom(new SpellDamageSource(targets.caster, "drain_life", Element.UNDEATH,  Element.NATURE), ArsenalConfig.get().spells.drainLife.potency);
+				boolean success = living.attackEntityFrom(new SpellDamageSource(targets.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), ArsenalConfig.get().spells.drainLife.potency);
 				if (success) {
 					new SpawnParticleEmitterMessage("infuseLife").at(targets.caster).sendToAllWatchingAndSelf(targets.caster);
 					targets.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
