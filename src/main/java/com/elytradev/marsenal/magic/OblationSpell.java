@@ -51,7 +51,7 @@ public class OblationSpell implements ISpellEffect {
 			return;
 		}
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("drainLife", targets.caster, targets.targets.get(0), EnumElement.HOLY, EnumElement.AIR);
+		SpellEvent event = new SpellEvent.CastOnEntity("oblation", targets.caster, targets.targets.get(0), EnumElement.CHAOS, EnumElement.NATURE);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			targets.getTargets().clear();
