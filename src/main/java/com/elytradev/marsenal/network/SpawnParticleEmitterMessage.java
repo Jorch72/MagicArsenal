@@ -29,6 +29,7 @@ import com.elytradev.concrete.network.annotation.field.MarshalledAs;
 import com.elytradev.concrete.network.annotation.type.ReceivedOn;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.client.ParticleEmitters;
+import com.elytradev.marsenal.magic.TargetData;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
@@ -51,6 +52,10 @@ public class SpawnParticleEmitterMessage extends Message {
 	private int entityId = -1;
 	@MarshalledAs("int32")
 	private int sourceId = -1;
+	
+	private transient Entity target;
+	private transient World targetWorld;
+	private transient BlockPos targetLoc;
 	
 	public SpawnParticleEmitterMessage() {
 		super(MagicArsenal.CONTEXT);
@@ -84,6 +89,7 @@ public class SpawnParticleEmitterMessage extends Message {
 	}
 	
 	public SpawnParticleEmitterMessage at(Entity entity) {
+		target = entity;
 		worldId = entity.getEntityWorld().provider.getDimension();
 		entityId = entity.getEntityId();
 		x = (float)entity.posX;
@@ -94,6 +100,8 @@ public class SpawnParticleEmitterMessage extends Message {
 	}
 	
 	public SpawnParticleEmitterMessage at(World world, BlockPos pos) {
+		targetWorld = world;
+		targetLoc = pos;
 		worldId = world.provider.getDimension();
 		x = pos.getX()+0.5f;
 		y = pos.getY()+0.5f;
@@ -103,6 +111,8 @@ public class SpawnParticleEmitterMessage extends Message {
 	}
 	
 	public SpawnParticleEmitterMessage atLocationOf(Entity entity) {
+		targetWorld = entity.getEntityWorld();
+		targetLoc = entity.getPosition();
 		worldId = entity.getEntityWorld().provider.getDimension();
 		x = (float)entity.posX;
 		y = (float)entity.posY+2f;
@@ -110,5 +120,40 @@ public class SpawnParticleEmitterMessage extends Message {
 		
 		return this;
 	}
+	
+	public SpawnParticleEmitterMessage with(TargetData.Single<? extends Entity> targetData) {
+		if (targetData.getCaster()!=null) sourceId = targetData.getCaster().getEntityId();
+		if (targetData.getTarget()!=null) {
+			this.target = targetData.getTarget();
+			worldId = targetData.getTarget().getEntityWorld().provider.getDimension();
+			entityId = targetData.getTarget().getEntityId();
+			x = (float)targetData.getTarget().posX;
+			y = (float)targetData.getTarget().posY-(targetData.getTarget().height/2);
+			z = (float)targetData.getTarget().posZ;
+		}
+		
+		return this;
+	}
+	
+	public SpawnParticleEmitterMessage withReversed(TargetData.Single<? extends Entity> targetData) {
+		if (targetData.getTarget()!=null) sourceId = targetData.getTarget().getEntityId();
+		if (targetData.getCaster()!=null) {
+			this.target = targetData.getCaster();
+			worldId = targetData.getCaster().getEntityWorld().provider.getDimension();
+			entityId = targetData.getCaster().getEntityId();
+			x = (float)targetData.getCaster().posX;
+			y = (float)targetData.getCaster().posY-(targetData.getCaster().height/2);
+			z = (float)targetData.getCaster().posZ;
+		}
+		
+		return this;
+	}
 
+	public void sendToAllWatchingTarget() {
+		if (target!=null) {
+			this.sendToAllWatchingAndSelf(target);
+		} else if (targetWorld!=null && targetLoc!=null) {
+			this.sendToAllWatching(targetWorld, targetLoc);
+		}
+	}
 }

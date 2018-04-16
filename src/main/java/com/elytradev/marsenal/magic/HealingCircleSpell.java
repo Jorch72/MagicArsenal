@@ -40,23 +40,21 @@ import net.minecraftforge.common.MinecraftForge;
 public class HealingCircleSpell implements ISpellEffect {
 	public static final int RADIUS = 5;
 	
-	private TargetData targets;
 	private int ticksRemaining;
 	private World world;
 	private BlockPos epicenter;
+	private AxisAlignedBB aoe;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		targets = new TargetData(caster);
 		world = caster.getEntityWorld();
 		epicenter = caster.getPosition();
 		
-		SpellEvent event = new SpellEvent.CastOnArea("healingCircle", targets.caster, targets.caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR);
+		SpellEvent event = new SpellEvent.CastOnArea("healingCircle", caster, caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
-			targets.getTargets().clear();
 			ticksRemaining = 0;
 			return;
 		}
@@ -75,18 +73,21 @@ public class HealingCircleSpell implements ISpellEffect {
 	@Override
 	public int tick() {
 		if (ticksRemaining<=0) return 0;
-		//TODO: Cache targets for a couple ticks?
-		List<EntityLivingBase> withinCircle = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
+		
+		if (aoe==null) aoe = new AxisAlignedBB(
 				epicenter.getX()-RADIUS,
 				epicenter.getY()-RADIUS,
 				epicenter.getZ()-RADIUS,
 				epicenter.getX()+RADIUS,
 				epicenter.getY()+RADIUS,
-				epicenter.getZ()+RADIUS),
+				epicenter.getZ()+RADIUS);
+		
+		List<EntityLivingBase> withinCircle = world.getEntitiesWithinAABB(
+				EntityLivingBase.class,
+				aoe,
 				(it)->it.getDistanceSq(epicenter.getX(), epicenter.getY(), epicenter.getZ()) < RADIUS*RADIUS
 				);
 		
-		//EntityLivingBase target = withinCircle.get(rnd.nextInt(withinCircle.size()));
 		for(EntityLivingBase target: withinCircle) {
 			target.heal(ArsenalConfig.get().spells.healingCircle.potency);
 		}

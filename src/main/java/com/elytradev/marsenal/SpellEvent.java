@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import javax.annotation.Nullable;
 
 import com.elytradev.marsenal.magic.EnumElement;
+import com.elytradev.marsenal.magic.TargetData;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.entity.Entity;
@@ -151,6 +152,11 @@ public class SpellEvent extends Event {
 		public CastOnEntity(String spellId, World world, BlockPos origin, Entity target, EnumElement...elements) {
 			super(spellId, world, origin, elements);
 			this.target = target;
+		}
+		
+		public CastOnEntity(String spellId, TargetData.Single<? extends Entity> targetData, EnumElement... elements) {
+			super(spellId, targetData.getCaster(), elements);
+			this.target = targetData.getTarget();
 		}
 		
 		public Entity getTarget() {

@@ -34,11 +34,9 @@ import net.minecraft.entity.EntityLivingBase;
 
 /** Dummy spell effect for testing. Can also be used as an ancestor for spells requiring a caster. */
 public class SpellEffect implements ISpellEffect {
-	TargetData targets;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
-		targets = new TargetData(caster);
 	}
 
 	@Override
@@ -82,5 +80,9 @@ public class SpellEffect implements ISpellEffect {
 	
 	public static void spawnEmitter(String key, EntityLivingBase source, Entity target) {
 		new SpawnParticleEmitterMessage(key).at(target).from(source).sendToAllWatchingAndSelf(target);
+	}
+	
+	public static void spawnEmitter(String key, TargetData.Single<? extends Entity> targets) {
+		new SpawnParticleEmitterMessage(key).with(targets).sendToAllWatchingTarget();
 	}
 }

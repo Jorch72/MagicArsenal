@@ -29,63 +29,51 @@ import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 
 public class DrainLifeSpell implements ISpellEffect {
-	TargetData targets;
+	TargetData.Single<EntityLivingBase> target;
 	private int counter = 5;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
-		targets = new TargetData(caster);
-		//Find a victim
+		target = TargetData.Single.living(caster);
+		
 		if (res.getGlobalCooldown()<=0) {
-			targets.targetEntity(8);
-			if (targets.getTargets().isEmpty()) return;
-			if (!(targets.getTargets().get(0) instanceof EntityLiving)) {
-				//Don't try to activate for inert entities
-				targets.getTargets().clear();
-				return;
-			}
-			SpellEvent event = new SpellEvent.CastOnEntity("drainLife", targets.caster, targets.getTargets().get(0), EnumElement.UNDEATH, EnumElement.NATURE);
+			//Find a victim
+			target.targetRaycast(8);
+			if (target.getTarget()==null) return;
+			
+			SpellEvent event = new SpellEvent.CastOnEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE);
 			MinecraftForge.EVENT_BUS.post(event);
 			if (event.isCanceled()) {
-				targets.getTargets().clear();
+				target.clearTarget();
 				return;
 			}
 			
-			int spent = res.spend(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost, ArsenalConfig.get().resources.maxStamina, true);
-			if (spent<=0) {
-				targets.getTargets().clear();
-				return;
+			if (SpellEffect.activateWithStamina(target.getCaster(), ArsenalConfig.get().spells.drainLife.cost)) {
+				res.setGlobalCooldown(ArsenalConfig.get().spells.drainLife.cooldown);
+			} else {
+				target.clearTarget();
 			}
-			
-			res.setGlobalCooldown(ArsenalConfig.get().spells.drainLife.cooldown);
 		} else {
-			//Fizz?
+			//GCD isn't ready. Do nothing
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (targets.getTargets().isEmpty()) return 0;
+		if (target.getTarget()==null) return 0;
 		
-		for(Entity target : targets.getTargets()) {
-			if (target instanceof EntityLiving) {
-				new SpawnParticleEmitterMessage("drainLife").at(target).from(targets.caster).sendToAllWatchingAndSelf(target);
-				
-				EntityLiving living = (EntityLiving)target;
-				boolean success = living.attackEntityFrom(new SpellDamageSource(targets.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), ArsenalConfig.get().spells.drainLife.potency);
-				if (success) {
-					new SpawnParticleEmitterMessage("infuseLife").at(targets.caster).sendToAllWatchingAndSelf(targets.caster);
-					targets.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
-				}
-			}
+		new SpawnParticleEmitterMessage("drainLife").with(target).sendToAllWatchingTarget();
+		
+		boolean success = target.getTarget().attackEntityFrom(new SpellDamageSource(target.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), ArsenalConfig.get().spells.drainLife.potency);
+		if (success) {
+			new SpawnParticleEmitterMessage("infuseLife").from(target.caster).at(target.caster).sendToAllWatchingTarget();
+			target.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
 		}
-		
+
 		counter--;
 		return (counter<=0) ? 0 : 20*2;
 	}

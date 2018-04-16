@@ -24,55 +24,37 @@
 
 package com.elytradev.marsenal.magic;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.elytradev.marsenal.MagicArsenal;
+import com.google.common.base.Predicates;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class TargetData {
-	EntityLivingBase caster;
-	List<Entity> targets = new ArrayList<>();
+public abstract class TargetData<T extends Entity> {
+	//public static final Predicate<Entity> LIVING_ENTITIES = (it)->it instanceof EntityLivingBase;
+	public static final Predicate<EntityLivingBase>  NON_HOSTILE = (it)-> !(it instanceof EntityMob);
+	
+	protected EntityLivingBase caster;
+	protected Class<T> targetClass;
 	
 	public EntityLivingBase getCaster() { return caster; }
-	public List<Entity> getTargets() { return targets; }
 	
-	public TargetData(EntityLivingBase caster) {
+	@SuppressWarnings("unchecked")
+	public TargetData(EntityLivingBase caster, Class<T> targetClass) {
 		this.caster = caster;
+		this.targetClass = targetClass;
 	}
 	
-	public void clearTargets() {
-		targets.clear();
-	}
-	
-	/** Adds entities along the caster's line of sight to the target list. */
-	public void targetLine(Predicate<Entity> shouldAdd, int range, int maxTargets) {
-		List<Entity> found = caster
-				.getEntityWorld()
-				.getEntitiesInAABBexcluding(
-						caster,
-						caster.getEntityBoundingBox().expand(range, range, range),
-						(entity)->shouldAdd.test(entity) && isLookingAt(caster, entity)
-						);
-		
-		int count = 0;
-		for(Entity entity : found) {
-			count++;
-			if (count>maxTargets) break;
-			targets.add(entity);
-		}
-	}
-	
-	public void targetEntity(int range) {
+	protected static Entity raycastEntity(EntityLivingBase caster, int range, Predicate<Entity> rule) {
         World world = caster.world;
         Vec3d pos = new Vec3d(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ);
         Vec3d lookTarget = pos.add(caster.getLookVec().normalize().scale(range));
@@ -87,7 +69,7 @@ public class TargetData {
         double nearestDistanceSq = 0.0D;
 
         for (Entity target : list) {
-
+        	if (!rule.test(target)) continue;
             AxisAlignedBB axisalignedbb = target.getEntityBoundingBox().grow(0.30000001192092896D);
             RayTraceResult raytraceresult1 = axisalignedbb.calculateIntercept(pos, lookTarget);
 
@@ -101,12 +83,20 @@ public class TargetData {
             }
         }
 
-        if (result != null) {
-            targets.add(result);
-        }
+        return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private static <T extends Entity> Predicate<Entity> downcastingPredicate(Predicate<T> predicate, Class<T> clazz) {
+		return (it)->{
+			if (!clazz.isAssignableFrom(it.getClass())) return false;
+			
+			T t = (T)it;
+			return predicate.test(t);
+		};
+	}
 	
+	/*
 	public static boolean isLookingAt(EntityLivingBase entity, Entity target) {
 		if (entity.canEntityBeSeen(target)) return false;
 		
@@ -127,5 +117,75 @@ public class TargetData {
         } else {
         	return false;
         }
+	}*/
+	
+	public static class Single<T extends Entity> extends TargetData<T> {
+		private T target;
+		
+		public Single(EntityLivingBase caster, Class<T> targetClass) {
+			super(caster, targetClass);
+		}
+		
+		public T targetRaycast(int range) {
+			targetRaycast(range, Predicates.alwaysTrue());
+			return target;
+		}
+		
+		/** On a raycast failure, the target becomes null */
+		@SuppressWarnings("unchecked")
+		public T targetRaycast(int range, Predicate<T> rule) {
+			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
+			
+			Entity e = raycastEntity(caster, range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
+			if (!targetClass.isAssignableFrom(e.getClass())) {
+				target = null;
+				return null;
+			}
+			target = (T)e;
+			return target;
+		}
+		
+		public T getTarget() { return target; }
+		public void clearTarget() { target = null; }
+		public boolean hasTarget() { return target!=null; }
+		
+		public static Single<EntityLivingBase> living(EntityLivingBase caster) {
+			return new Single<>(caster, EntityLivingBase.class);
+		}
+	}
+	
+	public static class Multi<T extends Entity> extends TargetData<T> {
+		private HashSet<T> targets = new HashSet<>();
+		
+		public Multi(EntityLivingBase caster, Class<T> targetClass) {
+			super(caster, targetClass);
+		}
+		
+		public void targetRaycast(int range) {
+			targetRaycast(range, Predicates.alwaysTrue());
+		}
+		
+		/** On a raycast failure, the target list is *unchanged*. */
+		@SuppressWarnings("unchecked")
+		public void targetRaycast(int range, Predicate<T> rule) {
+			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
+			
+			Entity e = raycastEntity(caster, range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
+			if (!targetClass.isAssignableFrom(e.getClass())) {
+				return;
+			}
+			targets.add((T)e); //Doublechecked because who knows
+		}
+		
+		public Collection<T> getTargets() {
+			return targets;
+		}
+		
+		public void clearTargets() { targets.clear(); }
+		public boolean hasTargets() { return !targets.isEmpty(); }
+		
+		public static Multi<EntityLivingBase> living(EntityLivingBase caster) {
+			return new Multi<>(caster, EntityLivingBase.class);
+		}
 	}
 }

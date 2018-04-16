@@ -29,32 +29,24 @@ import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraftforge.common.MinecraftForge;
 
 public class OblationSpell implements ISpellEffect {
-	private TargetData targets;
+	private TargetData.Single<EntityLivingBase> targets;
 	private int ticksRemaining;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		targets = new TargetData(caster);
-		targets.targetEntity(20);
-		if (targets.targets.isEmpty()) return;
-		Entity target = targets.targets.get(0);
-		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
-			targets.targets.clear();
-			return;
-		}
+		targets = TargetData.Single.living(caster);
+		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;;
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("oblation", targets.caster, targets.targets.get(0), EnumElement.CHAOS, EnumElement.NATURE);
+		SpellEvent event = new SpellEvent.CastOnEntity("oblation", targets, EnumElement.CHAOS, EnumElement.NATURE);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
-			targets.getTargets().clear();
+			targets.clearTarget();
 			ticksRemaining = 0;
 			return;
 		}
@@ -70,19 +62,17 @@ public class OblationSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		if (targets==null || targets.targets.isEmpty()) return 0;
+		if (targets==null || !targets.hasTarget()) return 0;
 		
 		targets.caster.attackEntityFrom(
 				new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
 				ArsenalConfig.get().spells.oblation.potency);
 		
-		for(Entity entity : targets.targets) {
-			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.oblation.potency);
-				new SpawnParticleEmitterMessage("drainLife").at(targets.caster).from(entity).sendToAllWatchingAndSelf(targets.caster);
-				new SpawnParticleEmitterMessage("infuseLife").at(entity).from(targets.caster).sendToAllWatchingAndSelf(entity);
-			}
-		}
+		targets.getTarget().heal(ArsenalConfig.get().spells.oblation.potency);
+		new SpawnParticleEmitterMessage("drainLife").withReversed(targets).sendToAllWatchingTarget();
+		SpellEffect.spawnEmitter("infuseLife", targets);
+		//new SpawnParticleEmitterMessage("infuseLife").with(targets).sendToAllWatchingTarget();
+		//new SpawnParticleEmitterMessage("infuseLife").at(entity).from(targets.caster).sendToAllWatchingAndSelf(entity);
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) {

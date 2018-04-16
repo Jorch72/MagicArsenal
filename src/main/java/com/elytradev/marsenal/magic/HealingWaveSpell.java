@@ -28,32 +28,24 @@ import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraftforge.common.MinecraftForge;
 
 public class HealingWaveSpell implements ISpellEffect {
-	private TargetData targets;
+	private TargetData.Single<EntityLivingBase> targets;
 	private int ticksRemaining;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		targets = new TargetData(caster);
-		targets.targetEntity(20);
-		if (targets.targets.isEmpty()) return;
-		Entity target = targets.targets.get(0);
-		if (target instanceof EntityMob || !(target instanceof EntityLivingBase)) {
-			targets.clearTargets();
-			return;
-		}
+		targets = TargetData.Single.living(caster);
+		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets.caster, targets.getTargets().get(0), EnumElement.NATURE, EnumElement.HOLY);
+		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets, EnumElement.NATURE, EnumElement.HOLY);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
-			targets.clearTargets();
+			targets.clearTarget();
 			ticksRemaining = 0;
 			return;
 		}
@@ -65,19 +57,16 @@ public class HealingWaveSpell implements ISpellEffect {
 		} else {
 			//activation failure
 			this.ticksRemaining = 0;
-			this.targets.clearTargets();
+			this.targets.clearTarget();
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (targets==null || targets.targets.isEmpty()) return 0;
-		for(Entity entity : targets.targets) {
-			if (entity instanceof EntityLivingBase) {
-				((EntityLivingBase)entity).heal(ArsenalConfig.get().spells.healingWave.potency);
-				SpellEffect.spawnEmitter("infuseLife", targets.caster, entity);
-			}
-		}
+		if (targets==null || targets.getTarget()==null) return 0;
+
+		targets.getTarget().heal(ArsenalConfig.get().spells.healingWave.potency);
+		SpellEffect.spawnEmitter("infuseLife", targets);
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) {

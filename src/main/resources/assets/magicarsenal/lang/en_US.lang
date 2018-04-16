@@ -1,6 +1,7 @@
 itemGroup.magicarsenal=Magic Arsenal
 
 #Ingredients
+item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
 
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=Unattuned Spell Focus
