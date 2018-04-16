@@ -45,14 +45,16 @@ public class DrainLifeSpell implements ISpellEffect {
 			target.targetRaycast(8);
 			if (target.getTarget()==null) return;
 			
-			SpellEvent event = new SpellEvent.CastOnEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE);
+			SpellEvent.CastOnEntity event = new SpellEvent
+					.CastOnEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
+					.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost);
 			MinecraftForge.EVENT_BUS.post(event);
 			if (event.isCanceled()) {
 				target.clearTarget();
 				return;
 			}
 			
-			if (SpellEffect.activateWithStamina(target.getCaster(), ArsenalConfig.get().spells.drainLife.cost)) {
+			if (SpellEffect.activateWithStamina(target.getCaster(), event.getCost())) {
 				res.setGlobalCooldown(ArsenalConfig.get().spells.drainLife.cooldown);
 			} else {
 				target.clearTarget();
@@ -66,12 +68,18 @@ public class DrainLifeSpell implements ISpellEffect {
 	public int tick() {
 		if (target.getTarget()==null) return 0;
 		
-		new SpawnParticleEmitterMessage("drainLife").with(target).sendToAllWatchingTarget();
-		
-		boolean success = target.getTarget().attackEntityFrom(new SpellDamageSource(target.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), ArsenalConfig.get().spells.drainLife.potency);
-		if (success) {
-			new SpawnParticleEmitterMessage("infuseLife").from(target.caster).at(target.caster).sendToAllWatchingTarget();
-			target.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
+		SpellEvent.DamageEntity event = new SpellEvent
+				.DamageEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
+				.setDamage(ArsenalConfig.get().spells.drainLife.potency);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (!event.isCanceled()) {
+			SpellEffect.spawnEmitter("drainLife", target);
+			
+			boolean success = target.getTarget().attackEntityFrom(new SpellDamageSource(target.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), event.getDamage());
+			if (success) {
+				new SpawnParticleEmitterMessage("infuseLife").from(target.caster).at(target.caster).sendToAllWatchingTarget();
+				target.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
+			}
 		}
 
 		counter--;

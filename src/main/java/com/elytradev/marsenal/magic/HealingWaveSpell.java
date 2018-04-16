@@ -42,7 +42,9 @@ public class HealingWaveSpell implements ISpellEffect {
 		targets = TargetData.Single.living(caster);
 		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets, EnumElement.NATURE, EnumElement.HOLY);
+		SpellEvent event = new SpellEvent
+				.CastOnEntity("healingWave", targets, EnumElement.NATURE, EnumElement.HOLY)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingWave.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			targets.clearTarget();
@@ -50,7 +52,7 @@ public class HealingWaveSpell implements ISpellEffect {
 			return;
 		}
 		
-		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.healingWave.cost)) {
+		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingWave.cooldown);
 			
 			this.ticksRemaining = 5;

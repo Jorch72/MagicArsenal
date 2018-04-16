@@ -48,10 +48,43 @@ public abstract class TargetData<T extends Entity> {
 	
 	public EntityLivingBase getCaster() { return caster; }
 	
-	@SuppressWarnings("unchecked")
 	public TargetData(EntityLivingBase caster, Class<T> targetClass) {
 		this.caster = caster;
 		this.targetClass = targetClass;
+	}
+	
+	protected static RayTraceResult raycastEntity(Entity exclude, World world, Vec3d pos, Vec3d dir, int range, Predicate<Entity> rule) {
+        Vec3d lookTarget = pos.add(dir.normalize().scale(range));
+        RayTraceResult raytraceresult = world.rayTraceBlocks(pos, lookTarget, false, true, false);
+
+        if (raytraceresult != null) {
+        	lookTarget = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
+        } else {
+        	raytraceresult = new RayTraceResult(RayTraceResult.Type.MISS, null, null, null);
+        }
+
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(exclude, new AxisAlignedBB(pos.x-range, pos.y-range, pos.z-range, pos.x+range, pos.y+range, pos.z+range).grow(1.0D));
+        double nearestDistanceSq = 0.0D;
+
+        for (Entity target : list) {
+        	if (!rule.test(target)) continue;
+            AxisAlignedBB axisalignedbb = target.getEntityBoundingBox().grow(0.30000001192092896D);
+            RayTraceResult raytraceresult1 = axisalignedbb.calculateIntercept(pos, lookTarget);
+
+            if (raytraceresult1 != null) {
+                double distanceSq = pos.squareDistanceTo(raytraceresult1.hitVec);
+
+                if (distanceSq < nearestDistanceSq || nearestDistanceSq == 0.0D) {
+                	raytraceresult.hitVec = raytraceresult1.hitVec;
+                	raytraceresult.entityHit = target;
+                	raytraceresult.sideHit = raytraceresult1.sideHit;
+                	raytraceresult.typeOfHit = RayTraceResult.Type.ENTITY;
+                    nearestDistanceSq = distanceSq;
+                }
+            }
+        }
+        
+        return raytraceresult;
 	}
 	
 	protected static Entity raycastEntity(EntityLivingBase caster, int range, Predicate<Entity> rule) {
@@ -143,6 +176,13 @@ public abstract class TargetData<T extends Entity> {
 			}
 			target = (T)e;
 			return target;
+		}
+		
+		/** Returns whatever entity or block we hit when we raycast towards our target. */
+		public RayTraceResult raycastToExistingTarget(int range, Predicate<T> rule) {
+			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
+			
+			return raycastEntity(caster, caster.getEntityWorld(), caster.getPositionVector(), target.getPositionVector().subtract(caster.getPositionVector()).normalize(), range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
 		}
 		
 		public T getTarget() { return target; }

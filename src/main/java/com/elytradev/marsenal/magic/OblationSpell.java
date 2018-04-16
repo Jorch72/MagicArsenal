@@ -43,7 +43,9 @@ public class OblationSpell implements ISpellEffect {
 		targets = TargetData.Single.living(caster);
 		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;;
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("oblation", targets, EnumElement.CHAOS, EnumElement.NATURE);
+		SpellEvent event = new SpellEvent
+				.CastOnEntity("oblation", targets, EnumElement.CHAOS, EnumElement.NATURE)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.oblation.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			targets.clearTarget();
@@ -51,7 +53,7 @@ public class OblationSpell implements ISpellEffect {
 			return;
 		}
 		
-		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.oblation.cost)) {
+		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.oblation.cooldown);
 			
 			this.ticksRemaining = 5;
@@ -64,13 +66,19 @@ public class OblationSpell implements ISpellEffect {
 	public int tick() {
 		if (targets==null || !targets.hasTarget()) return 0;
 		
-		targets.caster.attackEntityFrom(
-				new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
-				ArsenalConfig.get().spells.oblation.potency);
-		
-		targets.getTarget().heal(ArsenalConfig.get().spells.oblation.potency);
-		new SpawnParticleEmitterMessage("drainLife").withReversed(targets).sendToAllWatchingTarget();
-		SpellEffect.spawnEmitter("infuseLife", targets);
+		SpellEvent.DamageEntity event = new SpellEvent
+				.DamageEntity("oblation", targets.getCaster(), targets.getCaster(), EnumElement.CHAOS, EnumElement.NATURE)
+				.setDamage(ArsenalConfig.get().spells.oblation.potency);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (!event.isCanceled()) {
+			targets.caster.attackEntityFrom(
+					new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
+					event.getDamage());
+			
+			targets.getTarget().heal(ArsenalConfig.get().spells.oblation.potency);
+			new SpawnParticleEmitterMessage("drainLife").withReversed(targets).sendToAllWatchingTarget();
+			SpellEffect.spawnEmitter("infuseLife", targets);
+		}
 		//new SpawnParticleEmitterMessage("infuseLife").with(targets).sendToAllWatchingTarget();
 		//new SpawnParticleEmitterMessage("infuseLife").at(entity).from(targets.caster).sendToAllWatchingAndSelf(entity);
 		

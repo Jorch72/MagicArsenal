@@ -52,14 +52,16 @@ public class HealingCircleSpell implements ISpellEffect {
 		world = caster.getEntityWorld();
 		epicenter = caster.getPosition();
 		
-		SpellEvent event = new SpellEvent.CastOnArea("healingCircle", caster, caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR);
+		SpellEvent event = new SpellEvent
+				.CastOnArea("healingCircle", caster, caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingCircle.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			ticksRemaining = 0;
 			return;
 		}
 		
-		if (SpellEffect.activateWithStamina(caster, ArsenalConfig.get().spells.healingCircle.cost)) {
+		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingCircle.cooldown);
 			
 			this.ticksRemaining = 10;

@@ -4,16 +4,53 @@ itemGroup.magicarsenal=Magic Arsenal
 item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
 
 #Spell Focus Items
-item.magicarsenal.spellfocus.name=Unattuned Spell Focus
+item.magicarsenal.spellfocus.name=%1$s Spell Focus
+
 item.magicarsenal.spellfocus.healing_wave.name=Healing Wave Spell Focus
 item.magicarsenal.spellfocus.healing_circle.name=Healing Circle Spell Focus
 item.magicarsenal.spellfocus.recovery.name=Recovery Spell Focus
 item.magicarsenal.spellfocus.drain_life.name=Drain Life Spell Focus
 item.magicarsenal.spellfocus.oblation.name=Oblation Spell Focus
 
+item.magicarsenal.spellfocus.disruption.name=Disruption Spell Focus
+item.magicarsenal.spellfocus.magmablast.name=Magma Blast Spell Focus
+item.magicarsenal.spellfocus.frostshards.name=Frost Shards Spell Focus
+item.magicarsenal.spellfocus.willowisp.name=Will O' Wisp Spell Focus
+item.magicarsenal.spellfocus.chainlightning.name=Chain Lightning Spell Focus
+
 #Spell Damage Sources
-death.attack.spell.drainlife=%2$s stole %1$s's life essence.
+death.attack.spell.drain_life=%1$s wasted away.
+death.attack.spell.oblation=%1$s was too generous with their life essence.
+death.attack.spell.disruption=%1$s was vaporized by a disruptor beam.
+death.attack.spell.magmablast=%1$s was shredded by molten rock.
+death.attack.spell.frostshards=%1$s was pierced by razor-sharp ice.
+death.attack.spell.willowisp=%1$s walked into the light.
+death.attack.spell.chainlightning=%1$s has discovered electricity.
 
 #Potion Effects
 
 
+#Info Pages
+info.magicarsenal.element.elements=Elements:
+
+info.magicarsenal.element.fire=Fire
+info.magicarsenal.element.frost=Frost
+info.magicarsenal.element.nature=Nature
+info.magicarsenal.element.air=Air
+
+info.magicarsenal.element.undeath=Undeath
+info.magicarsenal.element.holy=Holy
+info.magicarsenal.element.arcane=Arcane
+info.magicarsenal.element.chaos=Chaos
+
+#Spells
+spell.magicarsenal.healing_wave.name=Healing Wave
+spell.magicarsenal.spell.healing_circle=Healing Circle
+spell.magicarsenal.recovery=Recovery
+spell.magicarsenal.drain_life=Drain Life
+spell.magicarsenal.oblation=Oblation
+spell.magicarsenal.disruption=Disruption
+spell.magicarsenal.magmablast=Magma Blast
+spell.magicarsenal.frostshards=Frost Shards
+spell.magicarsenal.willowisp=Will O' Wisp
+spell.magicarsenal.chainlightning=Chain Lightning

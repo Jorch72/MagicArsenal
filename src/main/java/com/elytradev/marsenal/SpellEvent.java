@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -50,6 +51,8 @@ public class SpellEvent extends Event {
 	private final EnumSet<EnumElement> elements;
 	private final World world;
 	private final BlockPos origin;
+	private ResourceLocation resource;
+	private int cost = 0;
 	
 	public SpellEvent(String spellId, EntityLivingBase caster, Collection<EnumElement> elements) {
 		this.caster = caster;
@@ -122,6 +125,27 @@ public class SpellEvent extends Event {
 		elements.add(elem);
 	}
 	
+	@Nullable
+	public ResourceLocation getCostResource() {
+		return resource;
+	}
+	
+	public int getCost() {
+		return cost;
+	}
+	
+	/** Changes the cost of the spell as it activates */
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+	
+	/** Meant for builder syntax when creating the event: The resource will be ignored if changed after event creation */
+	public SpellEvent withCost(ResourceLocation resource, int cost) {
+		this.resource = resource;
+		this.cost = cost;
+		return this;
+	}
+	
 
 	public static class CastProjectile extends SpellEvent {
 		public CastProjectile(String spellId, EntityLivingBase caster, Collection<EnumElement> elements) {
@@ -138,6 +162,12 @@ public class SpellEvent extends Event {
 		
 		public CastProjectile(String spellId, World world, BlockPos origin, EnumElement... elements) {
 			super(spellId, world, origin, elements);
+		}
+		
+		@Override
+		public CastProjectile withCost(ResourceLocation resource, int cost) {
+			super.withCost(resource, cost);
+			return this;
 		}
 	}
 
@@ -166,6 +196,12 @@ public class SpellEvent extends Event {
 		public void changeTarget(Entity newTarget) {
 			target = newTarget;
 		}
+		
+		@Override
+		public CastOnEntity withCost(ResourceLocation resource, int cost) {
+			super.withCost(resource, cost);
+			return this;
+		}
 	}
 	
 	public static class CastOnArea extends SpellEvent {
@@ -192,5 +228,39 @@ public class SpellEvent extends Event {
 			return radius;
 		}
 		
+		@Override
+		public CastOnArea withCost(ResourceLocation resource, int cost) {
+			super.withCost(resource, cost);
+			return this;
+		}
+	}
+	
+	public static class DamageEntity extends SpellEvent {
+		private EntityLivingBase target;
+		private int damage = 0;
+		
+		public DamageEntity(String spellId, EntityLivingBase caster, EntityLivingBase target, EnumElement... elements) {
+			super(spellId, caster, elements);
+			this.target = target;
+		}
+		
+		public DamageEntity(String spellId, TargetData.Single<? extends EntityLivingBase> target, EnumElement... elements) {
+			super(spellId, target.getCaster(), elements);
+			this.target = target.getTarget();
+		}
+		
+		public DamageEntity(String spellId, World world, BlockPos pos, EntityLivingBase target, EnumElement... elements) {
+			super(spellId, world, pos, elements);
+			this.target = target;
+		}
+		
+		public DamageEntity setDamage(int amount) {
+			damage = amount;
+			return this;
+		}
+		
+		public int getDamage() { return damage; }
+		
+		public EntityLivingBase getTarget() { return target; }
 	}
 }

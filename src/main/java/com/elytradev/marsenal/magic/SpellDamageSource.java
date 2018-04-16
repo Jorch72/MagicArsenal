@@ -40,6 +40,7 @@ public class SpellDamageSource extends EntityDamageSource {
 		
 		for(EnumElement element : elements) {
 			this.elements.add(element);
+			if (element==EnumElement.FIRE) this.setFireDamage();
 		}
 		this.spell = spell;
 	}
