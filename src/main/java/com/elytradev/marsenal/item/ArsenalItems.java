@@ -104,6 +104,12 @@ public class ArsenalItems {
 				Blocks.IRON_BARS,
 				Blocks.GLOWSTONE
 				).setRegistryName("magicarsenal_spellfocus_healing_circle"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.DISRUPTION.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.BLAZE_ROD,
+				Items.MAGMA_CREAM
+				).setRegistryName("magicarsenal_spellfocus_disruption"));
 	}
 	
 	
