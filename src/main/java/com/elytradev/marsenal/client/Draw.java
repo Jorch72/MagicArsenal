@@ -99,7 +99,6 @@ public class Draw {
 		}
 		Vec3d up = north.crossProduct(east).normalize().scale(width/2d);
 		
-		GlStateManager.glLineWidth(width);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		
 		//Pretend north (+z) is parallel to the line
@@ -123,7 +122,7 @@ public class Draw {
 		_quad(vb, usw, dsw, dnw, unw, r, g, b, a);
 		_quad(vb, use, une, dne, dse, r, g, b, a);
 		if (endcap) {
-			_quad(vb, usw, dsw, dse, use, r, g, b, a);
+			_quad(vb, usw, use, dse, dsw, r, g, b, a);
 			_quad(vb, une, dne, dnw, unw, r, b, b, a);
 		}
 		

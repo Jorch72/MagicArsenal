@@ -25,14 +25,22 @@
 package com.elytradev.marsenal.client;
 
 import net.minecraft.client.particle.Particle;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ParticleVelocity extends Particle {
 
 	public ParticleVelocity(World world, float x, float y, float z, float vx, float vy, float vz) {
 		super(world, x, y, z, vx, vy, vz);
-		this.motionX = vx;
+		this.motionX = vx; //fixes the game's weird particle velocity scaling
 		this.motionY = vy;
 		this.motionZ = vz;
+	}
+	
+	public ParticleVelocity(World world, Vec3d position, Vec3d velocity) {
+		super(world, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
+		this.motionX = velocity.x;
+		this.motionY = velocity.y;
+		this.motionZ = velocity.z;
 	}
 }

@@ -138,7 +138,7 @@ public class ArsenalConfig {
 		public SpellEntry recovery       = new SpellEntry( 1,   60, 20*10);
 		public SpellEntry drainLife      = new SpellEntry( 2,   60, 20* 6);
 		public SpellEntry oblation       = new SpellEntry( 1,   20, 20* 2);
-		public SpellEntry disruption     = new SpellEntry( 2,  200, 20*30);
+		public SpellEntry disruption     = new SpellEntry( 2,  200, 20*10);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

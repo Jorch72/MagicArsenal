@@ -61,6 +61,8 @@ public class ClientProxy extends Proxy {
 		Emitter.register("healingSphere", HealingSphereEmitter.class);
 		Emitter.register("drainLife", DrainLifeEmitter.class);
 		Emitter.register("infuseLife", InfuseLifeEmitter.class);
+		Emitter.register("disruption", DisruptionEmitter.class);
+		Emitter.register("spellGather", SpellGatherEmitter.class);
 	}
 	
 	@SubscribeEvent

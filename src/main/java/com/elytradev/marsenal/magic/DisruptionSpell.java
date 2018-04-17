@@ -27,9 +27,11 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 import com.google.common.base.Predicates;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -57,8 +59,7 @@ public class DisruptionSpell implements ISpellEffect {
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.disruption.cooldown);
 			
-			//SpellEffect.spawnEmitter("powerup", target); //NYI
-			
+			SpellEffect.spawnEmitter("spellGather", caster, caster);
 		}
 	}
 
@@ -75,9 +76,13 @@ public class DisruptionSpell implements ISpellEffect {
 		} else if (ticksExisted>=1 && ticksExisted<7) {
 			//Every half second, for three more seconds (six ticks in all), we raycast and annihilate
 			RayTraceResult trace = target.raycastToExistingTarget(RANGE, Predicates.alwaysTrue());
-			System.out.println("Trace hit "+trace.typeOfHit+" entity:"+trace.entityHit);
-			//SpellEffect.spawnEmitter("disruption", target); //NYI
+			
 			if (trace.entityHit!=null) {
+				new SpawnParticleEmitterMessage("disruption")
+					.from(target.caster)
+					.at(trace.entityHit)
+					.sendToAllWatchingTarget();
+				
 				SpellEvent.DamageEntity event = new SpellEvent
 						.DamageEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 						.setDamage(ArsenalConfig.get().spells.disruption.potency);
@@ -86,6 +91,15 @@ public class DisruptionSpell implements ISpellEffect {
 					EntityLivingBase toHurt = (EntityLivingBase)trace.entityHit;
 					toHurt.attackEntityFrom(new SpellDamageSource(target.caster, "disruption", EnumElement.ARCANE, EnumElement.FIRE), event.getDamage());
 				}
+			} else {
+				BlockPos targetLoc = trace.getBlockPos();
+				if (targetLoc==null) targetLoc = new BlockPos(trace.hitVec);
+				
+				new SpawnParticleEmitterMessage("disruption")
+					.from(target.caster)
+					.at(target.caster.getEntityWorld(), targetLoc)
+					.sendToAllWatchingTarget();
+				
 			}
 			
 			ticksExisted++;

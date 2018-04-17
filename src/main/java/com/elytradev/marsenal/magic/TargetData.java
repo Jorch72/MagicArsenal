@@ -35,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -60,7 +61,7 @@ public abstract class TargetData<T extends Entity> {
         if (raytraceresult != null) {
         	lookTarget = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
         } else {
-        	raytraceresult = new RayTraceResult(RayTraceResult.Type.MISS, null, null, null);
+        	raytraceresult = new RayTraceResult(RayTraceResult.Type.MISS, lookTarget, null, new BlockPos(lookTarget));
         }
 
         List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(exclude, new AxisAlignedBB(pos.x-range, pos.y-range, pos.z-range, pos.x+range, pos.y+range, pos.z+range).grow(1.0D));
