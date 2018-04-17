@@ -24,14 +24,22 @@
 
 package com.elytradev.marsenal.compat;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
+import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumSpellFocus;
+import com.elytradev.marsenal.magic.EnumElement;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 
+@SuppressWarnings("deprecation")
 @JEIPlugin
 public class JEICompat implements IModPlugin {
 	
@@ -40,45 +48,90 @@ public class JEICompat implements IModPlugin {
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.DRAIN_LIFE.ordinal()),
 				ItemStack.class,
-				"Spell: Drain Life",
-				"Elements: Undeath, Nature",
-				"",
-				"Effect: Steals health from one entity in line of sight, converting some of it into health for the caster.");
+				spellInfo(
+						"drainLife",
+						EnumElement.UNDEATH, EnumElement.NATURE,
+						IMagicResources.RESOURCE_STAMINA
+				));
 		
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.HEALING_WAVE.ordinal()),
 				ItemStack.class,
-				"Spell: Healing Wave",
-				"Elements: Holy, Nature",
-				"Uses: Stamina",
-				"",
-				"Effect: Heals one friendly entity in line of sight.");
+				spellInfo(
+						"healingWave",
+						EnumElement.HOLY, EnumElement.NATURE,
+						IMagicResources.RESOURCE_STAMINA
+				));
 		
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.HEALING_CIRCLE.ordinal()),
 				ItemStack.class,
-				"Spell: Healing Circle",
-				"Elements: Holy, Air",
-				"Uses: Stamina",
-				"",
-				"Effect: Places a luminous sigil at the caster's location. Entities within the area will heal slowly over time.");
+				spellInfo(
+						"healingCircle",
+						EnumElement.HOLY, EnumElement.AIR,
+						IMagicResources.RESOURCE_STAMINA
+				));
 		
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.RECOVERY.ordinal()),
 				ItemStack.class,
-				"Spell: Recovery",
-				"Elements: Arcane, Nature",
-				"Uses: Stamina",
-				"",
-				"Effect: One swig of this ever-filling flask heals the caster over five seconds.");
+				spellInfo(
+						"recovery",
+						EnumElement.ARCANE, EnumElement.NATURE,
+						IMagicResources.RESOURCE_STAMINA
+				));
 		
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.OBLATION.ordinal()),
 				ItemStack.class,
-				"Spell: Oblation",
-				"Elements: Chaos, Nature",
-				"Uses: Stamina",
-				"",
-				"Effect: Drains a large amount of the caster's health, channeling all of it to one friendly target in line of sight.");
+				spellInfo(
+						"oblation",
+						EnumElement.CHAOS, EnumElement.NATURE,
+						IMagicResources.RESOURCE_STAMINA
+				));
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.DISRUPTION.ordinal()),
+				ItemStack.class,
+				spellInfo(
+						"disruption",
+						EnumElement.ARCANE, EnumElement.FIRE,
+						IMagicResources.RESOURCE_STAMINA
+				));
+	}
+	
+	private static String[] spellInfo(String spell, EnumElement elem, EnumElement elem2, ResourceLocation resource) {
+		ArrayList<String> result = new ArrayList<>();
+		result.add(format("info.magicarsenal.label.spell", local("spell.magicarsenal."+spell)));
+		result.add(format("info.magicarsenal.label.elements", element(elem), element(elem2)));
+		if (resource!=null) {
+			result.add(format("info.magicarsenal.label.resource", resource(resource)));
+		}
+		
+		String effectText = local("spell.magicarsenal."+spell+".desc");
+		if (effectText!=null && !effectText.equals("spell.magicarsenal."+spell+".desc")) {
+			result.add("");
+			result.add(format("info.magicarsenal.label.effect", effectText));
+		}
+		
+		return result.toArray(new String[result.size()]);
+	}
+	
+	private static String local(String key) {
+		return I18n.translateToLocal(key);
+	}
+	
+	private static String format(String key, Object... args) {
+		return I18n.translateToLocalFormatted(key, args);
+	}
+	
+	private static String element(EnumElement elem) {
+		return local("info.magicarsenal.element."+ elem.name().toLowerCase(Locale.ENGLISH));
+	}
+	
+	private static String resource(ResourceLocation resource) {
+		String domain = resource.getResourceDomain();
+		String resourceName = resource.getResourcePath();
+		return local("resource."+domain+"."+resourceName);
 	}
 }

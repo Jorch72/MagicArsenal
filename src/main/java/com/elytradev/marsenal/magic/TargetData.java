@@ -181,8 +181,9 @@ public abstract class TargetData<T extends Entity> {
 		/** Returns whatever entity or block we hit when we raycast towards our target. */
 		public RayTraceResult raycastToExistingTarget(int range, Predicate<T> rule) {
 			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
-			
-			return raycastEntity(caster, caster.getEntityWorld(), caster.getPositionVector(), target.getPositionVector().subtract(caster.getPositionVector()).normalize(), range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
+			Vec3d pos = new Vec3d(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ);
+			Vec3d targetPos = new Vec3d(target.posX, target.posY+(target.height/2), target.posZ);
+			return raycastEntity(caster, caster.getEntityWorld(), pos, targetPos.subtract(pos).normalize(), range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
 		}
 		
 		public T getTarget() { return target; }

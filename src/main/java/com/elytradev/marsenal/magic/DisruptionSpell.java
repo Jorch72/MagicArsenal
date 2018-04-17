@@ -43,6 +43,8 @@ public class DisruptionSpell implements ISpellEffect {
 		target = TargetData.Single.living(caster);
 		if (res.getGlobalCooldown()>0) return;
 		
+		target.targetRaycast(20);
+		
 		SpellEvent event = new SpellEvent
 				.CastOnEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.disruption.cost);
@@ -73,6 +75,7 @@ public class DisruptionSpell implements ISpellEffect {
 		} else if (ticksExisted>=1 && ticksExisted<7) {
 			//Every half second, for three more seconds (six ticks in all), we raycast and annihilate
 			RayTraceResult trace = target.raycastToExistingTarget(RANGE, Predicates.alwaysTrue());
+			System.out.println("Trace hit "+trace.typeOfHit+" entity:"+trace.entityHit);
 			//SpellEffect.spawnEmitter("disruption", target); //NYI
 			if (trace.entityHit!=null) {
 				SpellEvent.DamageEntity event = new SpellEvent
@@ -84,6 +87,8 @@ public class DisruptionSpell implements ISpellEffect {
 					toHurt.attackEntityFrom(new SpellDamageSource(target.caster, "disruption", EnumElement.ARCANE, EnumElement.FIRE), event.getDamage());
 				}
 			}
+			
+			ticksExisted++;
 			return 10;
 		} else {
 			return 0;

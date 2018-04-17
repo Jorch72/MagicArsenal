@@ -31,7 +31,10 @@ death.attack.spell.chainlightning=%1$s has discovered electricity.
 
 
 #Info Pages
-info.magicarsenal.element.elements=Elements:
+info.magicarsenal.label.spell=§lSpell: §r%1$s
+info.magicarsenal.label.elements=§lElements: §r%1$s, %2$s
+info.magicarsenal.label.resource=§lResource: §r%1$s
+info.magicarsenal.label.effect=§lEffect: §r%1$s
 
 info.magicarsenal.element.fire=Fire
 info.magicarsenal.element.frost=Frost
@@ -44,13 +47,31 @@ info.magicarsenal.element.arcane=Arcane
 info.magicarsenal.element.chaos=Chaos
 
 #Spells
-spell.magicarsenal.healing_wave.name=Healing Wave
-spell.magicarsenal.spell.healing_circle=Healing Circle
+spell.magicarsenal.healingWave=Healing Wave
+spell.magicarsenal.healingWave.desc=Heals one friendly entity in line of sight.
+spell.magicarsenal.healingCircle=Healing Circle
+spell.magicarsenal.healingCircle.desc=Places a luminous sigil at the caster's location. Entities within the area will heal slowly over time.
 spell.magicarsenal.recovery=Recovery
-spell.magicarsenal.drain_life=Drain Life
+spell.magicarsenal.recovery.desc=One swig of this ever-filling flask heals the caster over five seconds.
+spell.magicarsenal.drainLife=Drain Life
+spell.magicarsenal.drainLife.desc=Steals health from one entity in line of sight, converting some of it into health for the caster.
 spell.magicarsenal.oblation=Oblation
+spell.magicarsenal.oblation.desc=Drains a large amount of the caster's health, channeling all of it to one friendly target in line of sight.
+
 spell.magicarsenal.disruption=Disruption
-spell.magicarsenal.magmablast=Magma Blast
-spell.magicarsenal.frostshards=Frost Shards
-spell.magicarsenal.willowisp=Will O' Wisp
-spell.magicarsenal.chainlightning=Chain Lightning
+spell.magicarsenal.disruption.desc=Channels a beam of arcane energy towards one entity in line of sight. Can be blocked by walls and creatures!
+spell.magicarsenal.magmaBlast=Magma Blast
+spell.magicarsenal.magmaBlast.desc=Creates a flare of elemental fire directly in front of the caster, damaging anything standing near.
+spell.magicarsenal.frostShards=Frost Shards
+spell.magicarsenal.frostShards.desc=Fires small, razor-sharp projectiles that travel very far, but do only a small amount of damage.
+spell.magicarsenal.willOWisp=Will O' Wisp
+spell.magicarsenal.willOWisp.desc=Sends out a slow-moving luminous orb that bounces off entities and obstacles, and burns whatever it touches.
+spell.magicarsenal.chainLightning=Chain Lightning
+spell.magicarsenal.chainLightning.desc=Shocks an entity in line of sight with electricity, which arcs to additional entities.
+
+#Resources
+resource.magicarsenal.stamina=Stamina
+resource.magicarsenal.blood=Blood
+resource.magicarsenal.chaos=Chaos
+resource.magicarsenal.vengeance=Vengeance
+resource.magicarsenal.rage=Rage
