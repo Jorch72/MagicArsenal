@@ -13,10 +13,10 @@ item.magicarsenal.spellfocus.drain_life.name=Drain Life Spell Focus
 item.magicarsenal.spellfocus.oblation.name=Oblation Spell Focus
 
 item.magicarsenal.spellfocus.disruption.name=Disruption Spell Focus
-item.magicarsenal.spellfocus.magmablast.name=Magma Blast Spell Focus
-item.magicarsenal.spellfocus.frostshards.name=Frost Shards Spell Focus
+item.magicarsenal.spellfocus.magma_blast.name=Magma Blast Spell Focus
+item.magicarsenal.spellfocus.frost_shards.name=Frost Shards Spell Focus
 item.magicarsenal.spellfocus.willowisp.name=Will O' Wisp Spell Focus
-item.magicarsenal.spellfocus.chainlightning.name=Chain Lightning Spell Focus
+item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 
 #Spell Damage Sources
 death.attack.spell.drain_life=%1$s wasted away.

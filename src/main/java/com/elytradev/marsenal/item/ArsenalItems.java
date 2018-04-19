@@ -110,6 +110,18 @@ public class ArsenalItems {
 				Items.BLAZE_ROD,
 				Items.MAGMA_CREAM
 				).setRegistryName("magicarsenal_spellfocus_disruption"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.MAGMA_BLAST.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.IRON_INGOT,
+				Items.FIRE_CHARGE
+				).setRegistryName("magicarsenal_spellfocus_magma_blast"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.FROST_SHARDS.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				"gemDiamond",
+				Items.ENDER_PEARL
+				).setRegistryName("magicarsenal_spellfocus_frost_shards"));
 	}
 	
 	

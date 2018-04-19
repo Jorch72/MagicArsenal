@@ -58,7 +58,7 @@ public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMet
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote) return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+		if (world.isRemote) return ActionResult.newResult(EnumActionResult.FAIL, stack);
 		
 		if (player.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, EnumFacing.SOUTH)) {
 			IMagicResources res = player.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, EnumFacing.SOUTH);
@@ -68,7 +68,7 @@ public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMet
 			effect.activate(player, res);
 			SpellScheduler.schedule(effect);
 			
-			return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+			return ActionResult.newResult(EnumActionResult.FAIL, stack);
 		} else {
 			return ActionResult.newResult(EnumActionResult.FAIL, stack);
 		}
@@ -81,7 +81,7 @@ public class ItemSpellFocus extends ItemSubtyped<EnumSpellFocus> implements IMet
 	
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
-        return EnumAction.BOW;
+		return EnumAction.NONE;
     }
 
 	@Override

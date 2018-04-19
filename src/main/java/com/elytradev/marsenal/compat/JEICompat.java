@@ -98,6 +98,24 @@ public class JEICompat implements IModPlugin {
 						EnumElement.ARCANE, EnumElement.FIRE,
 						IMagicResources.RESOURCE_STAMINA
 				));
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.MAGMA_BLAST.ordinal()),
+				ItemStack.class,
+				spellInfo(
+						"magmaBlast",
+						EnumElement.ARCANE, EnumElement.FIRE,
+						IMagicResources.RESOURCE_STAMINA
+				));
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.FROST_SHARDS.ordinal()),
+				ItemStack.class,
+				spellInfo(
+						"frostShards",
+						EnumElement.ARCANE, EnumElement.FROST,
+						IMagicResources.RESOURCE_STAMINA
+				));
 	}
 	
 	private static String[] spellInfo(String spell, EnumElement elem, EnumElement elem2, ResourceLocation resource) {
