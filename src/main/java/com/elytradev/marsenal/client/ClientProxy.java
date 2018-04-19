@@ -65,6 +65,7 @@ public class ClientProxy extends Proxy {
 		Emitter.register("infuseLife", InfuseLifeEmitter.class);
 		Emitter.register("disruption", DisruptionEmitter.class);
 		Emitter.register("spellGather", SpellGatherEmitter.class);
+		Emitter.register("magmaBlast", MagmaBlastEmitter.class);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrostShard.class, RenderFrostShard::new);
 	}

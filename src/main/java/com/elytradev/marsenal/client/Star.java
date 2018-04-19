@@ -106,17 +106,50 @@ public strictfp class Star {
 		this.tailz=z;
 	}
 	
-	public void setAcceleration(float x, float y, float z) {
+	public void setVelocity(float x, float y, float z) {
 		vx=x;
 		vy=y;
 		vz=z;
 	}
 	
-	public void setAcceleration(Vec3d vec) {
-		setAcceleration((float)vec.x, (float)vec.y, (float)vec.z);
+	public void setVelocity(Vec3d vec) {
+		setVelocity((float)vec.x, (float)vec.y, (float)vec.z);
 	}
 	
 	public void paint(double dx, double dy, double dz) {
 		Draw.fakeLine(tailx-dx, taily-dy, tailz-dz, x-dx, y-dy, z-dz, width, color, true);
+	}
+	
+	public void fuzzColor(float r, float g, float b) {
+		float rFuzz = (float)(Math.random()*r)+(r*0.5f);
+		float gFuzz = (float)(Math.random()*g)+(g*0.5f);
+		float bFuzz = (float)(Math.random()*b)+(b*0.5f);
+		
+		int rf = (int)(rFuzz*255);
+		int gf = (int)(gFuzz*255);
+		int bf = (int)(bFuzz*255);
+		
+		int oldr = (color >> 16) & 0xFF;
+		int oldg = (color >>  8) & 0xFF;
+		int oldb = (color      ) & 0xFF;
+		int olda = (color >> 24) & 0xFF;
+		
+		int newr = oldr+rf;
+		if (newr<0) newr=0;
+		if (newr>255) newr=255;
+		
+		int newg = oldg+gf;
+		if (newg<0) newg=0;
+		if (newg>255) newg=255;
+		
+		int newb = oldb+bf;
+		if (newb<0) newb=0;
+		if (newb>255) newb=255;
+		
+		this.color =
+				(olda << 24) |
+				(newr << 16) |
+				(newg <<  8) |
+				(newb      );
 	}
 }

@@ -71,7 +71,7 @@ public class MagmaBlastSpell implements ISpellEffect {
 		
 		//TODO: Spawn FX
 		//caster.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, epicenter.x, epicenter.y, epicenter.z, 0, 0, 0, 0); //Doesn't make it to clients
-		
+		SpellEffect.spawnEmitter("magmaBlast", caster, caster);
 		
 		AxisAlignedBB aoe = new AxisAlignedBB(epicenter.x-2.5f, epicenter.y-2.5f, epicenter.z-2.5f, epicenter.x+2.5f, epicenter.y+2.5f, epicenter.z+2.5f);
 		List<Entity> targets = caster.getEntityWorld().getEntitiesWithinAABBExcludingEntity(caster, aoe);

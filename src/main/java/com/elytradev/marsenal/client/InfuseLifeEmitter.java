@@ -64,7 +64,7 @@ public class InfuseLifeEmitter extends Emitter {
 			star.color = 0xFF74aa00;
 			star.lifetime = 2;
 			//star.setAcceleration(towardsEntity);
-			star.setAcceleration(0, -512, 0);
+			star.setVelocity(0, -512, 0);
 			stars.add(star);
 		}
 		

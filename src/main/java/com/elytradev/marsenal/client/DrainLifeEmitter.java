@@ -79,7 +79,7 @@ public class DrainLifeEmitter extends Emitter {
 					it.lifetime = 0;
 					//TODO: Spawn a green puff?
 				};
-			star.setAcceleration(towardsEntity);
+			star.setVelocity(towardsEntity);
 			stars.add(star);
 		}
 		still = false;

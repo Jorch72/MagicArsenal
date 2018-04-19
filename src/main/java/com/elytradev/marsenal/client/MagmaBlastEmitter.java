@@ -24,23 +24,63 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.Vec3d;
+
 public class MagmaBlastEmitter extends Emitter {
-	private int ticksRemaining = 10;
+	private int ticksRemaining = 20;
+	private Random random = new Random();
 	
+	private ArrayList<Star> dead = new ArrayList<>();
+	private ArrayList<Star> stars = new ArrayList<>();
+	//                      still
+	//                      burn
 	
 	@Override
 	public void tick() {
-		
+		if (entity!=null && ticksRemaining>15) {
+			for(int i=0; i<32; i++) {
+				Vec3d lookVec = entity.getLookVec();
+				lookVec = lookVec.addVector(random.nextGaussian()*0.5f, random.nextGaussian()*0.5f, random.nextGaussian()*0.5f).normalize(); //Fuzz
+				lookVec = lookVec.scale(800.0f); //velocity magnitude
+				
+				Star star = new Star();
+				star.width = 0.1f;
+				star.taild2 = 1.5f;
+				//star.limit = 0.4f;
+				star.move((float)entity.posX, (float)entity.posY+entity.getEyeHeight(), (float)entity.posZ);
+				star.color = 0xFFff3300;
+				star.fuzzColor(0.6f, 0.6f, 0.3f);
+				star.lifetime = 2;
+				star.setVelocity(lookVec);
+				stars.add(star);
+			}
+		}
 		
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) kill();
 	}
-
+	
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
-		// TODO Auto-generated method stub
-		
+		GlStateManager.disableLighting();
+		GlStateManager.disableTexture2D();
+		for(Star star : stars) {
+			star.tick(partialFrameTime);
+			star.paint(dx, dy, dz);
+			if (star.lifetime<=0) dead.add(star);
+		}
+		for(Star star : dead) {
+			stars.remove(star);
+		}
+		dead.clear();
+
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
 	}
 
 }
