@@ -22,10 +22,33 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal;
+package com.elytradev.marsenal.client;
 
-public class Proxy {
-	public void preInit() {}
+import com.elytradev.marsenal.entity.EntityFrostShard;
 
-	public void init() {}
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.ResourceLocation;
+
+public class RenderFrostShard extends Render<EntityFrostShard> {
+	protected RenderFrostShard(RenderManager renderManager) {
+		super(renderManager);
+	}
+
+	@Override
+	protected ResourceLocation getEntityTexture(EntityFrostShard entity) {
+		
+		return null;
+	}
+	
+	@Override
+	public void doRender(EntityFrostShard entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		GlStateManager.disableLighting();
+		GlStateManager.disableTexture2D();
+		Draw.circle(x, y+0.25f, z, 0.5f, Draw.TAU/6, 0.04f, 0xFF7777FF);
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableLighting();
+	}
 }

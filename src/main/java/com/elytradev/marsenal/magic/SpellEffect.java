@@ -31,6 +31,8 @@ import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /** Dummy spell effect for testing. Can also be used as an ancestor for spells requiring a caster. */
 public class SpellEffect implements ISpellEffect {
@@ -79,10 +81,17 @@ public class SpellEffect implements ISpellEffect {
 	}
 	
 	public static void spawnEmitter(String key, EntityLivingBase source, Entity target) {
-		new SpawnParticleEmitterMessage(key).at(target).from(source).sendToAllWatchingAndSelf(target);
+		new SpawnParticleEmitterMessage(key).at(target).from(source).sendToAllWatchingTarget();
 	}
 	
 	public static void spawnEmitter(String key, TargetData.Single<? extends Entity> targets) {
 		new SpawnParticleEmitterMessage(key).with(targets).sendToAllWatchingTarget();
+	}
+	
+	public static void spawnEmitter(String key, EntityLivingBase source, World world, BlockPos pos) {
+		new SpawnParticleEmitterMessage(key)
+			.at(world, pos)
+			.from(source)
+			.sendToAllWatchingTarget();
 	}
 }

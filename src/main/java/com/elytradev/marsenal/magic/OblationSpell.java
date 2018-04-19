@@ -59,6 +59,7 @@ public class OblationSpell implements ISpellEffect {
 			this.ticksRemaining = 5;
 		} else {
 			//activation failure
+			targets.clearTarget();
 		}
 	}
 

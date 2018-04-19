@@ -32,6 +32,7 @@ import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
@@ -49,6 +50,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -63,6 +65,12 @@ public class ClientProxy extends Proxy {
 		Emitter.register("infuseLife", InfuseLifeEmitter.class);
 		Emitter.register("disruption", DisruptionEmitter.class);
 		Emitter.register("spellGather", SpellGatherEmitter.class);
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityFrostShard.class, RenderFrostShard::new);
+	}
+	
+	@Override
+	public void init() {
 	}
 	
 	@SubscribeEvent

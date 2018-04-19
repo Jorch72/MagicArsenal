@@ -138,17 +138,22 @@ public class ArsenalConfig {
 		public SpellEntry recovery       = new SpellEntry( 1,   60, 20*10);
 		public SpellEntry drainLife      = new SpellEntry( 2,   60, 20* 6);
 		public SpellEntry oblation       = new SpellEntry( 1,   20, 20* 2);
+		
 		public SpellEntry disruption     = new SpellEntry( 2,  200, 20*10);
+		public SpellEntry magmaBlast     = new SpellEntry( 8,   80, 20* 5);
+		public SpellEntry frostShards    = new SpellEntry( 2,   20, 20* 1);
+		public SpellEntry willOWisp      = new SpellEntry( 4,   40, 20* 2);
+		public SpellEntry chainLightning = new SpellEntry( 3,   60, 20* 4);
 	}
 	
 	public SpellsSection spells = new SpellsSection();
 	
 	public static class ResourcesSection {
 		public int maxStamina   =  600;
-		public int maxBlood     =  100;
-		public int maxRage      =  100;
+		public int maxBlood     = 1000;
+		public int maxRage      = 1000;
 		public int maxChaos     = 1000;
-		public int maxVengeance =  100;
+		public int maxVengeance = 1000;
 	}
 	public ResourcesSection resources = new ResourcesSection();
 

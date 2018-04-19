@@ -84,18 +84,19 @@ public class SpawnParticleEmitterMessage extends Message {
 	}
 
 	public SpawnParticleEmitterMessage from(Entity entity) {
-		sourceId = entity.getEntityId();
+		if (entity!=null) sourceId = entity.getEntityId();
 		return this;
 	}
 	
 	public SpawnParticleEmitterMessage at(Entity entity) {
 		target = entity;
-		worldId = entity.getEntityWorld().provider.getDimension();
-		entityId = entity.getEntityId();
-		x = (float)entity.posX;
-		y = (float)entity.posY-(entity.height/2);
-		z = (float)entity.posZ;
-		
+		if (entity!=null) {
+			worldId = entity.getEntityWorld().provider.getDimension();
+			entityId = entity.getEntityId();
+			x = (float)entity.posX;
+			y = (float)entity.posY-(entity.height/2);
+			z = (float)entity.posZ;
+		}
 		return this;
 	}
 	

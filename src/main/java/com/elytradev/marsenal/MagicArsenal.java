@@ -31,14 +31,13 @@ import com.elytradev.concrete.network.NetworkContext;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
-import com.elytradev.marsenal.client.ClientProxy;
+import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,6 +54,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -62,6 +62,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid=MagicArsenal.MODID, version=MagicArsenal.VERSION, name="Magic Arsenal")
@@ -93,11 +94,18 @@ public class MagicArsenal {
 		CONTEXT.register(ConfigMessage.class);
 		CONTEXT.register(MagicResourcesMessage.class);
 		
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "frostShard"), EntityFrostShard.class, "magicarsenal.frostShard", 0, this, 16*5, 10, true);
+		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);
 		MinecraftForge.EVENT_BUS.register(ArsenalItems.class);
 		
 		PROXY.preInit();
+	}
+	
+	@Mod.EventHandler
+	public void onInit(FMLInitializationEvent e) {
+		PROXY.init();
 	}
 	
 	@Mod.EventHandler

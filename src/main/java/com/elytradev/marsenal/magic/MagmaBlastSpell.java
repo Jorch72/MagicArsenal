@@ -29,77 +29,71 @@ import java.util.List;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 
-public class HealingCircleSpell implements ISpellEffect {
-	public static final int RADIUS = 5;
+public class MagmaBlastSpell implements ISpellEffect {
+	EntityLivingBase caster;
 	
-	private int ticksRemaining;
-	private World world;
-	private BlockPos epicenter;
-	private AxisAlignedBB aoe;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		world = caster.getEntityWorld();
-		epicenter = caster.getPosition();
-		
+		this.caster = caster;
 		SpellEvent event = new SpellEvent
-				.CastOnArea("healingCircle", caster, caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR)
-				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingCircle.cost);
+				.CastOnArea("magmaBlast", caster.getEntityWorld(), caster.getPosition(), caster.getPosition(), 5, EnumElement.ARCANE, EnumElement.FIRE)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.magmaBlast.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
-			ticksRemaining = 0;
+			this.caster = null;
 			return;
 		}
 		
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
-			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingCircle.cooldown);
-			
-			this.ticksRemaining = 10;
-			
-			new SpawnParticleEmitterMessage("healingSphere").at(world, epicenter).sendToAllAround(world, caster, 16*7);
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.magmaBlast.cooldown);
 		} else {
-			ticksRemaining = 0;
-			//activation failure
+			this.caster = null;
 		}
+		
+		
 	}
 
 	@Override
 	public int tick() {
-		if (ticksRemaining<=0) return 0;
+		if (caster==null) return 0;
 		
-		if (aoe==null) aoe = new AxisAlignedBB(
-				epicenter.getX()-RADIUS,
-				epicenter.getY()-RADIUS,
-				epicenter.getZ()-RADIUS,
-				epicenter.getX()+RADIUS,
-				epicenter.getY()+RADIUS,
-				epicenter.getZ()+RADIUS);
+		Vec3d epicenter = caster.getPositionEyes(1.0f).add(caster.getLookVec().normalize().scale(2.0));
 		
-		List<EntityLivingBase> withinCircle = world.getEntitiesWithinAABB(
-				EntityLivingBase.class,
-				aoe,
-				(it)->it.getDistanceSq(epicenter.getX(), epicenter.getY(), epicenter.getZ()) < RADIUS*RADIUS
-				);
+		//TODO: Spawn FX
+		//caster.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, epicenter.x, epicenter.y, epicenter.z, 0, 0, 0, 0); //Doesn't make it to clients
 		
-		for(EntityLivingBase target: withinCircle) {
-			target.heal(ArsenalConfig.get().spells.healingCircle.potency);
+		
+		AxisAlignedBB aoe = new AxisAlignedBB(epicenter.x-2.5f, epicenter.y-2.5f, epicenter.z-2.5f, epicenter.x+2.5f, epicenter.y+2.5f, epicenter.z+2.5f);
+		List<Entity> targets = caster.getEntityWorld().getEntitiesWithinAABBExcludingEntity(caster, aoe);
+		for(Entity target : targets) {
+			if (target instanceof EntityLivingBase) {
+				
+				SpellEvent.DamageEntity event = new SpellEvent
+						.DamageEntity("magmaBlast", caster, (EntityLivingBase)target, EnumElement.ARCANE, EnumElement.FIRE)
+						.setDamage(ArsenalConfig.get().spells.magmaBlast.potency);
+				MinecraftForge.EVENT_BUS.post(event);
+				
+				if (!event.isCanceled()) {
+					((EntityLivingBase)target).attackEntityFrom(new SpellDamageSource(caster, "magmaBlast", EnumElement.ARCANE, EnumElement.FIRE), event.getDamage());
+				}
+			}
+			
+			Vec3d vec = new Vec3d(target.posX, target.posY+(target.height/2), target.posZ).subtract(epicenter).normalize().scale(1.5f);
+			
+			target.addVelocity(vec.x, vec.y, vec.z);
 		}
 		
-		ticksRemaining--;
-		if (ticksRemaining<=0) {
-			return 0;
-		} else {
-			return 40;
-		}
+		return 0;
 	}
+	
 }

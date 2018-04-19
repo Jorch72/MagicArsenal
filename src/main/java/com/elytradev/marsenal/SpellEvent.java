@@ -65,6 +65,7 @@ public class SpellEvent extends Event {
 	
 	public SpellEvent(String spellId, EntityLivingBase caster, EnumElement... elements) {
 		this.caster = caster;
+		if (caster==null) throw new IllegalArgumentException("Caster can't be null in this constructor - we need to know the world the event is coming from");
 		this.world = caster.getEntityWorld();
 		this.origin = caster.getPosition();
 		this.spellId = spellId;

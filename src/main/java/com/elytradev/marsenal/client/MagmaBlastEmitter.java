@@ -22,10 +22,25 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal;
+package com.elytradev.marsenal.client;
 
-public class Proxy {
-	public void preInit() {}
+public class MagmaBlastEmitter extends Emitter {
+	private int ticksRemaining = 10;
+	
+	
+	@Override
+	public void tick() {
+		
+		
+		
+		ticksRemaining--;
+		if (ticksRemaining<=0) kill();
+	}
 
-	public void init() {}
+	@Override
+	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

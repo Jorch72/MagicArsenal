@@ -60,6 +60,9 @@ public class DisruptionSpell implements ISpellEffect {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.disruption.cooldown);
 			
 			SpellEffect.spawnEmitter("spellGather", caster, caster);
+		} else {
+			this.ticksExisted = -1;
+			target.clearTarget();
 		}
 	}
 

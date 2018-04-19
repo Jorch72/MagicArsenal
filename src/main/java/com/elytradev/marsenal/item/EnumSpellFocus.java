@@ -33,6 +33,8 @@ import com.elytradev.marsenal.magic.OblationSpell;
 import com.elytradev.marsenal.magic.HealingWaveSpell;
 import com.elytradev.marsenal.magic.HealingCircleSpell;
 import com.elytradev.marsenal.magic.DisruptionSpell;
+import com.elytradev.marsenal.magic.MagmaBlastSpell;
+import com.elytradev.marsenal.magic.FrostShardsSpell;
 import com.elytradev.marsenal.magic.ISpellEffect;
 import com.elytradev.marsenal.capability.IMagicResources;
 
@@ -45,12 +47,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public enum EnumSpellFocus implements ISpellFocus {
-	HEALING_WAVE  (HealingWaveSpell.class, IMagicResources.RESOURCE_STAMINA, true,  false), //uses Stamina to grant health to friendly look-target
-	HEALING_CIRCLE(HealingCircleSpell.class,      IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant regen to nearby friendly targets
-	RECOVERY      (RecoverySpell.class,    IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant health to the caster
-	DRAIN_LIFE    (DrainLifeSpell.class,   IMagicResources.RESOURCE_STAMINA, false, true ), //Drains life from hostile look-target to grant health to the caster
-	OBLATION      (OblationSpell.class,    IMagicResources.RESOURCE_STAMINA, true,  false), //Drains life from the caster and grants it to friendly look-target
-	DISRUPTION    (DisruptionSpell.class,      IMagicResources.RESOURCE_STAMINA, false, true),
+	HEALING_WAVE  (HealingWaveSpell.class,   IMagicResources.RESOURCE_STAMINA, true,  false), //uses Stamina to grant health to friendly look-target
+	HEALING_CIRCLE(HealingCircleSpell.class, IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant regen to nearby friendly targets
+	RECOVERY      (RecoverySpell.class,      IMagicResources.RESOURCE_STAMINA, false, false), //uses Stamina to grant health to the caster
+	DRAIN_LIFE    (DrainLifeSpell.class,     IMagicResources.RESOURCE_STAMINA, false, true ), //Drains life from hostile look-target to grant health to the caster
+	OBLATION      (OblationSpell.class,      IMagicResources.RESOURCE_STAMINA, true,  false), //Drains life from the caster and grants it to friendly look-target
+	DISRUPTION    (DisruptionSpell.class,    IMagicResources.RESOURCE_STAMINA, false, true),
+	MAGMA_BLAST   (MagmaBlastSpell.class,    IMagicResources.RESOURCE_STAMINA, false, true),
+	FROST_SHARDS  (FrostShardsSpell.class,   IMagicResources.RESOURCE_STAMINA, false, true),
 	;
 	
 	private Class<? extends ISpellEffect> effectClass;

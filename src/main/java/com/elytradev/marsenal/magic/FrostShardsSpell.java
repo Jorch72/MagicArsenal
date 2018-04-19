@@ -27,54 +27,47 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
-import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
+import com.elytradev.marsenal.entity.EntityFrostShard;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.common.MinecraftForge;
 
-public class RecoverySpell implements ISpellEffect {
-	private EntityLivingBase caster = null;
-	private int ticksRemaining;
+public class FrostShardsSpell implements ISpellEffect {
+	private EntityLivingBase caster;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		SpellEvent event = new SpellEvent
-				.CastOnEntity("recovery", caster, caster, EnumElement.NATURE, EnumElement.ARCANE)
-				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.recovery.cost);
-		MinecraftForge.EVENT_BUS.post(event);
+		this.caster = caster;
+		
+		SpellEvent.CastProjectile event = new SpellEvent
+				.CastProjectile("frostShards", caster, EnumElement.ARCANE, EnumElement.FROST)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.frostShards.cost);
 		if (event.isCanceled()) {
-			caster = null;
-			ticksRemaining = 0;
+			this.caster = null;
 			return;
 		}
 		
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
-			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.recovery.cooldown);
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.frostShards.cooldown);
 			
-			this.caster = caster;
-			this.ticksRemaining = 5;
+			EntityFrostShard shard = new EntityFrostShard(caster.getEntityWorld(), caster);
+			shard.setLocationAndAngles(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ, 0, 0);
+			shard.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 0.1f);
+			
+			
+			caster.getEntityWorld().spawnEntity(shard);
+			System.out.println("Shard spawned at "+shard.posX+","+shard.posY+","+shard.posZ);
 		} else {
-			//Spell activation failure
-			caster = null;
+			this.caster = null;
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (caster!=null) {
-			caster.heal(ArsenalConfig.get().spells.recovery.potency);
-			new SpawnParticleEmitterMessage("infuseLife").at(caster).from(caster).sendToAllWatchingAndSelf(caster);
-			
-			ticksRemaining--;
-			if (ticksRemaining<=0) {
-				return 0;
-			} else {
-				return 20;
-			}
-		} else {
-			return 0;
-		}
+		
+		
+		return 0;
 	}
+
 }
