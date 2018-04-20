@@ -223,11 +223,19 @@ public abstract class TargetData<T extends Entity> {
 			return targets;
 		}
 		
+		public void removeTarget(T target) {
+			targets.remove(target);
+		}
+		
 		public void clearTargets() { targets.clear(); }
 		public boolean hasTargets() { return !targets.isEmpty(); }
 		
 		public static Multi<EntityLivingBase> living(EntityLivingBase caster) {
 			return new Multi<>(caster, EntityLivingBase.class);
+		}
+
+		public boolean hasTarget(T it) {
+			return targets.contains(it);
 		}
 	}
 }

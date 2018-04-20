@@ -31,49 +31,35 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 
-public class HealingWaveSpell implements ISpellEffect {
-	private TargetData.Single<EntityLivingBase> targets;
-	private int ticksRemaining;
+public class WillOWispSpell implements ISpellEffect {
+	EntityLivingBase caster;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		targets = TargetData.Single.living(caster);
-		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;
-		
-		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets, EnumElement.NATURE, EnumElement.HOLY)
-				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingWave.cost);
+		SpellEvent event = new SpellEvent.CastProjectile("willOWisp", caster, EnumElement.UNDEATH, EnumElement.FIRE)
+				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.willOWisp.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
-			targets.clearTarget();
-			ticksRemaining = 0;
 			return;
 		}
 		
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
-			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.healingWave.cooldown);
+			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.willOWisp.cooldown);
 			
-			this.ticksRemaining = 5;
-		} else {
-			//activation failure
-			this.ticksRemaining = 0;
-			this.targets.clearTarget();
+			this.caster = caster;
+			//TODO: Spell
 		}
 	}
 
 	@Override
 	public int tick() {
-		if (targets==null || targets.getTarget()==null) return 0;
-
-		targets.getTarget().heal(ArsenalConfig.get().spells.healingWave.potency);
-		SpellEffect.spawnEmitter("infuseLife", targets);
+		if (caster==null) return 0;
 		
-		ticksRemaining--;
-		if (ticksRemaining<=0) {
-			return 0;
-		} else {
-			return 20;
-		}
+		
+		
+		return 0;
 	}
+
 }

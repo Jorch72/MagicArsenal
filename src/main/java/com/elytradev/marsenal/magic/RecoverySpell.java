@@ -40,8 +40,7 @@ public class RecoverySpell implements ISpellEffect {
 	public void activate(EntityLivingBase caster, IMagicResources res) {
 		if (res.getGlobalCooldown()>0) return;
 		
-		SpellEvent event = new SpellEvent
-				.CastOnEntity("recovery", caster, caster, EnumElement.NATURE, EnumElement.ARCANE)
+		SpellEvent event = new SpellEvent.CastOnEntity("recovery", caster, caster, EnumElement.NATURE, EnumElement.ARCANE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.recovery.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {

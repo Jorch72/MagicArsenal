@@ -40,8 +40,7 @@ public class FrostShardsSpell implements ISpellEffect {
 		
 		this.caster = caster;
 		
-		SpellEvent.CastProjectile event = new SpellEvent
-				.CastProjectile("frostShards", caster, EnumElement.ARCANE, EnumElement.FROST)
+		SpellEvent.CastProjectile event = new SpellEvent.CastProjectile("frostShards", caster, EnumElement.ARCANE, EnumElement.FROST)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.frostShards.cost);
 		if (event.isCanceled()) {
 			this.caster = null;
@@ -55,9 +54,7 @@ public class FrostShardsSpell implements ISpellEffect {
 			shard.setLocationAndAngles(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ, 0, 0);
 			shard.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 0.1f);
 			
-			
 			caster.getEntityWorld().spawnEntity(shard);
-			System.out.println("Shard spawned at "+shard.posX+","+shard.posY+","+shard.posZ);
 		} else {
 			this.caster = null;
 		}

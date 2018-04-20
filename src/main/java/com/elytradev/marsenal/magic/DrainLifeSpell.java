@@ -45,8 +45,7 @@ public class DrainLifeSpell implements ISpellEffect {
 			target.targetRaycast(8);
 			if (target.getTarget()==null) return;
 			
-			SpellEvent.CastOnEntity event = new SpellEvent
-					.CastOnEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
+			SpellEvent.CastOnEntity event = new SpellEvent.CastOnEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
 					.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.drainLife.cost);
 			MinecraftForge.EVENT_BUS.post(event);
 			if (event.isCanceled()) {
@@ -68,8 +67,7 @@ public class DrainLifeSpell implements ISpellEffect {
 	public int tick() {
 		if (target.getTarget()==null) return 0;
 		
-		SpellEvent.DamageEntity event = new SpellEvent
-				.DamageEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
+		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("drainLife", target, EnumElement.UNDEATH, EnumElement.NATURE)
 				.setDamage(ArsenalConfig.get().spells.drainLife.potency);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (!event.isCanceled()) {

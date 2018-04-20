@@ -43,8 +43,7 @@ public class OblationSpell implements ISpellEffect {
 		targets = TargetData.Single.living(caster);
 		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;;
 		
-		SpellEvent event = new SpellEvent
-				.CastOnEntity("oblation", targets, EnumElement.CHAOS, EnumElement.NATURE)
+		SpellEvent event = new SpellEvent.CastOnEntity("oblation", targets, EnumElement.CHAOS, EnumElement.NATURE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.oblation.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
@@ -67,8 +66,7 @@ public class OblationSpell implements ISpellEffect {
 	public int tick() {
 		if (targets==null || !targets.hasTarget()) return 0;
 		
-		SpellEvent.DamageEntity event = new SpellEvent
-				.DamageEntity("oblation", targets.getCaster(), targets.getCaster(), EnumElement.CHAOS, EnumElement.NATURE)
+		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("oblation", targets.getCaster(), targets.getCaster(), EnumElement.CHAOS, EnumElement.NATURE)
 				.setDamage(ArsenalConfig.get().spells.oblation.potency);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (!event.isCanceled()) {

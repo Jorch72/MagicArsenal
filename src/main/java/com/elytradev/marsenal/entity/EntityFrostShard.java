@@ -76,8 +76,7 @@ public class EntityFrostShard extends EntityThrowable {
 		if (!this.world.isRemote) {
             if (result.entityHit != null && this.thrower!=null) {
             	if (result.entityHit instanceof EntityLivingBase) {
-            		SpellEvent.DamageEntity event = new SpellEvent
-            				.DamageEntity("frostShards", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.ARCANE, EnumElement.FROST)
+            		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("frostShards", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.ARCANE, EnumElement.FROST)
             				.setDamage(ArsenalConfig.get().spells.frostShards.potency);
             		
             		if (!event.isCanceled()) {

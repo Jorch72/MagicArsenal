@@ -45,8 +45,7 @@ public class MagmaBlastSpell implements ISpellEffect {
 		if (res.getGlobalCooldown()>0) return;
 		
 		this.caster = caster;
-		SpellEvent event = new SpellEvent
-				.CastOnArea("magmaBlast", caster.getEntityWorld(), caster.getPosition(), caster.getPosition(), 5, EnumElement.ARCANE, EnumElement.FIRE)
+		SpellEvent event = new SpellEvent.CastOnArea("magmaBlast", caster.getEntityWorld(), caster.getPosition(), caster.getPosition(), 5, EnumElement.ARCANE, EnumElement.FIRE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.magmaBlast.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
@@ -78,8 +77,7 @@ public class MagmaBlastSpell implements ISpellEffect {
 		for(Entity target : targets) {
 			if (target instanceof EntityLivingBase) {
 				
-				SpellEvent.DamageEntity event = new SpellEvent
-						.DamageEntity("magmaBlast", caster, (EntityLivingBase)target, EnumElement.ARCANE, EnumElement.FIRE)
+				SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("magmaBlast", caster, (EntityLivingBase)target, EnumElement.ARCANE, EnumElement.FIRE)
 						.setDamage(ArsenalConfig.get().spells.magmaBlast.potency);
 				MinecraftForge.EVENT_BUS.post(event);
 				

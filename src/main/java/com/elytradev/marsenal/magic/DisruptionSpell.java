@@ -47,8 +47,7 @@ public class DisruptionSpell implements ISpellEffect {
 		
 		target.targetRaycast(20);
 		
-		SpellEvent event = new SpellEvent
-				.CastOnEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
+		SpellEvent event = new SpellEvent.CastOnEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.disruption.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
@@ -86,8 +85,7 @@ public class DisruptionSpell implements ISpellEffect {
 					.at(trace.entityHit)
 					.sendToAllWatchingTarget();
 				
-				SpellEvent.DamageEntity event = new SpellEvent
-						.DamageEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
+				SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 						.setDamage(ArsenalConfig.get().spells.disruption.potency);
 				MinecraftForge.EVENT_BUS.post(event);
 				if (!event.isCanceled() && trace.entityHit instanceof EntityLivingBase) {
