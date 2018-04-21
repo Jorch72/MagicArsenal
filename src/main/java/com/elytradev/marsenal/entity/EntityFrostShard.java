@@ -45,6 +45,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityFrostShard extends EntityThrowable {
 	private static final float WIDTH = 1.0f;
@@ -142,11 +144,12 @@ public class EntityFrostShard extends EntityThrowable {
 	
 	@Override
 	public void onUpdate() {
-		//super.onUpdate();
-		throwableUpdate();
+		super.onUpdate();
+		//throwableUpdate();
 		
 		
 		if (this.world!=null && this.world.isRemote) {
+			/*
 			for(int i=0; i<3; i++) {
 				float px = (float)(posX + random.nextGaussian()*0.5d);
 				float py = (float)(posY);
@@ -160,7 +163,8 @@ public class EntityFrostShard extends EntityThrowable {
 				particle.setRBGColorF(0.6f, 0.6f, 0.9667f);
 				
 				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
-			}
+			}*/
+			spawnParticles();
 		}
 		
 		
@@ -170,6 +174,25 @@ public class EntityFrostShard extends EntityThrowable {
 		if (this.age>maxAge) this.setDead();
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public void spawnParticles() {
+		for(int i=0; i<3; i++) {
+			float px = (float)(posX + random.nextGaussian()*0.5d);
+			float py = (float)(posY);
+			float pz = (float)(posZ + random.nextGaussian()*0.5d);
+			
+			Particle particle = new ParticleVelocity(world,
+					px, py, pz,
+					0f, -0.6f, 0f
+					);
+			particle.setParticleTextureIndex(5); //Midway through redstone
+			particle.setRBGColorF(0.6f, 0.6f, 0.9667f);
+			
+			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		}
+	}
+	
+	/*
 	private void throwableUpdate() {
         this.lastTickPosX = this.posX;
         this.lastTickPosY = this.posY;
@@ -275,7 +298,7 @@ public class EntityFrostShard extends EntityThrowable {
         this.motionZ *= (double)f1;
 
         this.setPosition(this.posX, this.posY, this.posZ);
-	}
+	}*/
 	
 	/*
 	@Override
