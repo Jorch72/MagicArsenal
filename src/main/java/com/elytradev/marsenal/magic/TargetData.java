@@ -171,6 +171,7 @@ public abstract class TargetData<T extends Entity> {
 			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
 			
 			Entity e = raycastEntity(caster, range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
+			if (e==null) return null;
 			if (!targetClass.isAssignableFrom(e.getClass())) {
 				target = null;
 				return null;
@@ -213,6 +214,7 @@ public abstract class TargetData<T extends Entity> {
 			Predicate<Entity> casted = downcastingPredicate(rule, targetClass);
 			
 			Entity e = raycastEntity(caster, range, (it)->targetClass.isAssignableFrom(it.getClass()) && casted.test(it));
+			if (e==null) return;
 			if (!targetClass.isAssignableFrom(e.getClass())) {
 				return;
 			}
