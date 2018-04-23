@@ -238,7 +238,7 @@ public class SpellEvent extends Event {
 	
 	public static class DamageEntity extends SpellEvent {
 		private EntityLivingBase target;
-		private int damage = 0;
+		private float damage = 0;
 		
 		public DamageEntity(String spellId, EntityLivingBase caster, EntityLivingBase target, EnumElement... elements) {
 			super(spellId, caster, elements);
@@ -255,12 +255,12 @@ public class SpellEvent extends Event {
 			this.target = target;
 		}
 		
-		public DamageEntity setDamage(int amount) {
+		public DamageEntity setDamage(float amount) {
 			damage = amount;
 			return this;
 		}
 		
-		public int getDamage() { return damage; }
+		public float getDamage() { return damage; }
 		
 		public EntityLivingBase getTarget() { return target; }
 	}

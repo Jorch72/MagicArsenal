@@ -65,7 +65,7 @@ spell.magicarsenal.magmaBlast.desc=Creates a flare of elemental fire directly in
 spell.magicarsenal.frostShards=Frost Shards
 spell.magicarsenal.frostShards.desc=Fires small, razor-sharp projectiles that travel very far, but do only a small amount of damage.
 spell.magicarsenal.willOWisp=Will O' Wisp
-spell.magicarsenal.willOWisp.desc=Sends out a slow-moving luminous orb that bounces off of obstacles, and burns whatever it touches.
+spell.magicarsenal.willOWisp.desc=Summons a slow-moving luminous orb that bounces off of obstacles, and burns whatever it touches.
 spell.magicarsenal.chainLightning=Chain Lightning
 spell.magicarsenal.chainLightning.desc=Shocks an entity in line of sight with electricity, which arcs to additional entities.
 

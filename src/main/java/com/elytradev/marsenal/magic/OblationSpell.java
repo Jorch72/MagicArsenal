@@ -25,6 +25,7 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
@@ -64,8 +65,10 @@ public class OblationSpell implements ISpellEffect {
 
 	@Override
 	public int tick() {
-		if (targets==null || !targets.hasTarget()) return 0;
+		if (targets==null || targets.caster.isDead || !targets.hasTarget()) return 0;
 		
+		float damageDealt = DamageHelper.fireSpellDamage(targets.getCaster(), targets.getCaster(), "oblation", ArsenalConfig.get().spells.oblation.potency, EnumElement.CHAOS, EnumElement.NATURE);
+		/*
 		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("oblation", targets.getCaster(), targets.getCaster(), EnumElement.CHAOS, EnumElement.NATURE)
 				.setDamage(ArsenalConfig.get().spells.oblation.potency);
 		MinecraftForge.EVENT_BUS.post(event);
@@ -73,8 +76,9 @@ public class OblationSpell implements ISpellEffect {
 			targets.caster.attackEntityFrom(
 					new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
 					event.getDamage());
-			
-			targets.getTarget().heal(ArsenalConfig.get().spells.oblation.potency);
+			*/
+		if (damageDealt>0) {
+			targets.getTarget().heal(damageDealt);
 			new SpawnParticleEmitterMessage("drainLife").withReversed(targets).sendToAllWatchingTarget();
 			SpellEffect.spawnEmitter("infuseLife", targets);
 		}
