@@ -30,7 +30,6 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.Vec3d;
 
 public class InfuseLifeEmitter extends Emitter {
 	Random random = new Random();
@@ -67,20 +66,21 @@ public class InfuseLifeEmitter extends Emitter {
 			star.setVelocity(0, -512, 0);
 			stars.add(star);
 		}
-		
-		for(int i=0; i<6; i++) {
-			float px = (float)(entity.posX + random.nextGaussian()*0.2d);
-			float py = (float)(entity.posY + entity.height + 0.1f);
-			float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
-			
-			Particle particle = new ParticleVelocity(world,
-					px, py, pz,
-					0f, -0.6f, 0f
-					);
-			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
-			
-			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
+			for(int i=0; i<6; i++) {
+				float px = (float)(entity.posX + random.nextGaussian()*0.2d);
+				float py = (float)(entity.posY + entity.height + 0.1f);
+				float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
+				
+				Particle particle = new ParticleVelocity(world,
+						px, py, pz,
+						0f, -0.6f, 0f
+						);
+				particle.setParticleTextureIndex(5); //Midway through redstone
+				particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
+				
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
 		}
 		
 		ticksRemaining--;

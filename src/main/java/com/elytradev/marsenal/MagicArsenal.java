@@ -32,6 +32,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.entity.EntityFrostShard;
+import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
@@ -95,6 +96,7 @@ public class MagicArsenal {
 		CONTEXT.register(MagicResourcesMessage.class);
 		
 		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "frostShard"), EntityFrostShard.class, "magicarsenal.frostShard", 0, this, 16*5, 10, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "willOWisp"),  EntityWillOWisp.class,  "magicarsenal.willOWisp",  1, this, 16*5, 10, true);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);

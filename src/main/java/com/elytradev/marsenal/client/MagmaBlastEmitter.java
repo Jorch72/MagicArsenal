@@ -27,6 +27,7 @@ package com.elytradev.marsenal.client;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
@@ -42,7 +43,11 @@ public class MagmaBlastEmitter extends Emitter {
 	@Override
 	public void tick() {
 		if (entity!=null && ticksRemaining>15) {
-			for(int i=0; i<32; i++) {
+			int spawns = 32;
+			if (Minecraft.getMinecraft().gameSettings.particleSetting==1) spawns=16;
+			if (Minecraft.getMinecraft().gameSettings.particleSetting==2) spawns=8;
+			
+			for(int i=0; i<spawns; i++) {
 				Vec3d lookVec = entity.getLookVec();
 				lookVec = lookVec.addVector(random.nextGaussian()*0.5f, random.nextGaussian()*0.5f, random.nextGaussian()*0.5f).normalize(); //Fuzz
 				lookVec = lookVec.scale(800.0f); //velocity magnitude

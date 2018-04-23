@@ -44,22 +44,23 @@ public class HealingSphereEmitter extends Emitter {
 	
 	@Override
 	public void tick() {
-		for(int i=0; i<12; i++) {
-			Vec3d pt = rndPolar().scale(random.nextFloat()*RADIUS);
-			float px = (float)(x + pt.x);
-			float py = (float)(y + 0.05f);
-			float pz = (float)(z + pt.z);
-			
-			Particle particle = new ParticleVelocity(world,
-					px, py, pz,
-					0f, 0.02f, 0f
-					);
-			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
-			
-			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		if (Minecraft.getMinecraft().gameSettings.particleSetting!=0) {
+			for(int i=0; i<12; i++) {
+				Vec3d pt = rndPolar().scale(random.nextFloat()*RADIUS);
+				float px = (float)(x + pt.x);
+				float py = (float)(y + 0.05f);
+				float pz = (float)(z + pt.z);
+				
+				Particle particle = new ParticleVelocity(world,
+						px, py, pz,
+						0f, 0.02f, 0f
+						);
+				particle.setParticleTextureIndex(5); //Midway through redstone
+				particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
+				
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
 		}
-		
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) kill();

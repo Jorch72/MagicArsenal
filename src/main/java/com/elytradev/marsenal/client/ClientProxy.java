@@ -33,6 +33,7 @@ import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.entity.EntityFrostShard;
+import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
@@ -68,6 +69,7 @@ public class ClientProxy extends Proxy {
 		Emitter.register("magmaBlast", MagmaBlastEmitter.class);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrostShard.class, RenderFrostShard::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityWillOWisp.class,  RenderWillOWisp::new);
 	}
 	
 	@Override

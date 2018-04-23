@@ -27,7 +27,6 @@ package com.elytradev.marsenal.entity;
 import java.util.Random;
 
 import com.elytradev.marsenal.ArsenalConfig;
-import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.magic.EnumElement;
@@ -35,33 +34,33 @@ import com.elytradev.marsenal.magic.SpellDamageSource;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityFrostShard extends EntityThrowable {
-	private static final float WIDTH = 1.0f;
-	private static final float HEIGHT = 0.5f;
+public class EntityWillOWisp extends EntityThrowable {
+	private static final float WIDTH = 0.8f;
+	private static final float HEIGHT = 0.8f;
 	
 	private Random random = new Random();
 	
-	private int maxAge = 40;
+	private int maxAge = 320;
 	private int age = 0;
 	
-	public EntityFrostShard(World world) {
+	public EntityWillOWisp(World world) {
 		super(world);
-		//if (world.isRemote) MagicArsenal.LOG.info("Clientside Frost Shard!");
+		//if (world.isRemote) MagicArsenal.LOG.info("Clientside Will O Wisp!");
 		
 		this.width = WIDTH;
 		this.height = HEIGHT;
 		this.setNoGravity(true);
 	}
 	
-	public EntityFrostShard(World world, EntityLivingBase thrower) {
+	public EntityWillOWisp(World world, EntityLivingBase thrower) {
 		super(world, thrower);
 		
 		this.width = WIDTH;
@@ -73,45 +72,52 @@ public class EntityFrostShard extends EntityThrowable {
 	protected void onImpact(RayTraceResult result) {
 		if (!this.world.isRemote) {
             if (result.entityHit != null && this.thrower!=null) {
-            	if (result.entityHit instanceof EntityLivingBase) {
-            		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("frostShards", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.ARCANE, EnumElement.FROST)
-            				.setDamage(ArsenalConfig.get().spells.frostShards.potency);
+            	if (result.entityHit instanceof EntityLivingBase && result.entityHit!=thrower) {
+            		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("willOWisp", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.UNDEATH, EnumElement.FIRE)
+            				.setDamage(ArsenalConfig.get().spells.willOWisp.potency);
             		
             		if (!event.isCanceled()) {
-            			result.entityHit.attackEntityFrom(new SpellDamageSource(this.thrower, "frostShards", EnumElement.ARCANE, EnumElement.FROST), event.getDamage());
+            			result.entityHit.attackEntityFrom(new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE), event.getDamage());
+            			
+            			result.entityHit.setFire(2+random.nextInt(5)); //2..6 seconds
             		}
             	}
+            } else {
+            	Vec3i vec = result.sideHit.getDirectionVec();
+            	if (vec.getX()!=0) motionX *= -vec.getX();
+            	if (vec.getY()!=0) motionY *= -vec.getY();
+            	if (vec.getZ()!=0) motionZ *= -vec.getZ();
             }
-
-            this.setDead();
         }
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (world==null) return;
 		
-		if (this.world!=null && this.world.isRemote) {
+		if (world.isRemote) {
 			spawnParticles();
+		} else {
+			this.age++;
+			if (this.age>maxAge) this.setDead();
 		}
-		
-		this.age++;
-		if (this.age>maxAge) this.setDead();
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public void spawnParticles() {
 		if (Minecraft.getMinecraft().gameSettings.particleSetting!=0) return;
 		for(int i=0; i<3; i++) {
-			float px = (float)(posX + random.nextGaussian()*0.5d);
+			float px = (float)(posX + random.nextGaussian()*0.2d);
 			float py = (float)(posY);
-			float pz = (float)(posZ + random.nextGaussian()*0.5d);
+			float pz = (float)(posZ + random.nextGaussian()*0.2d);
 			
 			Particle particle = new ParticleVelocity(world,
-					px, py, pz,
-					0f, -0.6f, 0f
+					px, py+0.5f, pz,
+					0f, (float)random.nextGaussian()*0.1f, 0f
 					);
-			particle.setParticleTextureIndex(5); //Midway through redstone
+			particle.setParticleTextureIndex(48); //flame
+			particle.multipleParticleScaleBy(1.5f);
 			particle.setRBGColorF(0.6f, 0.6f, 0.9667f);
 			
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);

@@ -44,16 +44,18 @@ public class DisruptionEmitter extends Emitter {
 				new Vec3d(x,y,z);
 		Vec3d ptVec = ptTarget.subtract(ptSrc).normalize().scale(3.5f);
 		
-		for(int i=0; i<4; i++) {
-			Vec3d ptRnd = ptSrc.addVector(random.nextGaussian()/3, random.nextGaussian()/3, random.nextGaussian()/3);
-			
-			Particle particle = new ParticleVelocity(world, ptRnd, ptVec);
-			//particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setParticleTextureIndex(65);
-			particle.setRBGColorF(0.8f, 0.1f, 0.3f);
-			particle.setMaxAge(10);
-			
-			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		if (Minecraft.getMinecraft().gameSettings.particleSetting!=0) {
+			for(int i=0; i<4; i++) {
+				Vec3d ptRnd = ptSrc.addVector(random.nextGaussian()/3, random.nextGaussian()/3, random.nextGaussian()/3);
+				
+				Particle particle = new ParticleVelocity(world, ptRnd, ptVec);
+				//particle.setParticleTextureIndex(5); //Midway through redstone
+				particle.setParticleTextureIndex(65);
+				particle.setRBGColorF(0.8f, 0.1f, 0.3f);
+				particle.setMaxAge(10);
+				
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
 		}
 		ticksRemaining--;
 		if (ticksRemaining<=0) kill();

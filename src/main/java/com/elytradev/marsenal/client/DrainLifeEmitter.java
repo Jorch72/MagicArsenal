@@ -49,7 +49,10 @@ public class DrainLifeEmitter extends Emitter {
 			return;
 		}
 		
-		if (still) for(int i=0; i<64; i++) {
+		int spawns = 64;
+		if (Minecraft.getMinecraft().gameSettings.particleSetting==1) spawns=32;
+		if (Minecraft.getMinecraft().gameSettings.particleSetting==2) spawns=16;
+		if (still) for(int i=0; i<spawns; i++) {
 			double startX = entity.posX + random.nextGaussian()*entity.width;
 			double startY = entity.posY - (entity.height/2) + random.nextGaussian()*entity.height;
 			double startZ = entity.posZ + random.nextGaussian()*entity.width;
@@ -84,19 +87,21 @@ public class DrainLifeEmitter extends Emitter {
 		}
 		still = false;
 		
-		for(int i=0; i<6; i++) {
-			float px = (float)(entity.posX + random.nextGaussian()*0.2d);
-			float py = (float)(entity.posY + 0.1f);
-			float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
-			
-			Particle particle = new ParticleVelocity(world,
-					px, py, pz,
-					0f, 0.01f, 0f
-					);
-			particle.setParticleTextureIndex(5); //Midway through redstone
-			particle.setRBGColorF(0.545f, 0.0274f, 0.130f);
-			
-			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
+			for(int i=0; i<6; i++) {
+				float px = (float)(entity.posX + random.nextGaussian()*0.2d);
+				float py = (float)(entity.posY + 0.1f);
+				float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
+				
+				Particle particle = new ParticleVelocity(world,
+						px, py, pz,
+						0f, 0.01f, 0f
+						);
+				particle.setParticleTextureIndex(5); //Midway through redstone
+				particle.setRBGColorF(0.545f, 0.0274f, 0.130f);
+				
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
 		}
 		
 		ticksRemaining--;

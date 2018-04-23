@@ -27,6 +27,7 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.entity.EntityWillOWisp;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,7 +50,11 @@ public class WillOWispSpell implements ISpellEffect {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.willOWisp.cooldown);
 			
 			this.caster = caster;
-			//TODO: Spell
+			EntityWillOWisp wisp = new EntityWillOWisp(caster.getEntityWorld(), caster);
+			wisp.setLocationAndAngles(caster.posX, caster.posY+caster.getEyeHeight(), caster.posZ, 0, 0);
+			wisp.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 0.2f, 0.1f);
+			
+			caster.getEntityWorld().spawnEntity(wisp);
 		}
 	}
 
