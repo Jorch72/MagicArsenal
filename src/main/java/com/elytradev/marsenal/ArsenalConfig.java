@@ -142,7 +142,7 @@ public class ArsenalConfig {
 		public SpellEntry disruption     = new SpellEntry( 2,  200, 20*10);
 		public SpellEntry magmaBlast     = new SpellEntry( 8,   80, 20* 5);
 		public SpellEntry frostShards    = new SpellEntry( 2,   20, 20* 1);
-		public SpellEntry willOWisp      = new SpellEntry( 4,   40, 20* 2);
+		public SpellEntry willOWisp      = new SpellEntry( 4,   40, 20* 4);
 		public SpellEntry chainLightning = new SpellEntry( 3,   60, 20* 4);
 	}
 	

@@ -35,9 +35,6 @@ import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionHelper;
-import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -92,7 +89,6 @@ public class ArsenalItems {
 		PotionUtils.addPotionToItemStack(healingPotion, PotionTypes.STRONG_HEALING);
 		IngredientNBT potionIngredient = new IngredientNBT(healingPotion);
 		
-		
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.RECOVERY.ordinal()),
 				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
 				"gemEmerald",
@@ -122,6 +118,18 @@ public class ArsenalItems {
 				"gemDiamond",
 				Items.ENDER_PEARL
 				).setRegistryName("magicarsenal_spellfocus_frost_shards"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.WILL_O_WISP.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.ENDER_EYE,
+				Items.MAGMA_CREAM
+				).setRegistryName("magicarsenal_spellfocus_will_o_wisp"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.CLOCK,
+				Items.GLOWSTONE_DUST
+				).setRegistryName("magicarsenal_spellfocus_chain_lightning"));
 	}
 	
 	

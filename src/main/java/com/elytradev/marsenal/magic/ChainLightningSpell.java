@@ -57,7 +57,7 @@ public class ChainLightningSpell implements ISpellEffect {
 			return;
 		}
 		
-		SpellEvent event = new SpellEvent.CastOnEntity("chainLightning", targets.getCaster(), targets.getTargets().iterator().next(), EnumElement.HOLY, EnumElement.FIRE)
+		SpellEvent event = new SpellEvent.CastOnEntity("chainLightning", targets.getCaster(), targets.getTargets().iterator().next(), EnumElement.HOLY, EnumElement.AIR)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.chainLightning.cost);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
@@ -68,7 +68,16 @@ public class ChainLightningSpell implements ISpellEffect {
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.chainLightning.cooldown);
 			
-			//TODO: Spell
+			
+			EntityLivingBase target = targets.getTargets().iterator().next();
+			SpellEvent.DamageEntity damageEvent = new SpellEvent.DamageEntity("chainLightning", targets.getCaster(), target, EnumElement.HOLY, EnumElement.AIR)
+					.setDamage(ArsenalConfig.get().spells.chainLightning.potency);
+			MinecraftForge.EVENT_BUS.post(damageEvent);
+			
+			if (!damageEvent.isCanceled()) {
+				target.attackEntityFrom(new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR), damageEvent.getDamage());
+			}
+			SpellEffect.spawnEmitter("lightning", targets.caster, target);
 			remainingRounds = NUM_ROUNDS;
 		}
 	}
@@ -76,33 +85,41 @@ public class ChainLightningSpell implements ISpellEffect {
 	@Override
 	public int tick() {
 		if (!targets.hasTargets()) return 0;
-		
-		zappedThisTurn.clear();
-		energizedThisTurn.clear();
-		energizedThisTurn.addAll(targets.getTargets());
-		
-		for(EntityLivingBase energized : targets.getTargets()) {
-			//Find nearby entities to zap
-			AxisAlignedBB aoe = energized.getEntityBoundingBox().expand(SECONDARY_RANGE, SECONDARY_RANGE, SECONDARY_RANGE).expand(-SECONDARY_RANGE, -SECONDARY_RANGE, -SECONDARY_RANGE);
+		if (remainingRounds!=NUM_ROUNDS) {
+			zappedThisTurn.clear();
+			energizedThisTurn.clear();
+			energizedThisTurn.addAll(targets.getTargets());
 			
-			List<EntityLivingBase> toZap = energized.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, aoe, (it)->!energizedThisTurn.contains(it) && it.getDistance(energized)<SECONDARY_RANGE);
-			
-			for(EntityLivingBase zap : toZap) {
+			for(EntityLivingBase energized : targets.getTargets()) {
+				if (energized.isDead) continue;
+				//Find nearby entities to zap
+				AxisAlignedBB aoe = energized.getEntityBoundingBox().expand(SECONDARY_RANGE, SECONDARY_RANGE, SECONDARY_RANGE).expand(-SECONDARY_RANGE, -SECONDARY_RANGE, -SECONDARY_RANGE);
 				
+				List<EntityLivingBase> toZap = energized.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, aoe, (it)->!energizedThisTurn.contains(it) && it.getDistance(energized)<SECONDARY_RANGE);
 				
-				
-				
+				for(EntityLivingBase zap : toZap) {
+					if (zappedThisTurn.contains(zap)) continue;
+					if (zap==targets.caster) continue;
+					
+					zappedThisTurn.add(zap);
+					
+					SpellEvent.DamageEntity damageEvent = new SpellEvent.DamageEntity("chainLightning", targets.getCaster(), zap, EnumElement.HOLY, EnumElement.AIR)
+							.setDamage(ArsenalConfig.get().spells.chainLightning.potency);
+					MinecraftForge.EVENT_BUS.post(damageEvent);
+					
+					if (!damageEvent.isCanceled()) {
+						zap.attackEntityFrom(new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR), damageEvent.getDamage());
+					}
+					SpellEffect.spawnEmitter("lightning", energized, zap);
+				}
 			}
 			
-			
-			
+			targets.clearTargets();
+			targets.getTargets().addAll(zappedThisTurn);
 		}
 		
-		targets.clearTargets();
-		targets.getTargets().addAll(zappedThisTurn);
-		
 		remainingRounds--;
-		return (remainingRounds>0) ? ROUND_LENGTH : 0;
+		return (remainingRounds>0 && targets.hasTargets()) ? ROUND_LENGTH : 0;
 	}
 
 }

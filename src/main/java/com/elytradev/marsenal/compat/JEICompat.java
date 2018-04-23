@@ -116,6 +116,24 @@ public class JEICompat implements IModPlugin {
 						EnumElement.ARCANE, EnumElement.FROST,
 						IMagicResources.RESOURCE_STAMINA
 				));
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.WILL_O_WISP.ordinal()),
+				ItemStack.class,
+				spellInfo(
+						"willOWisp",
+						EnumElement.UNDEATH, EnumElement.FIRE,
+						IMagicResources.RESOURCE_STAMINA
+				));
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
+				ItemStack.class,
+				spellInfo(
+						"chainLightning",
+						EnumElement.HOLY, EnumElement.AIR,
+						IMagicResources.RESOURCE_STAMINA
+				));
 	}
 	
 	private static String[] spellInfo(String spell, EnumElement elem, EnumElement elem2, ResourceLocation resource) {

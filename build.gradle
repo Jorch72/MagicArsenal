@@ -91,7 +91,7 @@ dependencies {
 
 group = "com.elytradev"
 archivesBaseName = "MagicArsenal"
-version = "MC1.12_ver1.0.0"
+version = "MC1.12_ver1.1.0"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

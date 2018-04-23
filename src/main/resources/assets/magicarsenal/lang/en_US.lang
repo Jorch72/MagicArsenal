@@ -15,7 +15,7 @@ item.magicarsenal.spellfocus.oblation.name=Oblation Spell Focus
 item.magicarsenal.spellfocus.disruption.name=Disruption Spell Focus
 item.magicarsenal.spellfocus.magma_blast.name=Magma Blast Spell Focus
 item.magicarsenal.spellfocus.frost_shards.name=Frost Shards Spell Focus
-item.magicarsenal.spellfocus.willowisp.name=Will O' Wisp Spell Focus
+item.magicarsenal.spellfocus.will_o_wisp.name=Will O' Wisp Spell Focus
 item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 
 #Spell Damage Sources
@@ -65,7 +65,7 @@ spell.magicarsenal.magmaBlast.desc=Creates a flare of elemental fire directly in
 spell.magicarsenal.frostShards=Frost Shards
 spell.magicarsenal.frostShards.desc=Fires small, razor-sharp projectiles that travel very far, but do only a small amount of damage.
 spell.magicarsenal.willOWisp=Will O' Wisp
-spell.magicarsenal.willOWisp.desc=Sends out a slow-moving luminous orb that bounces off entities and obstacles, and burns whatever it touches.
+spell.magicarsenal.willOWisp.desc=Sends out a slow-moving luminous orb that bounces off of obstacles, and burns whatever it touches.
 spell.magicarsenal.chainLightning=Chain Lightning
 spell.magicarsenal.chainLightning.desc=Shocks an entity in line of sight with electricity, which arcs to additional entities.
 
