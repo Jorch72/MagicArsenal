@@ -155,11 +155,11 @@ public class MagicArsenal {
 	public static void tickResources(IMagicResources res) {
 		res.reduceGlobalCooldown(1);
 		
-		if (res.getGlobalCooldown()<=0) {
+		//if (res.getGlobalCooldown()<=0) { //Disabled - try to rebalance for constant mana regen
 			//Regen Stamina
 			int stamina = res.getResource(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().resources.maxStamina);
 			res.set(IMagicResources.RESOURCE_STAMINA, Math.min(ArsenalConfig.get().resources.maxStamina, stamina+1));
-		}
+		//}
 		
 		//Waste Vengeance
 		res.spend(IMagicResources.RESOURCE_VENGEANCE, 1, 0, false);

@@ -119,13 +119,13 @@ public class ArsenalConfig {
 	}
 	
 	public static class SpellEntry {
-		public int potency = 10;
-		public int cost = 10;
-		public int cooldown = 10;
+		public float potency = 1.0f;
+		public int cost = 180;
+		public int cooldown = 20*10;
 		
 		public SpellEntry() {}
 		
-		public SpellEntry(int potency, int cost, int cooldown) {
+		public SpellEntry(float potency, int cost, int cooldown) {
 			this.potency = potency;
 			this.cost = cost;
 			this.cooldown = cooldown;
@@ -133,17 +133,17 @@ public class ArsenalConfig {
 	}
 	
 	public static class SpellsSection { //               str  cost     CD
-		public SpellEntry healingWave    = new SpellEntry( 1,  160, 20* 2);
-		public SpellEntry healingCircle  = new SpellEntry( 1,   60, 20* 5);
-		public SpellEntry recovery       = new SpellEntry( 1,   60, 20*10);
-		public SpellEntry drainLife      = new SpellEntry( 2,   60, 20* 6);
-		public SpellEntry oblation       = new SpellEntry( 1,   20, 20* 2);
+		public SpellEntry healingWave    = new SpellEntry( 1.0f,  120, 20* 2);
+		public SpellEntry healingCircle  = new SpellEntry( 1.0f,  180, 20* 5);
+		public SpellEntry recovery       = new SpellEntry( 1.0f,  180, 20*10);
+		public SpellEntry drainLife      = new SpellEntry( 1.5f,  200, 20* 8);
+		public SpellEntry oblation       = new SpellEntry( 1.0f,   60, 20* 2);
 		
-		public SpellEntry disruption     = new SpellEntry( 2,  200, 20*10);
-		public SpellEntry magmaBlast     = new SpellEntry( 8,   80, 20* 5);
-		public SpellEntry frostShards    = new SpellEntry( 2,   20, 20* 1);
-		public SpellEntry willOWisp      = new SpellEntry( 4,   40, 20* 4);
-		public SpellEntry chainLightning = new SpellEntry( 3,   60, 20* 4);
+		public SpellEntry disruption     = new SpellEntry( 2.0f,  600, 20*10);
+		public SpellEntry magmaBlast     = new SpellEntry( 8.0f,  240, 20* 5);
+		public SpellEntry frostShards    = new SpellEntry( 2.0f,  120, 20* 1);
+		public SpellEntry willOWisp      = new SpellEntry( 4.0f,  180, 20* 4);
+		public SpellEntry chainLightning = new SpellEntry( 3.0f,  180, 20* 4);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

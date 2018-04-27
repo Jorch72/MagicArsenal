@@ -91,7 +91,9 @@ public class HealingCircleSpell implements ISpellEffect {
 				);
 		
 		for(EntityLivingBase target: withinCircle) {
-			target.heal(ArsenalConfig.get().spells.healingCircle.potency);
+			if (TargetData.NON_HOSTILE.test(target)) { //We can't go healing zombies, can we?
+				target.heal(ArsenalConfig.get().spells.healingCircle.potency);
+			}
 		}
 		
 		ticksRemaining--;
