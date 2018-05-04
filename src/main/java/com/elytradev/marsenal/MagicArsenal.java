@@ -31,6 +31,7 @@ import com.elytradev.concrete.network.NetworkContext;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.compat.BaublesCompat;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
@@ -53,6 +54,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -101,6 +103,10 @@ public class MagicArsenal {
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);
 		MinecraftForge.EVENT_BUS.register(ArsenalItems.class);
+		
+		if (Loader.isModLoaded("baubles")) {
+			MinecraftForge.EVENT_BUS.register(BaublesCompat.class);
+		}
 		
 		PROXY.preInit();
 	}

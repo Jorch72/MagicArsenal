@@ -44,7 +44,7 @@ public class HealingSphereEmitter extends Emitter {
 	
 	@Override
 	public void tick() {
-		if (Minecraft.getMinecraft().gameSettings.particleSetting!=0) {
+		if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
 			for(int i=0; i<12; i++) {
 				Vec3d pt = rndPolar().scale(random.nextFloat()*RADIUS);
 				float px = (float)(x + pt.x);

@@ -46,6 +46,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ArsenalItems {
 	private static List<Item> itemsForModels = new ArrayList<>();
 	public static ItemSpellFocus               SPELL_FOCUS = null;
+	public static ItemSpellBauble              SPELL_BAUBLE= null;
 	public static ItemSubtyped<EnumIngredient> INGREDIENT  = null;
 	
 	@SubscribeEvent
@@ -53,6 +54,7 @@ public class ArsenalItems {
 		IForgeRegistry<Item> r = event.getRegistry();
 		
 		SPELL_FOCUS = item(r, new ItemSpellFocus());
+		SPELL_BAUBLE= item(r, new ItemSpellBauble());
 		INGREDIENT  = item(r, new ItemSubtyped<>("ingredient", EnumIngredient.values(), false));
 	}
 	

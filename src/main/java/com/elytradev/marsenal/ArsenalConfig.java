@@ -132,7 +132,7 @@ public class ArsenalConfig {
 		}
 	}
 	
-	public static class SpellsSection { //               str  cost     CD
+	public static class SpellsSection { //                  str  cost     CD
 		public SpellEntry healingWave    = new SpellEntry( 1.0f,  120, 20* 2);
 		public SpellEntry healingCircle  = new SpellEntry( 1.0f,  180, 20* 5);
 		public SpellEntry recovery       = new SpellEntry( 1.0f,  180, 20*10);
