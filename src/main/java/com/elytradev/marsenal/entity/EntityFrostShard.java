@@ -27,7 +27,6 @@ package com.elytradev.marsenal.entity;
 import java.util.Random;
 
 import com.elytradev.marsenal.ArsenalConfig;
-import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.magic.EnumElement;
@@ -35,7 +34,6 @@ import com.elytradev.marsenal.magic.SpellDamageSource;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.math.RayTraceResult;

@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import javax.annotation.Nullable;
 
 import com.elytradev.marsenal.magic.EnumElement;
+import com.elytradev.marsenal.magic.SpellDamageSource;
 import com.elytradev.marsenal.magic.TargetData;
 import com.google.common.collect.ImmutableSet;
 
@@ -239,6 +240,11 @@ public class SpellEvent extends Event {
 	public static class DamageEntity extends SpellEvent {
 		private EntityLivingBase target;
 		private float damage = 0;
+		
+		public DamageEntity(SpellDamageSource source, EntityLivingBase target) {
+			super(source.getSpell(), source.getCaster(), source.getElements());
+			this.target = target;
+		}
 		
 		public DamageEntity(String spellId, EntityLivingBase caster, EntityLivingBase target, EnumElement... elements) {
 			super(spellId, caster, elements);

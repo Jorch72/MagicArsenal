@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 
@@ -68,15 +69,19 @@ public class ChainLightningSpell implements ISpellEffect {
 		if (SpellEffect.activateWithStamina(caster, event.getCost())) {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.chainLightning.cooldown);
 			
-			
 			EntityLivingBase target = targets.getTargets().iterator().next();
+			
+			/*
 			SpellEvent.DamageEntity damageEvent = new SpellEvent.DamageEntity("chainLightning", targets.getCaster(), target, EnumElement.HOLY, EnumElement.AIR)
 					.setDamage(ArsenalConfig.get().spells.chainLightning.potency);
 			MinecraftForge.EVENT_BUS.post(damageEvent);
 			
 			if (!damageEvent.isCanceled()) {
 				target.attackEntityFrom(new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR), damageEvent.getDamage());
-			}
+			}*/
+			
+			SpellDamageSource thunderDamage = new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR).setElectrical();
+			DamageHelper.fireSpellDamage(thunderDamage, target, ArsenalConfig.get().spells.chainLightning.potency);
 			SpellEffect.spawnEmitter("lightning", targets.caster, target);
 			remainingRounds = NUM_ROUNDS;
 		}
@@ -103,13 +108,9 @@ public class ChainLightningSpell implements ISpellEffect {
 					
 					zappedThisTurn.add(zap);
 					
-					SpellEvent.DamageEntity damageEvent = new SpellEvent.DamageEntity("chainLightning", targets.getCaster(), zap, EnumElement.HOLY, EnumElement.AIR)
-							.setDamage(ArsenalConfig.get().spells.chainLightning.potency);
-					MinecraftForge.EVENT_BUS.post(damageEvent);
+					SpellDamageSource thunderDamage = new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR).setElectrical();
+					DamageHelper.fireSpellDamage(thunderDamage, zap, ArsenalConfig.get().spells.chainLightning.potency);
 					
-					if (!damageEvent.isCanceled()) {
-						zap.attackEntityFrom(new SpellDamageSource(targets.caster, "chainLightning", EnumElement.HOLY, EnumElement.AIR), damageEvent.getDamage());
-					}
 					SpellEffect.spawnEmitter("lightning", energized, zap);
 				}
 			}

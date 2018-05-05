@@ -24,36 +24,38 @@
 
 package com.elytradev.marsenal;
 
-import com.elytradev.marsenal.compat.DracEvoCompat;
+import com.elytradev.concrete.reflect.accessor.Accessor;
+import com.elytradev.concrete.reflect.accessor.Accessors;
 import com.elytradev.marsenal.magic.EnumElement;
 import com.elytradev.marsenal.magic.SpellDamageSource;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.network.datasync.DataParameter;
 
 public class DamageHelper {
+	public static final Accessor<DataParameter<Boolean>> CREEPER_POWERED = Accessors.findField(EntityCreeper.class, "field_184714_b", "POWERED", "b");
 	
 	/**
 	 * Fires off spell damage. Returns the amount of damage actually dealt.
 	 */
-	public static float fireSpellDamage(EntityLivingBase caster, EntityLivingBase target, String spell, float amount, EnumElement... elements) {
+	public static float fireSpellDamage(SpellDamageSource damageSource, EntityLivingBase target, float amount) {
 		if (target.isDead) return 0f;
 		
-		SpellDamageSource damageSource = new SpellDamageSource(caster, spell, elements);
-		
-		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity(spell, caster, target, elements)
-				.setDamage(amount);
+		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity(damageSource, target).setDamage(amount);
 		if (event.isCanceled()) return 0f;
 		
-		if (damageSource.hasElement(EnumElement.CHAOS)) {
-			//ENGAGE PARANOIA
-			
-			if (Loader.isModLoaded("draconicevolution")) {
-				//ENGAGE MORE PARANOIA
-				DracEvoCompat.deployCountermeasures(target);
-			}
+		//Countermeasures moved to separate mod: Glass Jaw
+		
+		if (damageSource.isElectrical() && target instanceof EntityCreeper) {
+			((EntityCreeper)target).getDataManager().set(CREEPER_POWERED.get(null), true);
 		}
 		
 		return (target.attackEntityFrom(damageSource, event.getDamage())) ? event.getDamage() : 0f;
+	}
+	
+	public static float fireSpellDamage(EntityLivingBase caster, EntityLivingBase target, String spell, float amount, EnumElement... elements) {
+		SpellDamageSource damageSource = new SpellDamageSource(caster, spell, elements);
+		return fireSpellDamage(damageSource, target, amount);
 	}
 }

@@ -26,14 +26,16 @@ package com.elytradev.marsenal.magic;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EntityDamageSource;
 
 public class SpellDamageSource extends EntityDamageSource {
 	private EnumSet<EnumElement> elements = EnumSet.noneOf(EnumElement.class);
 	private String spell;
+	private boolean electrical = false;
+	private EntityLivingBase caster;
 	
-	public SpellDamageSource(Entity caster, String spell, EnumElement... elements) {
+	public SpellDamageSource(EntityLivingBase caster, String spell, EnumElement... elements) {
 		super( "spell."+spell, caster );
 		//Enforced loosely, but explained comprehensively.
 		if(elements.length < 1) throw new IllegalArgumentException("Spell damage must have at least one 'classical' element and one 'governing' element.");
@@ -42,7 +44,12 @@ public class SpellDamageSource extends EntityDamageSource {
 			this.elements.add(element);
 			if (element==EnumElement.FIRE) this.setFireDamage();
 		}
+		this.caster = caster;
 		this.spell = spell;
+	}
+	
+	public EntityLivingBase getCaster() {
+		return caster;
 	}
 	
 	/** Always returns true. Spell damage type is always magic damage. */
@@ -73,5 +80,14 @@ public class SpellDamageSource extends EntityDamageSource {
 	 */
 	public String getSpell() {
 		return spell;
+	}
+	
+	public SpellDamageSource setElectrical() {
+		electrical = true;
+		return this;
+	}
+	
+	public boolean isElectrical() {
+		return electrical;
 	}
 }
