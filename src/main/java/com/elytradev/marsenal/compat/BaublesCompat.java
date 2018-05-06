@@ -26,6 +26,8 @@ package com.elytradev.marsenal.compat;
 
 import java.util.Map;
 
+import com.elytradev.concrete.reflect.accessor.Accessor;
+import com.elytradev.concrete.reflect.accessor.Accessors;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumSpellBauble;
 import com.google.common.collect.MapMaker;
@@ -35,13 +37,19 @@ import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class BaublesCompat {
+	private static final Accessor<Integer> LEVITATING_SINCE = Accessors.findField(EntityPlayerMP.class, "field_193108_cu", "levitatingSince", "ct");
+	private static final Accessor<Vec3d>   LEVITATING_START_POS = Accessors.findField(EntityPlayerMP.class, "field_193107_ct", "levitationStartPos", "cs");
+	private static final Accessor<Integer>    NETHANDLER_FLOATING_TICK_COUNT = Accessors.findField(NetHandlerPlayServer.class, "field_147365_f", "floatingTickCount", "C");
+	
 	public static Map<EntityPlayer, PlayerFlightData> flightDataMap = new MapMaker().weakKeys().concurrencyLevel(2).makeMap();
 	
 	/** The maximum amount of time that two spacebar presses will be considered one double-press */
@@ -207,18 +215,22 @@ public class BaublesCompat {
 					}
 					
 					flightData.velocity = addSoftCap(prevMotion, impulse, speedLimit);
-					/*
-					flightData.velocity = prevMotion.add(impulse);
-					if (flightData.velocity.lengthVector()>speedLimit) {
-						flightData.velocity = flightData.velocity.normalize().scale(speedLimit);
-					}*/
-					
+
 					e.player.motionX = flightData.velocity.x;
 					e.player.motionY = flightData.velocity.y;
 					e.player.motionZ = flightData.velocity.z;
 				}
 			} else {
 				e.player.fallDistance = 0.0f;
+				if (e.player instanceof EntityPlayerMP) {
+					System.out.println("Fixing flight status");
+					NetHandlerPlayServer connection = ((EntityPlayerMP)e.player).connection;
+					if (connection!=null) { //You fake players, you. I'm onto your game.
+						NETHANDLER_FLOATING_TICK_COUNT.set(connection, 0);
+					}
+					LEVITATING_SINCE.set(e.player, e.player.ticksExisted);
+					LEVITATING_START_POS.set(e.player, new Vec3d(e.player.posX, e.player.posY, e.player.posZ));
+				}
 			}
 		}
 	}
