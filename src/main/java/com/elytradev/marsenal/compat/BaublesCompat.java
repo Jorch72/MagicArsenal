@@ -223,7 +223,6 @@ public class BaublesCompat {
 			} else {
 				e.player.fallDistance = 0.0f;
 				if (e.player instanceof EntityPlayerMP) {
-					System.out.println("Fixing flight status");
 					NetHandlerPlayServer connection = ((EntityPlayerMP)e.player).connection;
 					if (connection!=null) { //You fake players, you. I'm onto your game.
 						NETHANDLER_FLOATING_TICK_COUNT.set(connection, 0);
