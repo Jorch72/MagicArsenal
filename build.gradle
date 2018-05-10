@@ -50,8 +50,8 @@ repositories {
 }
 
 
-def mc_version='1.12.1';
-def jei_version="4.7.8.92";
+def mc_version='1.12.2';
+def jei_version="4.9.1.175";
 def concrete_version="0.3.6-SNAPSHOT";
 //def concrete_modules=[]; //For eclipse import
 def concrete_modules=["common","inventory","recipe","network","reflect"];
@@ -97,7 +97,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-	version = '1.12.2-14.23.0.2491'
+	version = '1.12.2-14.23.2.2611'
+	//version = '1.12.2-14.23.0.2491'
 	mappings = 'snapshot_20171130'
 
   runDir = "minecraft"

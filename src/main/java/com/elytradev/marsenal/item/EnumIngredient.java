@@ -24,10 +24,12 @@
 
 package com.elytradev.marsenal.item;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumIngredient implements IStringSerializable {
-	FOCUS_CORE("focuscore");
+	FOCUS_CORE("focuscore"),
+	PETAL_WOLFSBANE("petalwolfsbane");
 	
 	private final String name;
 	
@@ -38,5 +40,9 @@ public enum EnumIngredient implements IStringSerializable {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public ItemStack getItem() {
+		return new ItemStack(ArsenalItems.INGREDIENT, 1, this.ordinal());
 	}
 }

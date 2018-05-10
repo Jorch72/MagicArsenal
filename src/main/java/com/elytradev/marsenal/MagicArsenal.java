@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.elytradev.concrete.network.NetworkContext;
+import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
@@ -103,6 +104,7 @@ public class MagicArsenal {
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(PROXY);
 		MinecraftForge.EVENT_BUS.register(ArsenalItems.class);
+		MinecraftForge.EVENT_BUS.register(ArsenalBlocks.class);
 		
 		if (Loader.isModLoaded("baubles")) {
 			MinecraftForge.EVENT_BUS.register(BaublesCompat.class);
@@ -114,6 +116,8 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent e) {
 		PROXY.init();
+		
+		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_WOLFSBANE), 2);
 	}
 	
 	@Mod.EventHandler

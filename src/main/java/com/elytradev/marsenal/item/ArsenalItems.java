@@ -28,11 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.elytradev.marsenal.MagicArsenal;
+import com.elytradev.marsenal.block.ArsenalBlocks;
+import com.elytradev.marsenal.block.EnumPoisonPlant;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.PotionUtils;
@@ -48,14 +52,24 @@ public class ArsenalItems {
 	public static ItemSpellFocus               SPELL_FOCUS = null;
 	public static ItemSpellBauble              SPELL_BAUBLE= null;
 	public static ItemSubtyped<EnumIngredient> INGREDIENT  = null;
+	public static ItemPoisonRoot               ROOT_WOLFSBANE = null;
+	public static ItemPoisonRoot               ROOT_NIGHTSHADE = null;
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> r = event.getRegistry();
 		
+		for(Block b : ArsenalBlocks.blocksForItems()) {
+			item(r, new ItemBlock(b).setRegistryName(b.getRegistryName()));
+		}
+		
 		SPELL_FOCUS = item(r, new ItemSpellFocus());
 		SPELL_BAUBLE= item(r, new ItemSpellBauble());
 		INGREDIENT  = item(r, new ItemSubtyped<>("ingredient", EnumIngredient.values(), false));
+		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
+		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND)); //FIXME: Switch to nightshade when the plant is done
+		
+		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
 	}
 	
 	@SubscribeEvent

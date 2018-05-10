@@ -2,6 +2,8 @@ itemGroup.magicarsenal=Magic Arsenal
 
 #Ingredients
 item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
+item.magicarsenal.root.wolfsbane.name=Wolfsbane Root
+item.magicarsenal.root.nightshade.name=Nightshade Root
 
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=%1$s Spell Focus
@@ -71,6 +73,12 @@ spell.magicarsenal.willOWisp=Will O' Wisp
 spell.magicarsenal.willOWisp.desc=Summons a slow-moving luminous orb that bounces off of obstacles, and burns whatever it touches.
 spell.magicarsenal.chainLightning=Chain Lightning
 spell.magicarsenal.chainLightning.desc=Shocks an entity in line of sight with electricity, which arcs to additional entities.
+
+#Lore
+tooltip.magicarsenal.poisonroot.wolfsbane.taxonomy=Aconitum lycoctonum
+tooltip.magicarsenal.poisonroot.nightshade.taxonomy=Atropa belladonna
+tooltip.magicarsenal.poisonroot.wolfsbane=Long thought to be a treatment for lycanthropy and a protective ward, this plant carries a powerful poison that paralyzes the nerves.
+tooltip.magicarsenal.poisonroot.nightshade=Once the primary ingredient in witches' "flying ointment", every part of this plant is a poison of incredible potency.
 
 #Resources
 resource.magicarsenal.stamina=Stamina

@@ -1,0 +1,30 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cross",
+		"transform":"forge:default-block",
+		"uvlock":false,
+		"textures":{
+			"cross":"magicarsenal:blocks/wolfsbane/stage0"
+		}
+	},
+	"variants":{
+		"age=0,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=1,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=2,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=3,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=4,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=5,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=6,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=7,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/upper" } }],
+		"age=0,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage0" } }],
+		"age=1,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage1" } }],
+		"age=2,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage2" } }],
+		"age=3,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage3" } }],
+		"age=4,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage4" } }],
+		"age=5,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage5" } }],
+		"age=6,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage6" } }],
+		"age=7,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/wolfsbane/stage7" } }]
+	}
+}
