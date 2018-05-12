@@ -29,6 +29,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -36,14 +37,20 @@ public class ArsenalBlocks {
 	private static List<Block> blocksForItems = new ArrayList<>();
 	
 	public static BlockPoisonDoublePlant CROP_WOLFSBANE = null;
+	public static BlockRunestone         RUNESTONE1     = null;
+	public static BlockRunestone         RUNESTONE2     = null;
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 		IForgeRegistry<Block> r = event.getRegistry();
 		
 		CROP_WOLFSBANE = block(r, new BlockPoisonDoublePlant("wolfsbane"));
+		RUNESTONE1 = block(r, new BlockRunestone("1", EnumRuneCarving.FIRST_16));
+		RUNESTONE2 = block(r, new BlockRunestone("2", EnumRuneCarving.SECOND_16));
 		
 		
+		//No, you can't carry the crops around.
+		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());
 	}
 	
 	public static Iterable<Block> blocksForItems() {

@@ -1,0 +1,42 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cube_all",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{ "all":"magicarsenal:blocks/stele/r_uncarved" }
+	},
+	
+	"variants": {
+		"carving": {
+			"none":     { "textures":{ "all":"magicarsenal:blocks/stele/r_uncarved" } },
+			"fehu":     { "textures":{ "all":"magicarsenal:blocks/stele/r_fehu" } },
+			"uruz":     { "textures":{ "all":"magicarsenal:blocks/stele/r_uruz" } },
+			"thurisaz": { "textures":{ "all":"magicarsenal:blocks/stele/r_thurisaz" } },
+			"ansuz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_ansuz" } },
+			"raidho":   { "textures":{ "all":"magicarsenal:blocks/stele/r_raidho" } },
+			"kenaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_kenaz" } },
+			"gebo":     { "textures":{ "all":"magicarsenal:blocks/stele/r_gebo" } },
+			"wunjo":    { "textures":{ "all":"magicarsenal:blocks/stele/r_wunjo" } },
+			"hagalaz":  { "textures":{ "all":"magicarsenal:blocks/stele/r_hagalaz" } },
+			"nauthiz":  { "textures":{ "all":"magicarsenal:blocks/stele/r_nauthiz" } },
+			"isa":      { "textures":{ "all":"magicarsenal:blocks/stele/r_isa" } },
+			"jera":     { "textures":{ "all":"magicarsenal:blocks/stele/r_jera" } },
+			"eihwaz":   { "textures":{ "all":"magicarsenal:blocks/stele/r_eihwaz" } },
+			"perthro":  { "textures":{ "all":"magicarsenal:blocks/stele/r_perthro" } },
+			"elhaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_elhaz" } },
+			"sowilo":   { "textures":{ "all":"magicarsenal:blocks/stele/r_sowilo" } },
+			"tiwaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_tiwaz" } },
+			"berkano":  { "textures":{ "all":"magicarsenal:blocks/stele/r_berkano" } },
+			"ehwaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_ehwaz" } },
+			"mannaz":   { "textures":{ "all":"magicarsenal:blocks/stele/r_mannaz" } },
+			"laguz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_laguz" } },
+			"ingwaz":   { "textures":{ "all":"magicarsenal:blocks/stele/r_ingwaz" } },
+			"dagaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_dagaz" } },
+			"othala":   { "textures":{ "all":"magicarsenal:blocks/stele/r_othala" } }
+		}
+    }
+}

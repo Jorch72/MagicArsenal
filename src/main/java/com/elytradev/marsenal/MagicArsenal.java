@@ -36,6 +36,7 @@ import com.elytradev.marsenal.compat.BaublesCompat;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
+import com.elytradev.marsenal.item.EnumIngredient;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
@@ -45,6 +46,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -54,11 +57,13 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -226,5 +231,33 @@ public class MagicArsenal {
 	@SubscribeEvent
 	public void onConnect(PlayerEvent.PlayerLoggedInEvent evt) {
 		new ConfigMessage(ArsenalConfig.local()).sendTo(evt.player);
+	}
+	
+	@SubscribeEvent
+	public void onCraftingResult(PlayerEvent.ItemCraftedEvent event) {
+		for(int i=0; i<event.craftMatrix.getSizeInventory(); i++) {
+			ItemStack stack = event.craftMatrix.getStackInSlot(i);
+			if (stack!=null && !stack.isEmpty() && stack.getItem()==ArsenalItems.INGREDIENT && stack.getMetadata()==EnumIngredient.PETAL_WOLFSBANE.ordinal()) {
+				NBTTagCompound tag = event.crafting.getTagCompound();
+				if (tag==null) {
+					tag = new NBTTagCompound();
+					event.crafting.setTagCompound(tag);
+				}
+				tag.setBoolean("magicarsenal:Poisoned", true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onItemEaten(LivingEntityUseItemEvent.Finish event) {
+		if (event.getEntityLiving().getEntityWorld().isRemote) return;
+		
+		ItemStack stack = event.getItem();
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag==null) return;
+		
+		if (tag.hasKey("magicarsenal:Poisoned")) {
+			event.getEntityLiving().addPotionEffect(new PotionEffect(ArsenalItems.POTION_WOLFSBANE, 20*30));
+		}
 	}
 }

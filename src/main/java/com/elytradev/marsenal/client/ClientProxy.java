@@ -30,6 +30,7 @@ import java.util.Set;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.Proxy;
+import com.elytradev.marsenal.block.IItemVariants;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.entity.EntityFrostShard;
@@ -38,11 +39,13 @@ import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -91,13 +94,25 @@ public class ClientProxy extends Proxy {
 				ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
 				
 				if (variantList.size()==1) {
-					ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(loc, "inventory"));
+					registerModelVariant(new ItemStack(item), loc);
+					//ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(loc, "inventory"));
 				} else {
 					for(ItemStack subItem : variantList) {
-						ModelLoader.setCustomModelResourceLocation(item, subItem.getItemDamage(), new ModelResourceLocation(loc, "variant="+subItem.getItemDamage()));
+						registerModelVariant(subItem, loc);
+						//ModelLoader.setCustomModelResourceLocation(item, subItem.getItemDamage(), new ModelResourceLocation(loc, "variant="+subItem.getItemDamage()));
 					}
 				}
 			}
+		}
+	}
+	
+	private void registerModelVariant(ItemStack stack, ResourceLocation loc) {
+		if (stack.getItem() instanceof ItemBlock && ((ItemBlock)stack.getItem()).getBlock() instanceof IItemVariants) {
+			Block b = ((ItemBlock)stack.getItem()).getBlock();
+			String variant = ((IItemVariants)b).getVariantFromItem(stack);
+			ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(loc, variant));
+		} else {
+			ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(loc, "variant="+stack.getItemDamage()));
 		}
 	}
 	

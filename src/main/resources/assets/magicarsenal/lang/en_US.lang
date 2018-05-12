@@ -2,6 +2,7 @@ itemGroup.magicarsenal=Magic Arsenal
 
 #Ingredients
 item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
+item.magicarsenal.ingredient.petal_wolfsbane.name=Wolfsbane Petal
 item.magicarsenal.root.wolfsbane.name=Wolfsbane Root
 item.magicarsenal.root.nightshade.name=Nightshade Root
 
@@ -33,7 +34,9 @@ death.attack.spell.willOWisp=%1$s walked into the light.
 death.attack.spell.chainLightning=%1$s has discovered electricity.
 
 #Potion Effects
+effect.magicarsenal.wolfsbane=Wolfsbane
 
+potion.effect.magicarsenal.wolfsbane=Potion of Wolfsbane
 
 #Info Pages
 info.magicarsenal.label.spell=§lSpell: §r%1$s
@@ -79,6 +82,36 @@ tooltip.magicarsenal.poisonroot.wolfsbane.taxonomy=Aconitum lycoctonum
 tooltip.magicarsenal.poisonroot.nightshade.taxonomy=Atropa belladonna
 tooltip.magicarsenal.poisonroot.wolfsbane=Long thought to be a treatment for lycanthropy and a protective ward, this plant carries a powerful poison that paralyzes the nerves.
 tooltip.magicarsenal.poisonroot.nightshade=Once the primary ingredient in witches' "flying ointment", every part of this plant is a poison of incredible potency.
+
+tooltip.magicarsenal.carvedwith=Carved with: §9%s
+tooltip.magicarsenal.rune.none=None
+
+tooltip.magicarsenal.rune.fehu=Fehu
+tooltip.magicarsenal.rune.uruz=Uruz
+tooltip.magicarsenal.rune.thurisaz=Thurisaz
+tooltip.magicarsenal.rune.ansuz=Ansuz
+tooltip.magicarsenal.rune.raidho=Raidho
+tooltip.magicarsenal.rune.kenaz=Kenaz
+tooltip.magicarsenal.rune.gebo=Gebo
+tooltip.magicarsenal.rune.wunjo=Wunjo
+
+tooltip.magicarsenal.rune.hagalaz=Hagalaz
+tooltip.magicarsenal.rune.nauthiz=Nauthiz
+tooltip.magicarsenal.rune.isa=Isa
+tooltip.magicarsenal.rune.jera=Jera
+tooltip.magicarsenal.rune.eihwaz=Eihwaz
+tooltip.magicarsenal.rune.perthro=Perthro
+tooltip.magicarsenal.rune.elhaz=Elhaz
+tooltip.magicarsenal.rune.sowilo=Sowilo
+
+tooltip.magicarsenal.rune.tiwaz=Tiwaz
+tooltip.magicarsenal.rune.berkano=Berkano
+tooltip.magicarsenal.rune.ehwaz=Ehwaz
+tooltip.magicarsenal.rune.mannaz=Mannaz
+tooltip.magicarsenal.rune.laguz=Laguz
+tooltip.magicarsenal.rune.ingwaz=Ingwaz
+tooltip.magicarsenal.rune.dagaz=Dagaz
+tooltip.magicarsenal.rune.othala=Othala
 
 #Resources
 resource.magicarsenal.stamina=Stamina
