@@ -33,6 +33,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.compat.BaublesCompat;
+import com.elytradev.marsenal.compat.ChiselCompat;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
@@ -63,7 +64,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -121,6 +121,7 @@ public class MagicArsenal {
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent e) {
 		PROXY.init();
+		ChiselCompat.init(); //Only IMC in here
 		
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_WOLFSBANE), 2);
 	}
