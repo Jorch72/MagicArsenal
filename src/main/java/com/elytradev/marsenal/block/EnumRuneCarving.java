@@ -24,6 +24,7 @@
 
 package com.elytradev.marsenal.block;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumRuneCarving implements IStringSerializable {
@@ -74,4 +75,20 @@ public enum EnumRuneCarving implements IStringSerializable {
 	EnumRuneCarving(String name) { this.name = name; }
 	@Override
 	public String getName() { return name; }
+	
+	public ItemStack getUnwardedItem() {
+		for(int i=0; i<FIRST_16.length; i++) {
+			if (this==FIRST_16[i]) {
+				return new ItemStack(ArsenalBlocks.RUNESTONE1, 1, i);
+			}
+		}
+		
+		for(int i=0; i<SECOND_16.length; i++) {
+			if (this==SECOND_16[i]) {
+				return new ItemStack(ArsenalBlocks.RUNESTONE2, 1, i);
+			}
+		}
+		
+		return new ItemStack(ArsenalBlocks.RUNESTONE1, 1, 0);
+	}
 }

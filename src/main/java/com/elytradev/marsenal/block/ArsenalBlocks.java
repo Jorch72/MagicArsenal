@@ -36,15 +36,17 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ArsenalBlocks {
 	private static List<Block> blocksForItems = new ArrayList<>();
 	
-	public static BlockPoisonDoublePlant CROP_WOLFSBANE = null;
-	public static BlockRunestone         RUNESTONE1     = null;
-	public static BlockRunestone         RUNESTONE2     = null;
+	public static BlockPoisonDoublePlant CROP_WOLFSBANE  = null;
+	public static BlockPoisonDoublePlant CROP_NIGHTSHADE = null;
+	public static BlockRunestone         RUNESTONE1      = null;
+	public static BlockRunestone         RUNESTONE2      = null;
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 		IForgeRegistry<Block> r = event.getRegistry();
 		
-		CROP_WOLFSBANE = block(r, new BlockPoisonDoublePlant("wolfsbane"));
+		CROP_WOLFSBANE  = blockNoItem(r, new BlockPoisonDoublePlant("wolfsbane"));
+		CROP_NIGHTSHADE = blockNoItem(r, new BlockPoisonDoublePlant("nightshade"));
 		RUNESTONE1 = block(r, new BlockRunestone("1", EnumRuneCarving.FIRST_16));
 		RUNESTONE2 = block(r, new BlockRunestone("2", EnumRuneCarving.SECOND_16));
 		
@@ -60,6 +62,11 @@ public class ArsenalBlocks {
 	public static <T extends Block> T block(IForgeRegistry<Block> registry, T t) {
 		registry.register(t);
 		blocksForItems.add(t);
+		return t;
+	}
+	
+	public static <T extends Block> T blockNoItem(IForgeRegistry<Block> registry, T t) {
+		registry.register(t);
 		return t;
 	}
 }

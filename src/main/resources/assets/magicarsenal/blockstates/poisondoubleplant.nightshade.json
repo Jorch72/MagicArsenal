@@ -1,0 +1,30 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"minecraft:cross",
+		"transform":"forge:default-block",
+		"uvlock":false,
+		"textures":{
+			"cross":"magicarsenal:blocks/nightshade/stage0"
+		}
+	},
+	"variants":{
+		"age=0,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=1,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=2,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=3,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=4,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=5,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=6,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=7,half=upper": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/upper" } }],
+		"age=0,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage0" } }],
+		"age=1,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage1" } }],
+		"age=2,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage2" } }],
+		"age=3,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage3" } }],
+		"age=4,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage4" } }],
+		"age=5,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage5" } }],
+		"age=6,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage6" } }],
+		"age=7,half=lower": [{ "textures": { "cross":"magicarsenal:blocks/nightshade/stage7" } }]
+	}
+}

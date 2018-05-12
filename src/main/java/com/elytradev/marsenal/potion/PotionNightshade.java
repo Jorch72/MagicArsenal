@@ -24,11 +24,13 @@
 
 package com.elytradev.marsenal.potion;
 
+import java.util.Locale;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -36,15 +38,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PotionWolfsbane extends Potion {
-	private static final ResourceLocation TEXTURE_WOLFSBANE = new ResourceLocation("magicarsenal", "textures/effects/wolfsbane.png");
-	DamageSource DAMAGE_NIGHTSHADE = new DamageSource("magicarsenal.wolfsbane");
+public class PotionNightshade extends Potion {
+	private static final ResourceLocation TEXTURE_WOLFSBANE = new ResourceLocation("magicarsenal", "textures/effects/nightshade.png");
+	DamageSource DAMAGE_NIGHTSHADE = new DamageSource("magicarsenal.nightshade");
 	
-	public PotionWolfsbane() {
-		super(true, 0x9680c8);
+	public PotionNightshade() {
+		super(true, 0x2a0e49);
 		
-		setPotionName("effect.magicarsenal.wolfsbane");
-		setRegistryName("magicarsenal", "wolfsbane");
+		setPotionName("effect.magicarsenal.nightshade");
+		setRegistryName("magicarsenal", "nightshade");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -63,17 +65,23 @@ public class PotionWolfsbane extends Potion {
 	
 	@Override
 	public void performEffect(EntityLivingBase entity, int amplifier) {
-		if (entity.isEntityUndead()) return;
+		if (entity.isEntityUndead()) {
+			entity.heal(1.0f);
+			return;
+		}
+		
 		float toDamage = 1;
 		
-		if (entity instanceof EntityTameable) {
-			//This potion *will* kill pets and tameable beasts. It wasn't called wolfsbane for nothing.
+		if (entity instanceof EntityDragon || entity.getName().toLowerCase(Locale.ROOT).contains("dragon")) {
+			toDamage *= 2;
+			//Nightshade is especially potent against dragons, whose magic aptitude makes them sensitive to nerve poisons.
+			//Nightshade can also provide the killing blow against these creatures.
 		} else {
 			if (entity.getHealth()<toDamage) toDamage = entity.getHealth()-1.0f;
 		}
 		
 		if (toDamage > 0f) {
-            entity.attackEntityFrom(DamageSource.MAGIC, toDamage);
+            entity.attackEntityFrom(DAMAGE_NIGHTSHADE, toDamage);
         }
 	}
 	

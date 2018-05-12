@@ -29,7 +29,8 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumIngredient implements IStringSerializable {
 	FOCUS_CORE("focuscore"),
-	PETAL_WOLFSBANE("petalwolfsbane");
+	PETAL_WOLFSBANE("petalwolfsbane"),
+	BERRY_NIGHTSHADE("berrynightshade");
 	
 	private final String name;
 	

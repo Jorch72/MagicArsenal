@@ -44,44 +44,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
 public class ItemPoisonRoot extends ItemSeeds {
-	//private Block[] varieties = {
-	//	ArsenalBlocks.CROP_WOLFSBANE	
-	//};
+	private String id;
 	
 	public ItemPoisonRoot(String id, Block crop, Block soil) {
 		super(crop, soil);
+		this.id = id;
 		this.setRegistryName("root."+id);
 		this.setUnlocalizedName("magicarsenal.root."+id);
 		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
-		//super("root", EnumPoisonPlant.values(), false);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-		tooltip.add("§e"+I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+EnumPoisonPlant.valueOf(stack.getMetadata()).getName()+".taxonomy")+"§r");
-		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+EnumPoisonPlant.valueOf(stack.getMetadata()).getName());
+		tooltip.add("§e"+I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id+".taxonomy")+"§r");
+		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id);
 		List<String> lines = StringExtras.WordWrap(flavortext, 35);
 		for(String s : lines) {
 			tooltip.add("§9§o"+s+"§r");
 		}
 	}
-	/*
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,  float hitZ) {
-		if (ArsenalBlocks.CROP_WOLFSBANE.canPlaceBlockAt(world, pos.offset(facing))) {
-			return EnumActionResult.SUCCESS;
-		} else {
-			return EnumActionResult.FAIL;
-		}
-	}*/
 
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return EnumPlantType.Crop;
 	}
-
-	//@Override
-	//public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
-	//	return ArsenalBlocks.CROP_WOLFSBANE.getDefaultState();
-	//}
 }

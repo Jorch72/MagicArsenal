@@ -30,8 +30,8 @@ import java.util.List;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
-import com.elytradev.marsenal.block.IItemVariants;
-import com.elytradev.marsenal.potion.CustomPotions;
+import com.elytradev.marsenal.block.EnumRuneCarving;
+import com.elytradev.marsenal.potion.PotionNightshade;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
 
 import net.minecraft.block.Block;
@@ -39,13 +39,15 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionHelper;
+import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
@@ -60,8 +62,16 @@ public class ArsenalItems {
 	public static ItemSubtyped<EnumIngredient> INGREDIENT  = null;
 	public static ItemPoisonRoot               ROOT_WOLFSBANE = null;
 	public static ItemPoisonRoot               ROOT_NIGHTSHADE = null;
+	//public static ItemPoisonVial               POISON_VIAL = null;
 	
-	public static PotionWolfsbane              POTION_WOLFSBANE = null;
+	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
+	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
+	public static PotionType        POTIONTYPE_WOLFSBANE1 = null;
+	public static PotionType        POTIONTYPE_WOLFSBANE2 = null;
+	public static PotionType        POTIONTYPE_WOLFSBANE3 = null;
+	public static PotionType        POTIONTYPE_NIGHTSHADE1 = null;
+	public static PotionType        POTIONTYPE_NIGHTSHADE2 = null;
+	public static PotionType        POTIONTYPE_NIGHTSHADE3 = null;
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -75,23 +85,49 @@ public class ArsenalItems {
 		SPELL_BAUBLE= item(r, new ItemSpellBauble());
 		INGREDIENT  = item(r, new ItemSubtyped<>("ingredient", EnumIngredient.values(), false));
 		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
-		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND)); //FIXME: Switch to nightshade when the plant is done
+		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND)); //FIXME: Switch to nightshade when the plant is done
+		//POISON_VIAL = item(r, new ItemPoisonVial());
 		
 		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
+		ArsenalBlocks.CROP_NIGHTSHADE.setHarvestItems(EnumPoisonPlant.NIGHTSHADE.getRoot(), EnumIngredient.BERRY_NIGHTSHADE.getItem());
 		
 		OreDictionary.registerOre("dyePurple", EnumIngredient.PETAL_WOLFSBANE.getItem());
+		OreDictionary.registerOre("dyeBlack", EnumIngredient.BERRY_NIGHTSHADE.getItem());
 	}
 	
 	@SubscribeEvent
 	public static void onRegisterPotions(RegistryEvent.Register<Potion> event) {
 		IForgeRegistry<Potion> r = event.getRegistry();
 		
-		POTION_WOLFSBANE = potion(r, new PotionWolfsbane());
+		potion(r, POTION_WOLFSBANE);
+		potion(r, POTION_NIGHTSHADE);
+		EnumPoisonPlant.WOLFSBANE.registerPotion(POTION_WOLFSBANE);
+		EnumPoisonPlant.NIGHTSHADE.registerPotion(POTION_NIGHTSHADE);
 	}
 	
 	public static <T extends Potion> T potion(IForgeRegistry<Potion> registry, T t) {
 		registry.register(t);
 		return t;
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterPotionTypes(RegistryEvent.Register<PotionType> event) {
+		IForgeRegistry<PotionType> r = event.getRegistry();
+		
+		POTIONTYPE_WOLFSBANE1 = potionType(r, POTION_WOLFSBANE, 20*45, 0);
+		POTIONTYPE_WOLFSBANE2 = potionType(r, POTION_WOLFSBANE, 20*40, 1);
+		POTIONTYPE_WOLFSBANE3 = potionType(r, POTION_WOLFSBANE, 20*35, 2);
+		
+		POTIONTYPE_NIGHTSHADE1 = potionType(r, POTION_NIGHTSHADE, 20*45, 0);
+		POTIONTYPE_NIGHTSHADE2 = potionType(r, POTION_NIGHTSHADE, 20*40, 1);
+		POTIONTYPE_NIGHTSHADE3 = potionType(r, POTION_NIGHTSHADE, 20*35, 2);
+	}
+	
+	public static PotionType potionType(IForgeRegistry<PotionType> registry, Potion potion, int duration, int amplifier) {
+		PotionType result = new PotionType(new PotionEffect(potion, duration, amplifier));
+		result.setRegistryName(potion.getRegistryName().getResourceDomain(), potion.getRegistryName().getResourcePath()+"."+(amplifier+1));
+		registry.register(result);
+		return result;
 	}
 	
 	
@@ -170,22 +206,40 @@ public class ArsenalItems {
 				Items.GLOWSTONE_DUST
 				).setRegistryName("magicarsenal_spellfocus_chain_lightning"));
 		
-		ItemStack awkwardPotion = new ItemStack(Items.POTIONITEM);
-		PotionUtils.addPotionToItemStack(awkwardPotion, PotionTypes.AWKWARD);
+		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromStacks(EnumIngredient.PETAL_WOLFSBANE.getItem()), POTIONTYPE_WOLFSBANE1);
+		PotionHelper.addMix(POTIONTYPE_WOLFSBANE1, Items.GLOWSTONE_DUST, POTIONTYPE_WOLFSBANE2);
+		PotionHelper.addMix(POTIONTYPE_WOLFSBANE2, Items.GLOWSTONE_DUST, POTIONTYPE_WOLFSBANE3);
 		
-		BrewingRecipeRegistry.addRecipe(awkwardPotion, EnumIngredient.PETAL_WOLFSBANE.getItem(), CustomPotions.getBottleOf(POTION_WOLFSBANE, 20*30));
-		//Offline until they can be fixed, unfortunately.
-		//BrewingRecipeRegistry.addRecipe(CustomPotions.getBottleOf(POTION_WOLFSBANE, 20*30), new ItemStack(Items.GLOWSTONE_DUST), CustomPotions.getBottleOf(POTION_WOLFSBANE, 2, 20*30));
-		//BrewingRecipeRegistry.addRecipe(CustomPotions.getBottleOf(POTION_WOLFSBANE, 2, 20*30), new ItemStack(Items.GLOWSTONE_DUST), CustomPotions.getBottleOf(POTION_WOLFSBANE, 3, 20*30));
+		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromStacks(EnumIngredient.BERRY_NIGHTSHADE.getItem()), POTIONTYPE_NIGHTSHADE1);
+		PotionHelper.addMix(POTIONTYPE_NIGHTSHADE1, Items.GLOWSTONE_DUST, POTIONTYPE_NIGHTSHADE2);
+		PotionHelper.addMix(POTIONTYPE_NIGHTSHADE2, Items.GLOWSTONE_DUST, POTIONTYPE_NIGHTSHADE3);
 		
-		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "arrowtip"),
-				CustomPotions.getTippedArrow(POTION_WOLFSBANE, 1, 20*30),
-				"aaa", "apa", "aaa",
-				'a', Items.ARROW,
-				'p', new IngredientNBT(CustomPotions.getBottleOf(POTION_WOLFSBANE, 20*30)))
-				.setRegistryName("magicarsenal_arrowtip_wolfsbane"));
+		ItemStack nightshadePotion = new ItemStack(Items.POTIONITEM);
+		PotionUtils.addPotionToItemStack(nightshadePotion, POTIONTYPE_NIGHTSHADE1);
 		
+		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runestone"),
+				new ItemStack(ArsenalBlocks.RUNESTONE1, 1, 8),
+				"sss", "sps", "sss",
+				's', "stone",
+				'p', new IngredientNBT(nightshadePotion)
+				).setRegistryName("magicarsenal_runestone"));
 		
+		for(int i=1; i<EnumRuneCarving.values().length; i++) {
+			EnumRuneCarving priorCarving = EnumRuneCarving.values()[i-1];
+			EnumRuneCarving curCarving = EnumRuneCarving.values()[i];
+			ItemStack priorItem = priorCarving.getUnwardedItem();
+			ItemStack curItem = curCarving.getUnwardedItem();
+			r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runecarving"),
+					curItem,
+					priorItem
+					).setRegistryName("runecarving_loop_"+i));
+		}
+		ItemStack firstItem = EnumRuneCarving.values()[0].getUnwardedItem();
+		ItemStack lastItem = EnumRuneCarving.values()[EnumRuneCarving.values().length-1].getUnwardedItem();
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runecarving"),
+				firstItem,
+				lastItem
+				).setRegistryName("runecarving_loop_"+0));
 	}
 	
 	

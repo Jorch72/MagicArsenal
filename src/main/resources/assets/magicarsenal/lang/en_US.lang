@@ -3,11 +3,12 @@ itemGroup.magicarsenal=Magic Arsenal
 #Ingredients
 item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
 item.magicarsenal.ingredient.petal_wolfsbane.name=Wolfsbane Petal
+item.magicarsenal.ingredient.berry_nightshade.name=Nightshade Berries
 item.magicarsenal.root.wolfsbane.name=Wolfsbane Root
 item.magicarsenal.root.nightshade.name=Nightshade Root
 
 #Spell Focus Items
-item.magicarsenal.spellfocus.name=%1$s Spell Focus
+item.magicarsenal.spellfocus.name=%s Spell Focus
 
 item.magicarsenal.spellfocus.healing_wave.name=Healing Wave Spell Focus
 item.magicarsenal.spellfocus.healing_circle.name=Healing Circle Spell Focus
@@ -24,19 +25,50 @@ item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 #Spell Baubles
 item.magicarsenal.spellbauble.gravity_mantle.name=Gravity Mantle
 
+#Blocks
+tile.magicarsenal.runestone.name=Runestone
+
 #Spell Damage Sources
-death.attack.spell.drainLife=%1$s wasted away.
-death.attack.spell.oblation=%1$s was too generous with their life essence.
-death.attack.spell.disruption=%1$s was vaporized by a disruptor beam.
-death.attack.spell.magmaBlast=%1$s was shredded by molten rock.
-death.attack.spell.frostShards=%1$s was pierced by razor-sharp ice.
+death.attack.spell.drainLife=%s wasted away.
+death.attack.spell.oblation=%s was too generous with their life essence.
+death.attack.spell.disruption=%s was vaporized by a disruptor beam.
+death.attack.spell.magmaBlast=%s was shredded by molten rock.
+death.attack.spell.frostShards=%s was pierced by razor-sharp ice.
 death.attack.spell.willOWisp=%1$s walked into the light.
-death.attack.spell.chainLightning=%1$s has discovered electricity.
+death.attack.spell.chainLightning=%s has discovered electricity.
+death.attack.magicarsenal.wolfsbane=%s succumbed to wolfsbane poison
+death.attack.magicarsenal.nightshade=%s succumbed to nightshade poison
 
 #Potion Effects
 effect.magicarsenal.wolfsbane=Wolfsbane
 
-potion.effect.magicarsenal.wolfsbane=Potion of Wolfsbane
+potion.effect.wolfsbane.1=Wolfsbane Poison
+potion.effect.wolfsbane.2=Strong Wolfsbane Poison
+potion.effect.wolfsbane.3=Dangerously Strong Wolfsbane Poison
+splash_potion.effect.wolfsbane.1=Wolfsbane Splash Poison
+splash_potion.effect.wolfsbane.2=Strong Wolfsbane Splash Poison
+splash_potion.effect.wolfsbane.3=Dangerously Strong Wolfsbane Splash Poison
+lingering_potion.effect.wolfsbane.1=Lingering Wolfsbane Poison
+lingering_potion.effect.wolfsbane.2=Strong Lingering Wolfsbane Poison
+lingering_potion.effect.wolfsbane.3=Dangerously Strong Lingering Wolfsbane Poison
+tipped_arrow.effect.wolfsbane.1=Wolfsbane-Tipped Arrow
+tipped_arrow.effect.wolfsbane.2=Strong Wolfsbane-Tipped Arrow
+tipped_arrow.effect.wolfsbane.3=Dangerously Strong Wolfsbane-Tipped Arrow
+
+effect.magicarsenal.nightshade=Nightshade
+
+potion.effect.nightshade.1=Nightshade Poison
+potion.effect.nightshade.2=Deadly Nightshade Poison
+potion.effect.nightshade.3=Extremely Deadly Nightshade Poison
+splash_potion.effect.nightshade.1=Nightshade Splash Poison
+splash_potion.effect.nightshade.2=Deadly Nightshade Splash Poison
+splash_potion.effect.neightshade.3=Extremely Deadly Nightshade Splash Poison
+lingering_potion.effect.nightshade.1=Lingering Nightshade Poison
+lingering_potion.effect.nightshade.2=Deadly Lingering Nightshade Poison
+lingering_potion.effect.nightshade.3=Extremely Deadly Lingering Nightshade Poison
+tipped_arrow.effect.nightshade.1=Nightshade-Tipped Arrow
+tipped_arrow.effect.nightshade.2=Deadly Nightshade-Tipped Arrow
+tipped_arrow.effect.nightshade.3=Extremely Deadly Nightshade-Tipped Arrow
 
 #Info Pages
 info.magicarsenal.label.spell=§lSpell: §r%1$s

@@ -40,7 +40,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -48,6 +48,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -68,7 +69,7 @@ public class BlockPoisonDoublePlant extends Block implements IPlantable, IGrowab
 			new AxisAlignedBB(3*PX, 0.0d, 3*PX, 13*PX, 14*PX, 13*PX),
 			new AxisAlignedBB(3*PX, 0.0d, 3*PX, 13*PX, 16*PX, 13*PX)
 		};
-
+	
 	public static final PropertyInteger AGE = BlockCrops.AGE;
 	public static final PropertyEnum<BlockDoublePlant.EnumBlockHalf> HALF = BlockDoublePlant.HALF;
 	private final String id;
@@ -331,5 +332,10 @@ public class BlockPoisonDoublePlant extends Block implements IPlantable, IGrowab
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return NULL_AABB;
+	}
+	
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		return root.copy();
 	}
 }
