@@ -17,7 +17,7 @@
 			"uruz":     { "textures":{ "all":"magicarsenal:blocks/stele/r_uruz" } },
 			"thurisaz": { "textures":{ "all":"magicarsenal:blocks/stele/r_thurisaz" } },
 			"ansuz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_ansuz" } },
-			"raido":    { "textures":{ "all":"magicarsenal:blocks/stele/r_raido" } },
+			"raidho":   { "textures":{ "all":"magicarsenal:blocks/stele/r_raidho" } },
 			"kenaz":    { "textures":{ "all":"magicarsenal:blocks/stele/r_kenaz" } },
 			"gebo":     { "textures":{ "all":"magicarsenal:blocks/stele/r_gebo" } },
 			"wunjo":    { "textures":{ "all":"magicarsenal:blocks/stele/r_wunjo" } },

@@ -27,21 +27,29 @@ package com.elytradev.marsenal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.elytradev.concrete.inventory.IContainerInventoryHolder;
+import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import com.elytradev.concrete.inventory.gui.client.ConcreteGui;
 import com.elytradev.concrete.network.NetworkContext;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.capability.IRuneProducer;
 import com.elytradev.marsenal.capability.impl.DefaultMagicResourcesSerializer;
+import com.elytradev.marsenal.capability.impl.DefaultRuneProducerSerializer;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.capability.impl.RuneProducer;
 import com.elytradev.marsenal.compat.BaublesCompat;
 import com.elytradev.marsenal.compat.ChiselCompat;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
+import com.elytradev.marsenal.gui.EnumGui;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumIngredient;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
+import com.elytradev.probe.api.IProbeDataProvider;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -49,8 +57,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -71,6 +82,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -80,10 +93,15 @@ public class MagicArsenal {
 	public static final String VERSION = "@VERSION@";
 	@SidedProxy(clientSide="com.elytradev.marsenal.client.ClientProxy", serverSide="com.elytradev.marsenal.Proxy")
 	public static Proxy PROXY;
+	public static MagicArsenal INSTANCE;
 	public static Logger LOG;
 	public static NetworkContext CONTEXT;
 	@CapabilityInject(value = IMagicResources.class)
 	public static Capability<IMagicResources> CAPABILTIY_MAGIC_RESOURCES;
+	@CapabilityInject(value = IRuneProducer.class)
+	public static Capability<IRuneProducer> CAPABILITY_RUNEPRODUCER;
+	@CapabilityInject(value = IProbeDataProvider.class)
+	public static Object CAPABILITY_PROBEDATA;
 	
 	public static final CreativeTabs TAB_MARSENAL = new CreativeTabs("magicarsenal") {
 		@Override
@@ -94,9 +112,11 @@ public class MagicArsenal {
 	
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
+		INSTANCE = this;
 		LOG = LogManager.getLogger("MagicArsenal");
 		ArsenalConfig.setLocal(ArsenalConfig.load(e.getSuggestedConfigurationFile()));
 		CapabilityManager.INSTANCE.register(IMagicResources.class, new DefaultMagicResourcesSerializer(), MagicResources::new);
+		CapabilityManager.INSTANCE.register(IRuneProducer.class, new DefaultRuneProducerSerializer(), RuneProducer::new);
 		
 		CONTEXT = NetworkContext.forChannel("mafx");
 		CONTEXT.register(SpawnParticleEmitterMessage.class);
@@ -116,6 +136,39 @@ public class MagicArsenal {
 		}
 		
 		PROXY.preInit();
+		
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new IGuiHandler() {
+			@Override
+			public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+				TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
+				
+				if (te!=null && (te instanceof IContainerInventoryHolder)) {
+					ConcreteContainer container = EnumGui.forId(id).createContainer(
+							player.inventory,
+							((IContainerInventoryHolder)te).getContainerInventory(),
+							te);
+					container.validate();
+					return container;
+				}
+				
+				return null; //For now!
+			}
+
+			@Override
+			public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+				TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
+				ConcreteContainer container = null;
+				if (te!=null && (te instanceof IContainerInventoryHolder)) {
+					container = EnumGui.forId(id).createContainer(
+							player.inventory,
+							((IContainerInventoryHolder)te).getContainerInventory(),
+							te);
+				}
+				
+				return new ConcreteGui(container);
+			}
+			
+		});
 	}
 	
 	@Mod.EventHandler
@@ -186,6 +239,7 @@ public class MagicArsenal {
 	
 	private int tickCounter = 0;
 	private static final int MAX_TICK_COUNTER = 10;
+	
 	@SubscribeEvent
 	public void onTick(TickEvent.WorldTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) return;

@@ -27,6 +27,10 @@ item.magicarsenal.spellbauble.gravity_mantle.name=Gravity Mantle
 
 #Blocks
 tile.magicarsenal.runestone.name=Runestone
+tile.magicarsenal.altar.name=Runic Altar
+tile.magicarsenal.stele.uncarved.name=Uncarved Stele
+tile.magicarsenal.stele.raidho.name=Raidho Stele
+tile.magicarsenal.stele.kenaz.name=Kenaz Stele
 
 #Spell Damage Sources
 death.attack.spell.drainLife=%s wasted away.
@@ -85,6 +89,14 @@ info.magicarsenal.element.undeath=Undeath
 info.magicarsenal.element.holy=Holy
 info.magicarsenal.element.arcane=Arcane
 info.magicarsenal.element.chaos=Chaos
+
+#Probe Data
+info.magicarsenal.radiance.name=Radiance
+info.magicarsenal.emc.name=EMC
+info.magicarsenal.label.radiance=Radiance: %s
+info.magicarsenal.label.emc=EMC: %s
+info.magicarsenal.label.transmitting=Transmitting
+info.magicarsenal.label.sleeping=Sleeping
 
 #Spells
 spell.magicarsenal.healingWave=Healing Wave

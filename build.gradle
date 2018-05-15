@@ -60,6 +60,8 @@ def mc_version='1.12.2';
 def jei_version="4.9.1.175";
 def ctm_version="0.3.0.14"
 def chisel_version="0.2.0.31"
+def probedata_version="1.1.1"
+def fruitphone_version="2.84"
 def concrete_version="0.3.6-SNAPSHOT";
 //def concrete_modules=[]; //For eclipse import
 def concrete_modules=["common","inventory","recipe","network","reflect"];
@@ -94,6 +96,9 @@ dependencies {
 		shadow 'com.elytradev.concrete:concrete-' + module + ':' + concrete_version;
 		compile 'com.elytradev.concrete:concrete-' + module + ':' + concrete_version;
 	}
+	
+	deobfCompile "com.elytradev:probedataproviderapi:MC1.12_ver${probedata_version}"
+	runtime "com.elytradev:fruitphone:${mc_version}-${fruitphone_version}"
 	
 	shadow 'org.hjson:hjson:1.0.0';
 	compile 'org.hjson:hjson:1.0.0';

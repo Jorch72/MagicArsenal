@@ -1,0 +1,21 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"magicarsenal:altar",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":true,
+		"textures":{
+			"base":"magicarsenal:blocks/stele/uncarved",
+			"mitre":"magicarsenal:blocks/stele/r_uncarved",
+			"claw":"magicarsenal:blocks/stele/dark",
+			"particle":"magicarsenal:blocks/stele/uncarved"
+		}
+	},
+	
+	"variants": {
+		"normal": [{}]
+    }
+}

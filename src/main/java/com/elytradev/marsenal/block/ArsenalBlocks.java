@@ -27,10 +27,15 @@ package com.elytradev.marsenal.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.marsenal.tile.TileEntityKenazStele;
+import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
+import com.elytradev.marsenal.tile.TileEntityRunicAltar;
+
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ArsenalBlocks {
@@ -40,6 +45,11 @@ public class ArsenalBlocks {
 	public static BlockPoisonDoublePlant CROP_NIGHTSHADE = null;
 	public static BlockRunestone         RUNESTONE1      = null;
 	public static BlockRunestone         RUNESTONE2      = null;
+	public static BlockRunicAltar        RUNIC_ALTAR     = null;
+	public static BlockSimple            STELE_UNCARVED  = null;
+	public static BlockKenazStele        STELE_KENAZ     = null;
+	public static BlockRaidhoStele       STELE_RAIDHO    = null;
+	
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
@@ -49,7 +59,14 @@ public class ArsenalBlocks {
 		CROP_NIGHTSHADE = blockNoItem(r, new BlockPoisonDoublePlant("nightshade"));
 		RUNESTONE1 = block(r, new BlockRunestone("1", EnumRuneCarving.FIRST_16));
 		RUNESTONE2 = block(r, new BlockRunestone("2", EnumRuneCarving.SECOND_16));
+		RUNIC_ALTAR    = block(r, new BlockRunicAltar());
+		STELE_UNCARVED = block(r, new BlockSimple("stele.uncarved"));
+		STELE_RAIDHO   = block(r, new BlockRaidhoStele());
+		STELE_KENAZ    = block(r, new BlockKenazStele());
 		
+		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,  "magicarsenal.altar");
+		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class, "magicarsenal.stele.raidho");
+		GameRegistry.registerTileEntity(TileEntityKenazStele.class,  "magicarsenal.stele.kenaz");
 		
 		//No, you can't carry the crops around.
 		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());
