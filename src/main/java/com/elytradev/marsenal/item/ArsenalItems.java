@@ -27,12 +27,15 @@ package com.elytradev.marsenal.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.concrete.recipe.ItemIngredient;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
 import com.elytradev.marsenal.block.EnumRuneCarving;
 import com.elytradev.marsenal.potion.PotionNightshade;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
+import com.elytradev.marsenal.recipe.RunicAltarRecipes;
+import com.elytradev.marsenal.recipe.ShapelessAltarRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -240,6 +243,15 @@ public class ArsenalItems {
 				firstItem,
 				lastItem
 				).setRegistryName("runecarving_loop_"+0));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(Items.POTATO),
+				ItemIngredient.of(Items.BREAD),
+				ItemIngredient.of(Items.BREAD),
+				ItemIngredient.of(Items.BREAD),
+				ItemIngredient.of(Items.BREAD),
+				ItemIngredient.of(Items.BREAD),
+				ItemIngredient.of(Items.BREAD)
+				));
 	}
 	
 	

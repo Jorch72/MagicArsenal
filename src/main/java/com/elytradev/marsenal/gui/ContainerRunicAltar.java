@@ -72,10 +72,6 @@ public class ContainerRunicAltar extends ConcreteContainer {
 		//root.add(new WImage(BG_IMAGE), 1, 1, 6, 4);
 		
 		root.add(createPlayerInventoryPanel(), 0, 7);
-		
-		
-		
-		this.createPlayerInventoryPanel();
 	}
 
 }

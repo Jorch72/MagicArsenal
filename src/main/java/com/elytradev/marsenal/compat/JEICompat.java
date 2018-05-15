@@ -27,14 +27,24 @@ package com.elytradev.marsenal.compat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.gui.ContainerRunicAltar;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumSpellFocus;
 import com.elytradev.marsenal.magic.EnumElement;
+import com.elytradev.marsenal.recipe.RunicAltarRecipes;
+import com.elytradev.marsenal.recipe.ShapelessAltarRecipe;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.gui.elements.DrawableResource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -134,6 +144,12 @@ public class JEICompat implements IModPlugin {
 						EnumElement.HOLY, EnumElement.AIR,
 						IMagicResources.RESOURCE_STAMINA
 				));
+		
+		registry.addRecipeCatalyst(new ItemStack(ArsenalBlocks.RUNIC_ALTAR), "magicarsenal:altar");
+		
+		registry.addRecipes(RunicAltarRecipes.allRecipes(), "magicarsenal:altar");
+		registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRunicAltar.class, "magicarsenal:altar", 0, 6, 7, 36);
+		
 	}
 	
 	private static String[] spellInfo(String spell, EnumElement elem, EnumElement elem2, ResourceLocation resource) {
@@ -169,5 +185,48 @@ public class JEICompat implements IModPlugin {
 		String domain = resource.getResourceDomain();
 		String resourceName = resource.getResourcePath();
 		return local("resource."+domain+"."+resourceName);
+	}
+
+	public void registerCategories(IRecipeCategoryRegistration registry) {
+		registry.addRecipeCategories(new IRecipeCategory<ShapelessAltarRecipe>() {
+			@Override
+			public String getUid() {
+				return "magicarsenal:altar";
+			}
+
+			@Override
+			public String getTitle() {
+				return I18n.translateToLocal("tile.magicarsenal.altar.name");
+			}
+
+			@Override
+			public String getModName() {
+				return "magicarsenal";
+			}
+
+			@Override
+			public IDrawable getBackground() {
+				return new DrawableResource(new ResourceLocation("magicarsenal", "textures/guis/slot.eldritch.jei.png"), 0, 0, 184, 80, 0, 0, 0, 0, 184, 80);
+			}
+
+			@Override
+			public void setRecipe(IRecipeLayout recipeLayout, ShapelessAltarRecipe recipeWrapper, IIngredients ingredients) {
+				int leftMargin = 38;
+				int topMargin = 4;
+				recipeLayout.getItemStacks().init(0, true, leftMargin + 18*1 + 3, topMargin + 18*0 + 0);
+				recipeLayout.getItemStacks().init(1, true, leftMargin + 18*3 + 1, topMargin + 18*0 + 0);
+				recipeLayout.getItemStacks().init(2, true, leftMargin + 18*5 - 2, topMargin + 18*1 + 0);
+				recipeLayout.getItemStacks().init(3, true, leftMargin + 18*4 - 2, topMargin + 18*3 - 3);
+				recipeLayout.getItemStacks().init(4, true, leftMargin + 18*2 + 0, topMargin + 18*3 - 3);
+				recipeLayout.getItemStacks().init(5, true, leftMargin + 18*0 + 3, topMargin + 18*2 - 3);
+				
+				recipeLayout.getItemStacks().init(6, false, leftMargin + 18*2 + 8, topMargin + 18*1 + 7);
+				
+				recipeLayout.getItemStacks().set(ingredients);
+				
+				recipeLayout.setRecipeTransferButton(184-16, topMargin + 18*4);
+			}
+			
+		});
 	}
 }
