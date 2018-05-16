@@ -42,10 +42,14 @@ import net.minecraftforge.fml.common.Optional;
 public class ShapelessAltarRecipe implements IRecipeWrapper {
 	private ItemIngredient[] ingredients;
 	private ItemStack output;
+	private int radiance;
+	private int emc;
 	
-	public ShapelessAltarRecipe(ItemStack output, ItemIngredient... ingredients) {
+	public ShapelessAltarRecipe(ItemStack output, int radiance, int emc, ItemIngredient... ingredients) {
 		this.output = output;
 		this.ingredients = ingredients;
+		this.radiance = radiance;
+		this.emc = emc;
 	}
 	
 	@Override
@@ -80,6 +84,7 @@ public class ShapelessAltarRecipe implements IRecipeWrapper {
 	}
 
 	public boolean canCraftFrom(IItemHandler inventory) {
+		/*
 		List<ItemIngredient> needed = new ArrayList<>();
 		for(ItemIngredient it : ingredients) needed.add(it);
 		int searchSlots = Math.min(inventory.getSlots(), 6);
@@ -97,7 +102,38 @@ public class ShapelessAltarRecipe implements IRecipeWrapper {
 			if (needed.isEmpty()) return true;
 		}
 		
+		return needed.isEmpty();*/
+		return consumeIngredients(inventory, true);
+	}
+
+	public boolean consumeIngredients(IItemHandler inventory, boolean simulate) {
+		List<ItemIngredient> needed = new ArrayList<>();
+		for(ItemIngredient it : ingredients) needed.add(it);
+		int searchSlots = Math.min(inventory.getSlots(), 6);
+		
+		for(int i=0; i<searchSlots; i++) {
+			ItemIngredient matched = null;
+			for(ItemIngredient ingredient : needed) {
+				if (ingredient.apply(inventory.getStackInSlot(i))) {
+					matched = ingredient;
+					break;
+				}
+			}
+			if (matched==null) return false;
+			needed.remove(matched);
+			ItemStack stack = inventory.extractItem(i, 1, simulate);
+			if (stack==null || stack.isEmpty()) return false;
+			if (needed.isEmpty()) return true;
+		}
+		
 		return needed.isEmpty();
 	}
 
+	public int getEMC() {
+		return emc;
+	}
+	
+	public int getRadiance() {
+		return radiance;
+	}
 }

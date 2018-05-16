@@ -244,13 +244,14 @@ public class ArsenalItems {
 				lastItem
 				).setRegistryName("runecarving_loop_"+0));
 		
-		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(Items.POTATO),
-				ItemIngredient.of(Items.BREAD),
-				ItemIngredient.of(Items.BREAD),
-				ItemIngredient.of(Items.BREAD),
-				ItemIngredient.of(Items.BREAD),
-				ItemIngredient.of(Items.BREAD),
-				ItemIngredient.of(Items.BREAD)
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(ArsenalBlocks.ROSETTA_STONE),
+				1, 200,
+				ItemIngredient.of(Blocks.BOOKSHELF),
+				ItemIngredient.of(Blocks.BOOKSHELF),
+				ItemIngredient.of(Blocks.BOOKSHELF),
+				ItemIngredient.of(Blocks.BOOKSHELF),
+				ItemIngredient.of(Blocks.BOOKSHELF),
+				ItemIngredient.of(Blocks.BOOKSHELF)
 				));
 	}
 	

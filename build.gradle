@@ -90,7 +90,7 @@ artifacts {
 dependencies {
 	deobfCompile name: "Baubles", version: "${mc_shortversion}-1.5.2";
 	
-	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api";
+	//deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api";
 	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}";
 	
 	deobfCompile "team.chisel.ctm:CTM:MC${mc_shortversion}-${ctm_version}";

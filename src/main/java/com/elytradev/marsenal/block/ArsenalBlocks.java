@@ -50,6 +50,8 @@ public class ArsenalBlocks {
 	public static BlockKenazStele        STELE_KENAZ     = null;
 	public static BlockRaidhoStele       STELE_RAIDHO    = null;
 	
+	public static BlockRosettaStone      ROSETTA_STONE   = null;
+	
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
@@ -63,6 +65,8 @@ public class ArsenalBlocks {
 		STELE_UNCARVED = block(r, new BlockSimple("stele.uncarved"));
 		STELE_RAIDHO   = block(r, new BlockRaidhoStele());
 		STELE_KENAZ    = block(r, new BlockKenazStele());
+		
+		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		
 		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,  "magicarsenal.altar");
 		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class, "magicarsenal.stele.raidho");
