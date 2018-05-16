@@ -40,6 +40,7 @@ import com.elytradev.concrete.inventory.Validators;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.capability.IRuneProducer;
 import com.elytradev.marsenal.compat.ProbeDataCompat;
+import com.elytradev.marsenal.magic.SpellEffect;
 import com.elytradev.marsenal.recipe.RunicAltarRecipes;
 import com.elytradev.marsenal.recipe.ShapelessAltarRecipe;
 
@@ -59,6 +60,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	private static final int MAX_DEPTH = 20;
 	private static final int RESCAN_PERIOD = 20*10;
 	private static final int EMC_TIMER = 20;
+	private static final int CRAFTING_TIMER = (int)(20*2.5f);
 	private ConcreteItemStorage storage = new ConcreteItemStorage(7)
 			.withName("tile.magicarsenal.altar.name")
 			.setCanExtract(0, false)
@@ -82,6 +84,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	private ShapelessAltarRecipe currentlyCrafting = null;
 	private int emcCollected = 0;
 	private int timer = 0;
+	private int craftingTimer = 0;
 	
 	public TileEntityRunicAltar() {
 		storage.listen(this::markDirty);
@@ -226,57 +229,72 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	public void update() {
 		if (!this.hasWorld()) return;
 		
-		if (currentlyCrafting!=null && storage.getStackInSlot(6).isEmpty()) {
-			//IGNORE ALL OTHER CONCERNS - CRAFTING CAN HAPPEN
-			if (emcCollected<currentlyCrafting.getEMC()) {
-				timer--;
-				if (timer<=0) {
-					BlockPos pick = producerCache.toArray(new BlockPos[producerCache.size()])[(int)(Math.random()*producerCache.size())]; //No good way to yank a random member of a set
-					TileEntity te = world.getTileEntity(pick);
-					if (te.hasCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null)) {
-						IRuneProducer producer = te.getCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null);
-						int emcToRequest = Math.min(500, currentlyCrafting.getEMC()); //Request in 500EMC chunks, about 2 bookcases. Less if the crafting is cheap.
-						emcCollected += producer.produceEMC(emcToRequest, false);
-						this.markDirty();
-					}
-					
-					timer = EMC_TIMER;
-				}
-				return;
-			} else {
-				//TODO: BIG in-world effect. Crafting is over. No more crafting
-				storage.setStackInSlot(6, currentlyCrafting.getOutput().copy());
-				currentlyCrafting = null;
-				rescanTimer = 0; //We need to definitely update our EMC and radiance values
-				//Fallthrough to lower code so that rescan happens now.
-			}
-			
-			//Nothing can *actually* be crafted here. Let the rescans proceed.
-		} else {
-			if (storage.getStackInSlot(6).isEmpty()) {
-				List<ShapelessAltarRecipe> matches = RunicAltarRecipes.findMatching(storage);
-				if (!matches.isEmpty()) {
-					Collections.shuffle(matches);
-					for(ShapelessAltarRecipe recipe : matches) {
-						if (recipe.getEMC()>this.emc || recipe.getRadiance()>this.radiance) continue;
+		if (!world.isRemote) {
+			if (currentlyCrafting!=null && storage.getStackInSlot(6).isEmpty()) {
+				//IGNORE ALL OTHER CONCERNS - CRAFTING CAN HAPPEN
+				if (emcCollected<currentlyCrafting.getEMC()) {
+					timer--;
+					if (timer<=0) {
+						BlockPos pick = producerCache.toArray(new BlockPos[producerCache.size()])[(int)(Math.random()*producerCache.size())]; //No good way to yank a random member of a set
+						TileEntity te = world.getTileEntity(pick);
+						if (te.hasCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null)) {
+							IRuneProducer producer = te.getCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null);
+							int emcToRequest = Math.min(500, currentlyCrafting.getEMC()); //Request in 500EMC chunks, about 2 bookcases. Less if the crafting is cheap.
+							emcCollected += producer.produceEMC(emcToRequest, false);
+							this.markDirty();
+						}
 						
-						currentlyCrafting = matches.get(0);
 						timer = EMC_TIMER;
-						if (!currentlyCrafting.consumeIngredients(storage, false)) {
-							currentlyCrafting = null;
+					}
+					craftingTimer = CRAFTING_TIMER; //Set it up in case this finished it
+					
+					return;
+				} else {
+					if (craftingTimer == CRAFTING_TIMER) {
+						//Spawn the in-world crafting effect
+						SpellEffect.spawnEmitter("spellGather", null, world, pos);
+					}
+					craftingTimer--;
+					if (craftingTimer<=0) {
+						
+						//TODO: BIG in-world effect. Crafting is over. No more crafting
+						SpellEffect.spawnEmitter("coalesce", null, world, pos);
+						storage.setStackInSlot(6, currentlyCrafting.getOutput().copy());
+						currentlyCrafting = null;
+						rescanTimer = 0; //We need to definitely update our EMC and radiance values
+						//Fallthrough to lower code so that rescan happens now.
+					} else {
+						markDirty();
+						return; //Don't rescan while the crafting effect is happening
+					}
+				}
+				
+				//Nothing can *actually* be crafted here. Let the rescans proceed.
+			} else {
+				if (storage.getStackInSlot(6).isEmpty()) {
+					List<ShapelessAltarRecipe> matches = RunicAltarRecipes.findMatching(storage);
+					if (!matches.isEmpty()) {
+						Collections.shuffle(matches);
+						for(ShapelessAltarRecipe recipe : matches) {
+							if (recipe.getEMC()>this.emc || recipe.getRadiance()>this.radiance) continue;
+							
+							currentlyCrafting = matches.get(0);
+							timer = EMC_TIMER;
+							if (!currentlyCrafting.consumeIngredients(storage, false)) {
+								currentlyCrafting = null;
+								return;
+							}
+							emcCollected = 0;
+							markDirty();
+							//TODO: in-world effect
 							return;
 						}
-						emcCollected = 0;
-						markDirty();
-						//TODO: in-world effect
-						return;
+						
+						//Nothing can *actually* be crafted here. Let the rescans proceed.
 					}
-					
-					//Nothing can *actually* be crafted here. Let the rescans proceed.
 				}
 			}
 		}
-		
 		
 		
 		

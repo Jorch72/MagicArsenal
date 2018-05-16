@@ -39,11 +39,16 @@ public class SpellGatherEmitter extends Emitter {
 	
 	@Override
 	public void tick() {
-		Vec3d ptTarget    = new Vec3d(source.posX, source.posY+(source.height/2), source.posZ);
+		Vec3d ptTarget = null;
+		if (source==null) {
+			ptTarget = new Vec3d(this.x, this.y, this.z);
+		} else {
+			ptTarget = new Vec3d(source.posX, source.posY+(source.height/2), source.posZ);
+		}
 		
 		float escalation = (LIFETIME-ticksRemaining) / (float)LIFETIME;
 		int numParticles = 2 + (int)(8*escalation);
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<numParticles; i++) {
 			Vec3d ptRnd = ptTarget.addVector(random.nextGaussian()*2, random.nextGaussian()*2, random.nextGaussian()*2);
 			Vec3d ptVec = ptTarget.subtract(ptRnd).normalize().scale(0.6f + (0.8f*escalation));
 			
@@ -61,11 +66,18 @@ public class SpellGatherEmitter extends Emitter {
 
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		Vec3d ptTarget = null;
+		if (source==null) {
+			ptTarget = new Vec3d(this.x, this.y, this.z);
+		} else {
+			ptTarget = new Vec3d(source.posX, source.posY+(source.height/2), source.posZ);
+		}
+		
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		
 		float escalation = (LIFETIME-ticksRemaining) / (float)LIFETIME;
-		Draw.circle(source.posX-dx, source.posY+(source.height/2)-dy, source.posZ-dz, (1-escalation)*3.5f, Draw.TAU/8f, 0.2f*escalation, 0xFFFF00FF);
+		Draw.circle(ptTarget.x-dx, ptTarget.y-dy, ptTarget.z-dz, (1-escalation)*3.5f, Draw.TAU/8f, 0.2f*escalation, 0xFFFF00FF);
 		
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();

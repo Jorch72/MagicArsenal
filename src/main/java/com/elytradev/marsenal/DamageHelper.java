@@ -40,7 +40,7 @@ public class DamageHelper {
 	 * Fires off spell damage. Returns the amount of damage actually dealt.
 	 */
 	public static float fireSpellDamage(SpellDamageSource damageSource, EntityLivingBase target, float amount) {
-		if (target.isDead) return 0f;
+		if (target.isDead || !isAttackable(damageSource.getCaster(), target)) return 0f;
 		
 		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity(damageSource, target).setDamage(amount);
 		if (event.isCanceled()) return 0f;
@@ -57,5 +57,12 @@ public class DamageHelper {
 	public static float fireSpellDamage(EntityLivingBase caster, EntityLivingBase target, String spell, float amount, EnumElement... elements) {
 		SpellDamageSource damageSource = new SpellDamageSource(caster, spell, elements);
 		return fireSpellDamage(damageSource, target, amount);
+	}
+	
+	public static final boolean isAttackable(EntityLivingBase caster, EntityLivingBase target) {
+		if (!target.canBeHitWithPotion()) return false;
+		if (caster.isOnSameTeam(target)) return false;
+		
+		return true;
 	}
 }

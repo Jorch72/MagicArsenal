@@ -25,6 +25,7 @@
 package com.elytradev.marsenal.magic;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
@@ -85,13 +86,18 @@ public class DisruptionSpell implements ISpellEffect {
 					.at(trace.entityHit)
 					.sendToAllWatchingTarget();
 				
+				DamageHelper.fireSpellDamage(
+						new SpellDamageSource(target.caster, "disruption", EnumElement.ARCANE, EnumElement.FIRE),
+						target.getTarget(),
+						ArsenalConfig.get().spells.disruption.potency);
+				/*
 				SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 						.setDamage(ArsenalConfig.get().spells.disruption.potency);
 				MinecraftForge.EVENT_BUS.post(event);
 				if (!event.isCanceled() && trace.entityHit instanceof EntityLivingBase) {
 					EntityLivingBase toHurt = (EntityLivingBase)trace.entityHit;
 					toHurt.attackEntityFrom(new SpellDamageSource(target.caster, "disruption", EnumElement.ARCANE, EnumElement.FIRE), event.getDamage());
-				}
+				}*/
 			} else {
 				BlockPos targetLoc = trace.getBlockPos();
 				if (targetLoc==null) targetLoc = new BlockPos(trace.hitVec);

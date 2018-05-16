@@ -27,6 +27,7 @@ package com.elytradev.marsenal.entity;
 import java.util.Random;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.magic.EnumElement;
@@ -72,12 +73,19 @@ public class EntityFrostShard extends EntityThrowable {
 		if (!this.world.isRemote) {
             if (result.entityHit != null && this.thrower!=null) {
             	if (result.entityHit instanceof EntityLivingBase) {
+            		
+            		DamageHelper.fireSpellDamage(
+            				new SpellDamageSource(this.thrower, "frostShards", EnumElement.ARCANE, EnumElement.FROST),
+            				(EntityLivingBase)result.entityHit,
+            				ArsenalConfig.get().spells.frostShards.potency);
+            		
+            		/*
             		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("frostShards", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.ARCANE, EnumElement.FROST)
             				.setDamage(ArsenalConfig.get().spells.frostShards.potency);
             		
             		if (!event.isCanceled()) {
             			result.entityHit.attackEntityFrom(new SpellDamageSource(this.thrower, "frostShards", EnumElement.ARCANE, EnumElement.FROST), event.getDamage());
-            		}
+            		}*/
             	}
             }
 

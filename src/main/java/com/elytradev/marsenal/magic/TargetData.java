@@ -42,7 +42,8 @@ import net.minecraft.world.World;
 
 public abstract class TargetData<T extends Entity> {
 	//public static final Predicate<Entity> LIVING_ENTITIES = (it)->it instanceof EntityLivingBase;
-	public static final Predicate<EntityLivingBase>  NON_HOSTILE = (it)-> !(it instanceof EntityMob);
+	public static final Predicate<EntityLivingBase> NON_HOSTILE = (it)-> !(it instanceof EntityMob);
+	//public static final Predicate<EntityLivingBase> ATTACKABLE = TargetData::isAttackable;
 	
 	protected EntityLivingBase caster;
 	protected Class<T> targetClass;

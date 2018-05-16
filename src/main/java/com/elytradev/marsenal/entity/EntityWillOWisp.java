@@ -27,6 +27,7 @@ package com.elytradev.marsenal.entity;
 import java.util.Random;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.magic.EnumElement;
@@ -73,6 +74,14 @@ public class EntityWillOWisp extends EntityThrowable {
 		if (!this.world.isRemote) {
             if (result.entityHit != null && this.thrower!=null) {
             	if (result.entityHit instanceof EntityLivingBase && result.entityHit!=thrower) {
+            		
+            		DamageHelper.fireSpellDamage(
+            				new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE),
+            				(EntityLivingBase)result.entityHit,
+            				ArsenalConfig.get().spells.willOWisp.potency);
+            		
+            		
+            		/*
             		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("willOWisp", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.UNDEATH, EnumElement.FIRE)
             				.setDamage(ArsenalConfig.get().spells.willOWisp.potency);
             		
@@ -80,7 +89,7 @@ public class EntityWillOWisp extends EntityThrowable {
             			result.entityHit.attackEntityFrom(new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE), event.getDamage());
             			
             			result.entityHit.setFire(2+random.nextInt(5)); //2..6 seconds
-            		}
+            		}*/
             	}
             } else {
             	Vec3i vec = result.sideHit.getDirectionVec();
