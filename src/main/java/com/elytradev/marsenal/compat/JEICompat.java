@@ -145,6 +145,11 @@ public class JEICompat implements IModPlugin {
 						IMagicResources.RESOURCE_STAMINA
 				));
 		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.ROSETTA_STONE),
+				ItemStack.class,
+				"info.magicarsenal.rosettastone");
+		
 		registry.addRecipeCatalyst(new ItemStack(ArsenalBlocks.RUNIC_ALTAR), "magicarsenal:altar");
 		
 		registry.addRecipes(RunicAltarRecipes.allRecipes(), "magicarsenal:altar");

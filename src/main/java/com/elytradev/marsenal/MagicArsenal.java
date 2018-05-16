@@ -177,6 +177,7 @@ public class MagicArsenal {
 		ChiselCompat.init(); //Only IMC in here
 		
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_WOLFSBANE), 2);
+		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_NIGHTSHADE), 2);
 	}
 	
 	@Mod.EventHandler

@@ -132,10 +132,24 @@ public class ArsenalConfig {
 		}
 	}
 	
+	public static class StatusSpellEntry {
+		public int amplifier = 0;
+		public int duration = 20*10;
+		public int cost = 120;
+		public int cooldown = 20*10;
+		
+		public StatusSpellEntry() {}
+		public StatusSpellEntry(int amplifier, int duration, int cost, int cooldown) {
+			this.amplifier = amplifier;
+			this.duration = duration;
+			this.cost = cost;
+			this.cooldown = cooldown;
+		}
+		
+	}
+	
 	public static class SpellsSection { //                  str  cost     CD
-		public SpellEntry healingWave    = new SpellEntry( 1.0f,  120, 20* 2);
 		public SpellEntry healingCircle  = new SpellEntry( 1.0f,  180, 20* 5);
-		public SpellEntry recovery       = new SpellEntry( 1.0f,  180, 20*10);
 		public SpellEntry drainLife      = new SpellEntry( 1.5f,  200, 20* 8);
 		public SpellEntry oblation       = new SpellEntry( 1.0f,   60, 20* 2);
 		
@@ -144,6 +158,9 @@ public class ArsenalConfig {
 		public SpellEntry frostShards    = new SpellEntry( 2.0f,  120, 20* 1);
 		public SpellEntry willOWisp      = new SpellEntry( 4.0f,  180, 20* 4);
 		public SpellEntry chainLightning = new SpellEntry( 3.0f,  180, 20* 4);
+		
+		public StatusSpellEntry healingWave = new StatusSpellEntry( 0, 20*10, 120, 20*15);
+		public StatusSpellEntry recovery    = new StatusSpellEntry( 0, 20*10, 180, 20*10);
 	}
 	
 	public SpellsSection spells = new SpellsSection();

@@ -149,12 +149,12 @@ public class TileEntityKenazStele extends TileEntity implements INetworkParticip
 		int produced = 0;
 		for(int i=0; i<blockCache.size(); i++) {
 			BlockPos cur = blockCache.get(i);
-			int emcDrawn = getEffectiveEMC(cur, world.getBlockState(cur));
+			int emcDrawn = getEffectiveEMC(cur, world.getBlockState(cur)) - inefficiency;
 			if (!simulate) {
 				world.destroyBlock(cur, false); //TODO: MORE EFFECTS
 			}
 			produced += emcDrawn;
-			if (emcDrawn>amount) return emcDrawn;
+			if (emcDrawn>=amount) return emcDrawn;
 		}
 		
 		return produced;

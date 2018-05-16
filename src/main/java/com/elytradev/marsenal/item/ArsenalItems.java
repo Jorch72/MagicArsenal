@@ -32,6 +32,7 @@ import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
 import com.elytradev.marsenal.block.EnumRuneCarving;
+import com.elytradev.marsenal.potion.PotionInfuseLife;
 import com.elytradev.marsenal.potion.PotionNightshade;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
 import com.elytradev.marsenal.recipe.RunicAltarRecipes;
@@ -69,6 +70,7 @@ public class ArsenalItems {
 	
 	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
 	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
+	public static PotionInfuseLife  POTION_INFUSELIFE = new PotionInfuseLife();
 	public static PotionType        POTIONTYPE_WOLFSBANE1 = null;
 	public static PotionType        POTIONTYPE_WOLFSBANE2 = null;
 	public static PotionType        POTIONTYPE_WOLFSBANE3 = null;
@@ -104,6 +106,7 @@ public class ArsenalItems {
 		
 		potion(r, POTION_WOLFSBANE);
 		potion(r, POTION_NIGHTSHADE);
+		potion(r, POTION_INFUSELIFE);
 		EnumPoisonPlant.WOLFSBANE.registerPotion(POTION_WOLFSBANE);
 		EnumPoisonPlant.NIGHTSHADE.registerPotion(POTION_NIGHTSHADE);
 	}

@@ -235,7 +235,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 					TileEntity te = world.getTileEntity(pick);
 					if (te.hasCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null)) {
 						IRuneProducer producer = te.getCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null);
-						int emcToRequest = Math.min(500, currentlyCrafting.getEMC());
+						int emcToRequest = Math.min(500, currentlyCrafting.getEMC()); //Request in 500EMC chunks, about 2 bookcases. Less if the crafting is cheap.
 						emcCollected += producer.produceEMC(emcToRequest, false);
 						this.markDirty();
 					}

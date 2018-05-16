@@ -27,14 +27,15 @@ package com.elytradev.marsenal.magic;
 import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
+import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
 
 public class RecoverySpell implements ISpellEffect {
 	private EntityLivingBase caster = null;
-	private int ticksRemaining;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
@@ -45,7 +46,6 @@ public class RecoverySpell implements ISpellEffect {
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			caster = null;
-			ticksRemaining = 0;
 			return;
 		}
 		
@@ -53,7 +53,6 @@ public class RecoverySpell implements ISpellEffect {
 			SpellEffect.activateCooldown(caster, ArsenalConfig.get().spells.recovery.cooldown);
 			
 			this.caster = caster;
-			this.ticksRemaining = 5;
 		} else {
 			//Spell activation failure
 			caster = null;
@@ -63,17 +62,11 @@ public class RecoverySpell implements ISpellEffect {
 	@Override
 	public int tick() {
 		if (caster!=null) {
-			caster.heal(ArsenalConfig.get().spells.recovery.potency);
-			new SpawnParticleEmitterMessage("infuseLife").at(caster).from(caster).sendToAllWatchingAndSelf(caster);
+			caster.addPotionEffect(new PotionEffect(ArsenalItems.POTION_INFUSELIFE, ArsenalConfig.get().spells.recovery.duration, ArsenalConfig.get().spells.recovery.amplifier));
 			
-			ticksRemaining--;
-			if (ticksRemaining<=0) {
-				return 0;
-			} else {
-				return 20;
-			}
-		} else {
-			return 0;
+			new SpawnParticleEmitterMessage("infuseLife").at(caster).from(caster).sendToAllWatchingAndSelf(caster);
 		}
+		
+		return 0;
 	}
 }
