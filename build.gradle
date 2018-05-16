@@ -1,145 +1,147 @@
 buildscript {
 	repositories {
-		mavenCentral()
-		jcenter()
+		mavenCentral();
+		jcenter();
 		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
+			name = "forge";
+			url = "http://files.minecraftforge.net/maven";
 		}
 		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+			name = "sonatype";
+			url = "https://oss.sonatype.org/content/repositories/snapshots/";
 		}
 		maven {
-			url "https://plugins.gradle.org/m2/"
+			url "https://plugins.gradle.org/m2/";
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0'
-		classpath 'gradle.plugin.net.minecrell:licenser:0.3'
+		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT";
+		classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0";
+		classpath "gradle.plugin.net.minecrell:licenser:0.3";
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'net.minecrell.licenser'
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "java";
+apply plugin: "net.minecrell.licenser";
+apply plugin: "net.minecraftforge.gradle.forge";
+apply plugin: "com.github.johnrengelman.shadow";
 
 repositories {
 	maven {
-		url = 'https://repo.elytradev.com'
+		url = "https://repo.elytradev.com";
 	}
 	
 	maven {
 		// Primary JEI Maven
-		name = "Progwml6 maven"
-		url = "http://dvs1.progwml6.com/files/maven"
+		name = "Progwml6 maven";
+		url = "http://dvs1.progwml6.com/files/maven";
 	}
 	maven {
 		// Fallback JEI Maven
-		name = "ModMaven"
-		url = "modmaven.k-4u.nl"
+		name = "ModMaven";
+		url = "modmaven.k-4u.nl";
 	}
 	
 	maven {
-		//CTM + Chisel Maven
-		name = "Tterag's Maven"
-		url = "http://maven.tterrag.com"
+		//CTM + Chisel
+		name = "Tterag's Maven";
+		url = "http://maven.tterrag.com";
 	}
 	
 	ivy {
 		//Resolves baubles. Consider just dropping Baubles in your libs folder or rehosting it
-		name 'endless.blue dependency mirror'
-		artifactPattern "https://endless.blue/files/rehost/[module]-[revision].[ext]"
+		name "endless.blue dependency mirror";
+		artifactPattern "https://endless.blue/files/rehost/[module]-[revision].[ext]";
 	}
 }
 
 
-def mc_version='1.12.2';
-def jei_version="4.9.1.175";
-def ctm_version="0.3.0.14"
-def chisel_version="0.2.0.31"
-def probedata_version="1.1.1"
-def fruitphone_version="2.84"
-def concrete_version="0.3.6-SNAPSHOT";
-//def concrete_modules=[]; //For eclipse import
-def concrete_modules=["common","inventory","recipe","network","reflect"];
-def project_package='com.elytradev.marsenal';
+def mc_version        = "1.12.2";
+def mc_shortversion   = "1.12";
+
+def jei_version       = "4.9.1.175";
+def ctm_version       = "0.3.0.14";
+def chisel_version    = "0.2.0.31";
+def baubles_version   = "1.5.2";
+def probedata_version = "1.1.1";
+def fruitphone_version= "2.84";
+def concrete_version  = "0.3.6-SNAPSHOT";
+
+def concrete_modules  = ["common", "inventory", "recipe", "network", "reflect"];
+def project_package   = "com.elytradev.marsenal";
 
 shadowJar {
-	classifier = ''
-	relocate 'com.elytradev.concrete', project_package + '.repackage.com.elytradev.concrete'
-	configurations = [project.configurations.shadow]
+	classifier = "";
+	relocate "com.elytradev.concrete", "${project_package}.repackage.com.elytradev.concrete";
+	relocate "org.hjson", "${project_package}.repackage.org.hjson";
+	configurations = [project.configurations.shadow];
 }
 
 reobf {
-    shadowJar { mappingType = 'SEARGE' }
+    shadowJar { mappingType = "SEARGE"; }
 }
 
-tasks.build.dependsOn reobfShadowJar
+tasks.build.dependsOn reobfShadowJar;
 
 artifacts {
-    archives shadowJar
+    archives shadowJar;
 }
 
 dependencies {
-	deobfCompile name: "Baubles", version: "1.12-1.5.2"
+	deobfCompile name: "Baubles", version: "${mc_shortversion}-1.5.2";
 	
-	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
-	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
+	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api";
+	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}";
 	
-	deobfCompile "team.chisel.ctm:CTM:MC1.12-${ctm_version}"
-	deobfCompile "team.chisel:Chisel:MC${mc_version}-${chisel_version}"
+	deobfCompile "team.chisel.ctm:CTM:MC${mc_shortversion}-${ctm_version}";
+	deobfCompile "team.chisel:Chisel:MC${mc_version}-${chisel_version}";
 
 	for (String module : concrete_modules) {
-		shadow 'com.elytradev.concrete:concrete-' + module + ':' + concrete_version;
-		compile 'com.elytradev.concrete:concrete-' + module + ':' + concrete_version;
+		shadow "com.elytradev.concrete:concrete-${module}:${concrete_version}";
+		compile "com.elytradev.concrete:concrete-${module}:${concrete_version}";
 	}
 	
-	deobfCompile "com.elytradev:probedataproviderapi:MC1.12_ver${probedata_version}"
-	runtime "com.elytradev:fruitphone:${mc_version}-${fruitphone_version}"
+	deobfCompile "com.elytradev:probedataproviderapi:MC${mc_shortversion}_ver${probedata_version}";
+	runtime "com.elytradev:fruitphone:${mc_version}-${fruitphone_version}";
 	
-	shadow 'org.hjson:hjson:1.0.0';
-	compile 'org.hjson:hjson:1.0.0';
-	
+	shadow "org.hjson:hjson:1.0.0";
+	compile "org.hjson:hjson:1.0.0";
 }
 
-group = "com.elytradev"
-archivesBaseName = "MagicArsenal"
-version = "MC1.12_ver1.1.2"
+group = "com.elytradev";
+archivesBaseName = "MagicArsenal";
+version = "MC1.12_ver1.1.2";
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.8;
+targetCompatibility = 1.8;
 
 minecraft {
-	version = '1.12.2-14.23.2.2611'
-	//version = '1.12.2-14.23.0.2491'
-	mappings = 'snapshot_20171130'
+	version = "1.12.2-14.23.2.2611";
+	mappings = "snapshot_20171130";
 
-  runDir = "minecraft"
+	runDir = "minecraft";
 
-  replaceIn 'src/main/java/com/elytradev/marsenal/MagicArsenal.java'
-  replace '@VERSION@', project.version
+	replaceIn "src/main/java/com/elytradev/marsenal/MagicArsenal.java";
+	replace "@VERSION@", project.version;
 }
 
 processResources {
 	// this will ensure that this task is redone when the versions change.
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
+	inputs.property "version", project.version;
+	inputs.property "mcversion", project.minecraft.version;
 
 	// replace stuff in mcmod.info, nothing else
 	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
+		include "mcmod.info";
 
 		// replace version and mcversion
-		expand 'version':project.version, 'mcversion':project.minecraft.version
+		expand "version":project.version, "mcversion":project.minecraft.version;
 	}
 
 	// copy everything else, thats not the mcmod.info
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-		exclude '*.xcf' //Always exclude gimp source files.
+		exclude "mcmod.info";
+		exclude "*.xcf"; //Always exclude gimp source files.
 	}
 }
 
