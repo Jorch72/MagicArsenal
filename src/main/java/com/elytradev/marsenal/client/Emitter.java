@@ -24,12 +24,16 @@
 
 package com.elytradev.marsenal.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
 import com.elytradev.marsenal.MagicArsenal;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -82,5 +86,33 @@ public abstract class Emitter {
 	/** If this returns true at any time, the emitter will be removed from the scheduler and cease to be. */
 	public boolean isDead() {
 		return dead;
+	}
+	
+	
+	public static void drawStars(double dx, double dy, double dz, Collection<Star> stars) {
+		drawStars(0, dx, dy, dz, stars, false);
+	}
+	
+	private static List<Star> deadStars = new ArrayList<>();
+	public static void drawStars(float partialFrameTime, double dx, double dy, double dz, Collection<Star> stars, boolean doPhysics) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		
+		for(Star star : stars) {
+			star.paint(dx, dy, dz);
+			if (doPhysics) {
+				star.tick(partialFrameTime);
+				if (star.lifetime<=0) deadStars.add(star);
+			}
+		}
+		if (doPhysics) {
+			stars.removeAll(deadStars);
+			deadStars.clear();
+		}
+		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
 	}
 }

@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PartialTickTime {
-	private static final float FRAMES_PER_MSEC = 1/20_000f;
+	private static final float FRAMES_PER_MSEC = 20/1_000f;
 	private static final float DISCONTINUITY_THRESHOLD = 3f;
 	private static long curFrame = 0L;
 	private static long lastFrame = 0L;

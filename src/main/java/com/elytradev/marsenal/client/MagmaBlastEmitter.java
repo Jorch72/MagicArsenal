@@ -50,16 +50,16 @@ public class MagmaBlastEmitter extends Emitter {
 			for(int i=0; i<spawns; i++) {
 				Vec3d lookVec = entity.getLookVec();
 				lookVec = lookVec.addVector(random.nextGaussian()*0.5f, random.nextGaussian()*0.5f, random.nextGaussian()*0.5f).normalize(); //Fuzz
-				lookVec = lookVec.scale(800.0f); //velocity magnitude
+				lookVec = lookVec.scale(0.9f); //velocity magnitude
 				
 				Star star = new Star();
-				star.width = 0.1f;
-				star.taild2 = 1.5f;
+				star.width = 0.4f;
+				star.taild2 = 0.5f*0.5f;
 				//star.limit = 0.4f;
 				star.move((float)entity.posX, (float)entity.posY+entity.getEyeHeight(), (float)entity.posZ);
-				star.color = 0xFFff3300;
+				star.color = 0xccff3300;
 				star.fuzzColor(0.6f, 0.6f, 0.3f);
-				star.lifetime = 2;
+				star.lifetime = 4;
 				star.setVelocity(lookVec);
 				stars.add(star);
 			}
@@ -72,6 +72,8 @@ public class MagmaBlastEmitter extends Emitter {
 	
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
+		/*
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		for(Star star : stars) {
@@ -85,7 +87,7 @@ public class MagmaBlastEmitter extends Emitter {
 		dead.clear();
 
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture2D();*/
 	}
 
 }

@@ -29,66 +29,82 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class InfuseLifeEmitter extends Emitter {
 	Random random = new Random();
-	private int ticksRemaining = 3;
-	//private float partialTicks = 0f;
+	private int ticksRemaining = 30;
 	
-	private ArrayList<Star> dead = new ArrayList<>();
 	private ArrayList<Star> stars = new ArrayList<>();
-	//                      still
-	//                      burn
 	
 	@Override
 	public void tick() {
 		if (entity.isDead) {
 			ticksRemaining = 0;
-			kill();
+			//kill();
 			return;
 		}
 		
-		for(int i=0; i<2; i++) {
-			if (entity==null) return;
-			double startX = entity.posX + random.nextGaussian()*0.3d;
-			double startY = entity.posY + entity.height + 1.5d;
-			double startZ = entity.posZ + random.nextGaussian()*0.3d;
-			//Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
-			//		.normalize().scale(512.0f);
-		
-			Star star = new Star();
-			star.width = 0.05f;
-			star.move((float)startX, (float)startY, (float)startZ);
-			star.color = 0xFF74aa00;
-			star.lifetime = 2;
-			//star.setAcceleration(towardsEntity);
-			star.setVelocity(0, -512, 0);
-			stars.add(star);
+		if (ticksRemaining>0) {
+			for(int i=0; i<4; i++) {
+				if (entity==null) return;
+				double startX = entity.posX + random.nextGaussian()*0.3d;
+				double startY = entity.posY + entity.height + 2.5d;
+				double startZ = entity.posZ + random.nextGaussian()*0.3d;
+				//Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
+				//		.normalize().scale(512.0f);
+			
+				Star star = new Star();
+				star.taild2 = (float)(Math.pow(0.1f+(Math.random()*0.3f), 2));
+				star.width = 0.04f;
+				star.move((float)startX, (float)startY, (float)startZ);
+				star.color = 0x8874aa00;
+				star.fuzzColor(0.3f, 0.7f, 0.3f);
+				
+				star.lifetime = 20*2;
+				//star.setAcceleration(towardsEntity);
+				star.setVelocity(0, -0.4f + -(float)(Math.random()*0.2f), 0);
+				stars.add(star);
+			}
+			
+			if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
+				for(int i=0; i<3; i++) {
+					float px = (float)(entity.posX + random.nextGaussian()*0.2d);
+					float py = (float)(entity.posY + 0.1f);
+					float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
+					
+					Particle particle = new ParticleVelocity(world,
+							px, py, pz,
+							0f, 0.1f, 0f
+							);
+					particle.setParticleTextureIndex(5); //Midway through redstone
+					particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
+					particle.setAlphaF(0.7f);
+					
+					Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+				}
+			}
 		}
-		if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
-			for(int i=0; i<6; i++) {
-				float px = (float)(entity.posX + random.nextGaussian()*0.2d);
-				float py = (float)(entity.posY + entity.height + 0.1f);
-				float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
-				
-				Particle particle = new ParticleVelocity(world,
-						px, py, pz,
-						0f, -0.6f, 0f
-						);
-				particle.setParticleTextureIndex(5); //Midway through redstone
-				particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
-				
-				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		
+		for(Star star : stars) {
+			if (star.y<entity.posY) {
+				star.vy = 0.05f;
+				star.vx += random.nextGaussian()*0.01f;
+				star.vy += random.nextGaussian()*0.01f;
 			}
 		}
 		
 		ticksRemaining--;
-		if (ticksRemaining<=0) kill();
+		if (ticksRemaining<=0) {
+			if (stars.isEmpty()) {
+				kill();
+			}
+		}
 	}
 
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
+		/*
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		
@@ -105,6 +121,6 @@ public class InfuseLifeEmitter extends Emitter {
 		dead.clear();
 
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture2D();*/
 	}
 }

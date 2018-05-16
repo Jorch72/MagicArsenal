@@ -31,6 +31,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 public class OblationSpell implements ISpellEffect {
@@ -77,6 +78,10 @@ public class OblationSpell implements ISpellEffect {
 					new SpellDamageSource(targets.caster, "drain_life", EnumElement.CHAOS,  EnumElement.NATURE).setDamageIsAbsolute(),
 					event.getDamage());
 			*/
+		if (targets.caster instanceof EntityPlayer && ((EntityPlayer)targets.caster).capabilities.isCreativeMode) {
+			damageDealt = ArsenalConfig.get().spells.oblation.potency;
+		}
+		
 		if (damageDealt>0) {
 			targets.getTarget().heal(damageDealt);
 			new SpawnParticleEmitterMessage("drainLife").withReversed(targets).sendToAllWatchingTarget();

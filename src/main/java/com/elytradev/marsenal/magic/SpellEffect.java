@@ -31,6 +31,7 @@ import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -67,17 +68,32 @@ public class SpellEffect implements ISpellEffect {
 	 * @return        True if the player can cast the spell, and the stamina cost was successfully deducted.
 	 */
 	public static boolean activateWithStamina(EntityLivingBase caster, int amount) {
+		boolean creative =  caster instanceof EntityPlayer &&
+				((EntityPlayer)caster).capabilities.isCreativeMode;
+		
 		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return false;
 		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
-		return
+		
+		if (creative) {
+			return canActivate(res);
+		} else {
+			return
 				canActivate(res) &&
 				spendStaminaOrFail(res, amount);
+		}
 	}
 	
 	public static void activateCooldown(EntityLivingBase caster, int amount) {
+		boolean creative =  caster instanceof EntityPlayer &&
+				((EntityPlayer)caster).capabilities.isCreativeMode;
+		
 		if (!caster.hasCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null)) return;
 		IMagicResources res = caster.getCapability(MagicArsenal.CAPABILTIY_MAGIC_RESOURCES, null);
-		res.setGlobalCooldown(amount);
+		if (creative) {
+			res.setGlobalCooldown(Math.min(20, amount));
+		} else {
+			res.setGlobalCooldown(amount);
+		}
 	}
 	
 	public static void spawnEmitter(String key, EntityLivingBase source, Entity target) {

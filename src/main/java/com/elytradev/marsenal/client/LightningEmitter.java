@@ -58,8 +58,8 @@ public class LightningEmitter extends Emitter {
 					new Vec3d(entity.posX, entity.posY+(entity.height/2), entity.posZ) :
 					new Vec3d(x,y,z);
 					
-			drawBolt(dx, dy, dz, ptSrc, ptTarget, 10, 1.5f, 0.02f, 0xFFffff77);
-			drawBolt(dx, dy, dz, ptSrc, ptTarget, 10, 1.5f, 0.004f, 0xFFffee23);
+			drawBolt(dx, dy, dz, ptSrc, ptTarget, 10, 1.5f, 0.09f, 0x99ffff77);
+			drawBolt(dx, dy, dz, ptSrc, ptTarget, 10, 1.5f, 0.06f, 0x44ffee23);
 		//}
 		
 		GlStateManager.enableTexture2D();
@@ -77,8 +77,8 @@ public class LightningEmitter extends Emitter {
 					lerp(src.x, dest.x, progress) + uniform(wiggle),
 					lerp(src.y, dest.y, progress) + uniform(wiggle),
 					lerp(src.z, dest.z, progress) + uniform(wiggle));
-			
-			Draw.fakeLine(lastPt.x-dx, lastPt.y-dy, lastPt.z-dz, nextPt.x-dx, nextPt.y-dy, nextPt.z-dz, 0.1f, color, true);
+			float lineWidth = width*(1-(i/9f));
+			Draw.fakeLine(lastPt.x-dx, lastPt.y-dy, lastPt.z-dz, nextPt.x-dx, nextPt.y-dy, nextPt.z-dz, lineWidth, color, true);
 			
 			lastPt = nextPt;
 		}

@@ -41,7 +41,6 @@ public strictfp class Star {
 	public float taild2 = 2f;
 	public float width = 0.1f;
 	public int color = 0xFFFFFFFF;
-	public float acceleration = 60_000f;
 	public float limit = 1024f;
 	
 	public boolean intercept;
@@ -52,6 +51,13 @@ public strictfp class Star {
 	public Consumer<Star> onIntercept;
 	
 	public float lifetime = 20*1;
+	
+	public void fade(int amount) {
+		int a = (color >> 24) & 0xFF;
+		a -= amount;
+		if (a<0) a=0;
+		color = (color & 0xFFFFFF) | (a << 24);
+	}
 	
 	public void tick(float partial) {
 		x += vx*partial;
@@ -82,16 +88,15 @@ public strictfp class Star {
 			}
 			
 			//Accelerate towards intercept
-			//System.out.println("Accelerating towards intercept- delta:"+dx+","+dy+","+dz+" vel:"+vx+","+vy+","+vz);
-			if (dx<-interceptRange) vx-= acceleration*partial; if (vx<-limit) vx=-limit;
-			if (dx>interceptRange) vx+= acceleration*partial;  if (vx> limit) vx= limit;
+			float interceptFactor = 16;
+			if (dx<-interceptRange) vx -= (Math.abs(dx)/interceptFactor)*partial; if (vx<-limit) vx=-limit;
+			if (dx>interceptRange)  vx += (Math.abs(dx)/interceptFactor)*partial; if (vx> limit) vx= limit;
 			
-			if (dy<-interceptRange) vy-= acceleration*partial; if (vy<-limit) vy=-limit;
-			if (dy>interceptRange) vy+= acceleration*partial;  if (vy> limit) vy= limit;
+			if (dy<-interceptRange) vy -= (Math.abs(dy)/interceptFactor)*partial; if (vy<-limit) vy=-limit;
+			if (dy>interceptRange)  vy += (Math.abs(dy)/interceptFactor)*partial; if (vy> limit) vy= limit;
 			
-			if (dz<-interceptRange) vz-= acceleration*partial; if (vz<-limit) vz=-limit;
-			if (dz>interceptRange) vz+= acceleration*partial;  if (vz> limit) vz= limit;
-			//System.out.println("Resulting vel:"+vx+","+vy+","+vz);
+			if (dz<-interceptRange) vz -= (Math.abs(dz)/interceptFactor)*partial; if (vz<-limit) vz=-limit;
+			if (dz>interceptRange)  vz += (Math.abs(dz)/interceptFactor)*partial; if (vz> limit) vz= limit;
 		}
 		
 		lifetime-=partial;

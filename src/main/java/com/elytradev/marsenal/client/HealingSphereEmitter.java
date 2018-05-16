@@ -40,7 +40,7 @@ public class HealingSphereEmitter extends Emitter {
 	private int ticksRemaining = 400;
 	private float wubTime = 0f;
 	
-	
+	private int alpha = 88;
 	
 	@Override
 	public void tick() {
@@ -57,9 +57,15 @@ public class HealingSphereEmitter extends Emitter {
 						);
 				particle.setParticleTextureIndex(5); //Midway through redstone
 				particle.setRBGColorF(0.4549f, 0.6667f, 0.0000f);
+				particle.setAlphaF(0.7f);
 				
 				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 			}
+		}
+		
+		if (ticksRemaining<88) {
+			alpha--;
+			if (alpha<0) alpha = 0;
 		}
 		
 		ticksRemaining--;
@@ -78,15 +84,21 @@ public class HealingSphereEmitter extends Emitter {
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		
-		wubTime += partialFrameTime*128f;
+		wubTime += partialFrameTime*0.12f;
 		double wub = Math.sin(wubTime) * 0.3d;
 		double wub2 = Math.sin(wubTime+(Draw.TAU/4f)*1) * 0.3d;
 		double wub3 = Math.sin(wubTime+(Draw.TAU/4f)*2) * 0.3d;
-		Draw.circle(this.x-dx, this.y-dy, this.z-dz, RADIUS+wub, Draw.TAU/32f, 0.20f, 0xFF74aa00);
-		Draw.circle(this.x-dx, (this.y-dy)+0.5d, this.z-dz, RADIUS+wub2, Draw.TAU/32f, 0.15f, 0xFF74aa00);
-		Draw.circle(this.x-dx, (this.y-dy)+1.0d, this.z-dz, RADIUS+wub3, Draw.TAU/32f, 0.10f, 0xFF74aa00);
+		int color = 0x74aa00;
+		color |= alpha << 24;
 		
+		Draw.circle(this.x-dx, this.y-dy, this.z-dz, RADIUS+wub, Draw.TAU/32f, 0.20f, color);
+		Draw.circle(this.x-dx, (this.y-dy)+0.25d, this.z-dz, RADIUS+wub2, Draw.TAU/32f, 0.15f, color);
+		Draw.circle(this.x-dx, (this.y-dy)+0.50d, this.z-dz, RADIUS+wub3, Draw.TAU/32f, 0.10f, color);
+		
+		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();
 	}

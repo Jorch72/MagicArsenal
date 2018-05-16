@@ -75,7 +75,7 @@ public class DrainLifeSpell implements ISpellEffect {
 			
 			boolean success = target.getTarget().attackEntityFrom(new SpellDamageSource(target.caster, "drain_life", EnumElement.UNDEATH,  EnumElement.NATURE), event.getDamage());
 			if (success) {
-				new SpawnParticleEmitterMessage("infuseLife").from(target.caster).at(target.caster).sendToAllWatchingTarget();
+				//new SpawnParticleEmitterMessage("infuseLife").from(target.caster).at(target.caster).sendToAllWatchingTarget();
 				target.caster.heal(ArsenalConfig.get().spells.drainLife.potency/2f);
 			}
 		}

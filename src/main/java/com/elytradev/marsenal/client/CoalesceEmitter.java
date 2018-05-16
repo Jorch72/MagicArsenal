@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.GlStateManager;
 public class CoalesceEmitter extends Emitter {
 	private static final float TAU = (float)(2*Math.PI);
 	private static final int MAX_STARS = 100;
-	private static final float ROTATION_SPEED = TAU/3f * 200;
+	private static final float ROTATION_SPEED = TAU/4f;
 	private static final int FADEOUT_TICKS = 20*2;
 	private Random rnd = new Random();
 	private List<Star> dead  = new ArrayList<>();
@@ -47,11 +47,12 @@ public class CoalesceEmitter extends Emitter {
 		if (stars.size()<MAX_STARS && ticksRemaining>=FADEOUT_TICKS) {
 			Star star = new Star();
 			star.move(this.x + (float)rnd.nextGaussian()*0.25f, this.y + 3f, this.z + (float)rnd.nextGaussian());
-			star.setVelocity(0f, -60f, 0f);
+			star.setVelocity(0f, -0.16f, 0f);
 			star.lifetime = 20;
 			star.taild2=0.1f*0.1f;
 			
 			star.color = 0x7777FF99;
+			star.fuzzColor(0.4f, 0.4f, 0.5f);
 			
 			stars.add(star);
 		}

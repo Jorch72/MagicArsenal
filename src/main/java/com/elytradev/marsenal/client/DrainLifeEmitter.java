@@ -29,7 +29,6 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
 public class DrainLifeEmitter extends Emitter {
@@ -65,32 +64,54 @@ public class DrainLifeEmitter extends Emitter {
 			Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
 					.normalize().scale(512.0f);*/
 			Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
-					.normalize().scale(-128.0f);
+					.normalize().scale(-0.2f);
 		
 			Star star = new Star();
 			star.width = 0.05f;
 			star.move((float)startX, (float)startY, (float)startZ);
-			star.color = 0xFF8b0722;
-			star.lifetime = 8;
+			star.color = 0x668b0722;
+			star.lifetime = 40;
 			star.intercept = true;
 			star.tx = (float) source.posX;
 			star.ty = (float) (source.posY + (source.height/2));
 			star.tz = (float) source.posZ;
-			star.interceptRange=1.5f*1.5f;
-			star.taild2=0.5f*0.5f;
+			star.interceptRange=1f;
+			star.taild2=0.05f*0.05f;
 			star.onIntercept = (it) -> {
 					it.lifetime = 0;
-					//TODO: Spawn a green puff?
+					
+					//Spawn a green puff?
+					Particle particle = new ParticleVelocity(world,
+							star.x, star.y, star.z,
+							0f, 0.01f, 0f
+							);
+					particle.setParticleTextureIndex(5); //Midway through redstone
+					particle.setRBGColorF(0.0274f, 0.545f, 0.130f);
+					particle.setAlphaF(0.4f);
+					
+					Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 				};
 			star.setVelocity(towardsEntity);
+			star.limit = 0.4f;
 			stars.add(star);
+		} else {
+			//Continue to track the source
+			for(Star star : stars) {
+				star.tx = (float) source.posX;
+				star.ty = (float) (source.posY + (source.height/2));
+				star.tz = (float) source.posZ;
+				
+				if (star.lifetime < 10) {
+					star.fade(0xA);
+				}
+			}
 		}
 		still = false;
 		
 		if (Minecraft.getMinecraft().gameSettings.particleSetting!=2) {
-			for(int i=0; i<6; i++) {
+			for(int i=0; i<2; i++) {
 				float px = (float)(entity.posX + random.nextGaussian()*0.2d);
-				float py = (float)(entity.posY + 0.1f);
+				float py = (float)(entity.posY + entity.getEyeHeight() - 0.25f);
 				float pz = (float)(entity.posZ + random.nextGaussian()*0.2d);
 				
 				Particle particle = new ParticleVelocity(world,
@@ -99,17 +120,21 @@ public class DrainLifeEmitter extends Emitter {
 						);
 				particle.setParticleTextureIndex(5); //Midway through redstone
 				particle.setRBGColorF(0.545f, 0.0274f, 0.130f);
+				particle.multipleParticleScaleBy(1.4f);
+				particle.setAlphaF(0.4f);
 				
 				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 			}
 		}
 		
 		ticksRemaining--;
-		if (ticksRemaining<=0) kill();
+		if (ticksRemaining<=0 && stars.isEmpty()) kill();
 	}
 
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
+		/*
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		
@@ -130,7 +155,7 @@ public class DrainLifeEmitter extends Emitter {
 		dead.clear();
 
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture2D();*/
 	}
 
 }

@@ -30,6 +30,7 @@ import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.item.ArsenalItems;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +44,7 @@ public class HealingWaveSpell implements ISpellEffect {
 		if (res.getGlobalCooldown()>0) return;
 		
 		targets = TargetData.Single.living(caster);
-		if (targets.targetRaycast(20, TargetData.NON_HOSTILE)==null) return;
+		if (targets.targetRaycast(20, (EntityLivingBase entity)->entity.isEntityUndead() || !(entity instanceof EntityMob))==null) return;
 		
 		SpellEvent event = new SpellEvent.CastOnEntity("healingWave", targets, EnumElement.NATURE, EnumElement.HOLY)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingWave.cost);
