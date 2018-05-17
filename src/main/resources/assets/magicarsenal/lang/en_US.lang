@@ -4,8 +4,12 @@ itemGroup.magicarsenal=Magic Arsenal
 item.magicarsenal.ingredient.focus_core.name=Spell Focus Core
 item.magicarsenal.ingredient.petal_wolfsbane.name=Wolfsbane Petal
 item.magicarsenal.ingredient.berry_nightshade.name=Nightshade Berries
+item.magicarsenal.ingredient.portal_seared_tome.name=Portal-Seared Tome
+
 item.magicarsenal.root.wolfsbane.name=Wolfsbane Root
 item.magicarsenal.root.nightshade.name=Nightshade Root
+
+item.magicarsenal.codex.name=Portal-Seared Codex
 
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=%s Spell Focus
@@ -163,9 +167,33 @@ tooltip.magicarsenal.rune.ingwaz=Ingwaz
 tooltip.magicarsenal.rune.dagaz=Dagaz
 tooltip.magicarsenal.rune.othala=Othala
 
+tooltip.magicarsenal.codex.common=Burnt scraps of barely-legible tomes from another universe, rebound into a sturdy codex.
+tooltip.magicarsenal.codex.uncommon=A slim volume of reconstructed magical designs from another universe.
+tooltip.magicarsenal.codex.rare=A detailed reconstruction of elaborate magical designs from another universe.
+tooltip.magicarsenal.codex.epic=A priceless metal-bound manual full of elaborate magical designs from another universe.
+
 #Resources
 resource.magicarsenal.stamina=Stamina
 resource.magicarsenal.blood=Blood
 resource.magicarsenal.chaos=Chaos
 resource.magicarsenal.vengeance=Vengeance
 resource.magicarsenal.rage=Rage
+
+#Codex
+codex.magicarsenal.page.1.left=After extensive testing, I have more questions than answers about the Portal-Seared Tomes. They were once very well-made books, bound in unusually sturdy leather and clad in a silver-like metal. There are traces of a Protection enchant at higher levels than I've ever thought possible, but whatever happened to these books shattered those enchantments like glass.
+codex.magicarsenal.page.1.right=However, when comparing the books to each other, some things clear up: They are all copies of the §osame§r tome. The foreward seems to be the most legible part, and if it's to be believed, the Tomes come from §oanother universe§r. As it isn't named in the book, I will simply call it Elsewhere.
+codex.magicarsenal.page.2.left=The tome that these copies are made of must be filled with magical spells and contrivances far beyond anything I've studied in this world. Every new scrap I find has another crazy spell or machine on it! If I could reconstruct even a small fraction of these devices, I'd be one of the most powerful wizards of my age.
+codex.magicarsenal.page.2.right=The pages detailing most of the contraptions are frequently splattered with poison. §oStrong§r poison. It's definitely important to the magic. I have a feeling I can't just brew up a spider eye though. I've heard of plants called §lWolfsbane§r and §lNightshade§r, and if I could just track down roots for them, I could cultivate these plants and have better poison for my arrows, too.
+codex.magicarsenal.page.3.left=Nightshade is potent beyond my wildest imaginings. It's even more toxic to reptiles than to humans, and undead seem to be able to feed off its corruption, unlike spider venoms. Wolfsbane is slightly less potent, but my pets seem unusually wary of the substance, giving it a wide berth in the lab. I don't have the heart to test it, but I suspect the name "Wolfsbane" isn't random.
+codex.magicarsenal.page.3.right=As far as I can decipher, the tomes seem to indicate that poisons can be used to ward stone. I tried the stronger venom first, figuring it'd make a stronger ward. While it has definitely transformed the stone, and I can etch symbols from the books into it, there doesn't seem to be anything magical about it at all. Perhaps it'll make a good decoration.
+codex.magicarsenal.page.4.left=In my poison research, it's becoming clear that Nightshade doesn't just paralyze the nerves, but also carries within it the unmalleable magical toxin that the tomes are calling "Chaos". According to the texts, the spaces between worlds are vast, dark oceans of this energy, and that nothing living has ever crossed the divide. I don't plan on trying either.
+codex.magicarsenal.page.4.right=The reaction to Wolfsbane was instantly, completely different. While toxic to living things, stone becomes warded so well that I can't even carve magical symbols into it. This §lUncarved Stele§r hums with energy flowing through it. I can only guess that I need to carve the stone before I ward it, but that doesn't seem to be the whole picture.
+codex.magicarsenal.page.5.left=The breakthrough I needed came from the book. Deciphering it has become strangely easier as I've added more pages to my codex. Every single one of these runes has an affinity! Rune stele are sympathetic magic, and so their making requires a physical "link" to the concept that the symbol represents. It seems that my research will be at a standstill unless I can learn about the affinities of some of these runes.
+codex.magicarsenal.page.6.left=This rune seems to be a good place to start. Its nature seems deeply tied to wisdom and light, so if I can affix it properly, it should be of great use to me in unraveling the secrets of magic. In order to link the concept to the material world, I'll use a torch and an enchanted book.
+codex.magicarsenal.page.6.right=It's supposed to react with bookcases and torches it "sees".
+codex.magicarsenal.page.7.left=After staring at the inert Kenaz rune, questioning my direction in life, I realized there's simply nowhere for the energy to §ogo§r. I've become so familiar with the tomes at this point I very quickly found a design for an altar that looks perfect for gathering "Radiant Energy". This §lRunic Altar§r will probably become central to my endeavor.
+codex.magicarsenal.page.7.right=The tomes plead for caution here: "Don't put anything in front of a Stele you don't want to lose." Whatever that means.
+codex.magicarsenal.page.8.left=That did it! As soon as the altar and the stele got within 16 meters of each other, I started seing what can only be described as magical energy moving from the stele to the altar. The tomes describe a "Luminiferous Aether" with this radiant energy perpetually moving through it and pushing Chaos away. The altar is like the delta at the end of a river of Radiance.
+codex.magicarsenal.page.8.right=And just like flowing water can turn a wheel or erode a stone, Radiance can transmute matter, usually in ways that deepen its affinity with magic. Like all transmutation, this relies on the principle of equivalent exchange, so if the result contains properties the original does not have, the stele will balance the equation somehow. The manner in which they do so clearly depends on their affinity.
+
+

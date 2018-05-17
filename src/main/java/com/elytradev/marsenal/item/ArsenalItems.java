@@ -32,6 +32,7 @@ import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
 import com.elytradev.marsenal.block.EnumRuneCarving;
+import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.potion.PotionInfuseLife;
 import com.elytradev.marsenal.potion.PotionNightshade;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
@@ -61,12 +62,13 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ArsenalItems {
 	private static List<Item> itemsForModels = new ArrayList<>();
-	public static ItemSpellFocus               SPELL_FOCUS = null;
-	public static ItemSpellBauble              SPELL_BAUBLE= null;
-	public static ItemSubtyped<EnumIngredient> INGREDIENT  = null;
-	public static ItemPoisonRoot               ROOT_WOLFSBANE = null;
-	public static ItemPoisonRoot               ROOT_NIGHTSHADE = null;
-	//public static ItemPoisonVial               POISON_VIAL = null;
+	public static ItemSpellFocus      SPELL_FOCUS = null;
+	public static ItemSpellBauble     SPELL_BAUBLE= null;
+	public static ItemMagicIngredient INGREDIENT  = null;
+	public static ItemPoisonRoot      ROOT_WOLFSBANE = null;
+	public static ItemPoisonRoot      ROOT_NIGHTSHADE = null;
+	
+	public static ItemCodex         CODEX = null;
 	
 	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
 	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
@@ -88,16 +90,20 @@ public class ArsenalItems {
 		
 		SPELL_FOCUS = item(r, new ItemSpellFocus());
 		SPELL_BAUBLE= item(r, new ItemSpellBauble());
-		INGREDIENT  = item(r, new ItemSubtyped<>("ingredient", EnumIngredient.values(), false));
+		INGREDIENT  = item(r, new ItemMagicIngredient());
 		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
 		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND)); //FIXME: Switch to nightshade when the plant is done
 		//POISON_VIAL = item(r, new ItemPoisonVial());
+		CODEX       = item(r, new ItemCodex());
 		
 		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
 		ArsenalBlocks.CROP_NIGHTSHADE.setHarvestItems(EnumPoisonPlant.NIGHTSHADE.getRoot(), EnumIngredient.BERRY_NIGHTSHADE.getItem());
 		
 		OreDictionary.registerOre("dyePurple", EnumIngredient.PETAL_WOLFSBANE.getItem());
 		OreDictionary.registerOre("dyeBlack", EnumIngredient.BERRY_NIGHTSHADE.getItem());
+		
+		ContainerCodex.initCodex(); //Once items are done this should be fired *immediately*.
+		CODEX.updatePages();
 	}
 	
 	@SubscribeEvent
@@ -224,7 +230,7 @@ public class ArsenalItems {
 		PotionUtils.addPotionToItemStack(nightshadePotion, POTIONTYPE_NIGHTSHADE1);
 		
 		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runestone"),
-				new ItemStack(ArsenalBlocks.RUNESTONE1, 1, 8),
+				new ItemStack(ArsenalBlocks.RUNESTONE1, 8, 1),
 				"sss", "sps", "sss",
 				's', "stone",
 				'p', new IngredientNBT(nightshadePotion)
@@ -246,6 +252,36 @@ public class ArsenalItems {
 				firstItem,
 				lastItem
 				).setRegistryName("runecarving_loop_"+0));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "initialcodex"),
+				new ItemStack(CODEX),
+				EnumIngredient.PORTAL_SEARED_TOME.getItem(),
+				EnumIngredient.PORTAL_SEARED_TOME.getItem()
+				).setRegistryName("initalcodex"));
+		
+		r.register(new CodexRecipe());
+		
+		
+		ItemStack wolfsbanePotion = new ItemStack(Items.POTIONITEM);
+		PotionUtils.addPotionToItemStack(wolfsbanePotion, POTIONTYPE_WOLFSBANE1);
+		IngredientNBT wolfsbaneIngredient = new IngredientNBT(wolfsbanePotion);
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.kenaz"),
+				new ItemStack(ArsenalBlocks.STELE_KENAZ),
+				Items.ENCHANTED_BOOK,
+				Blocks.TORCH,
+				wolfsbaneIngredient,
+				EnumRuneCarving.KENAZ.getUnwardedItem()
+				).setRegistryName("ward.kenaz"));
+		
+		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runicaltar"),
+				new ItemStack(ArsenalBlocks.RUNIC_ALTAR),
+				"s s", "sss", "rrr",
+				's', ArsenalBlocks.STELE_UNCARVED,
+				'r', EnumRuneCarving.NONE.getUnwardedItem()
+				).setRegistryName("magicarsenal_runicaltar"));
+		
+		
 		
 		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(ArsenalBlocks.ROSETTA_STONE),
 				1, 200,

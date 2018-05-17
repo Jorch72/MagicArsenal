@@ -26,9 +26,10 @@ package com.elytradev.marsenal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class StringExtras {
-	public static List<String> WordWrap(String str, int width) {
+	public static List<String> wordWrap(String str, int width) {
 		List<String> result = new ArrayList<>();
 		String[] words = str.split(" ");
 
@@ -51,6 +52,26 @@ public class StringExtras {
 				}
 			}
 			line += " "+word;
+		}
+		if (!line.isEmpty()) result.add(line.trim());
+		
+		return result;
+	}
+	
+	public static List<String> wordWrap(String str, int width, Function<String, Integer> widthFunction) {
+		List<String> result = new ArrayList<>();
+		String[] words = str.split(" ");
+
+		String line = "";
+		for (String word : words) {
+			if (widthFunction.apply((line+" "+word).trim()) > width) {
+				//If the current line won't fit with the new word appended, emit the line so the new word sits at the start of the next line
+				if (!line.isEmpty()) {
+					result.add(line.trim());
+					line = "";
+				}
+			}
+			line += (" "+word).trim(); //Add it even if it won't fit by itself
 		}
 		if (!line.isEmpty()) result.add(line.trim());
 		

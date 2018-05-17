@@ -25,29 +25,50 @@
 package com.elytradev.marsenal.gui;
 
 import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import com.elytradev.concrete.inventory.gui.widget.WWidget;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum EnumGui {
-	RUNIC_ALTAR(ContainerRunicAltar::new),
-	TOME(ContainerCodex::new);
+public class WItemDisplay extends WWidget {
+	private ItemStack stack = ItemStack.EMPTY;
 	
-private final GuiSupplier supplier;
+	public WItemDisplay() {}
 	
-	EnumGui(GuiSupplier supplier) {
-		this.supplier = supplier;
+	public static WItemDisplay of(ItemStack stack) {
+		WItemDisplay w = new WItemDisplay();
+		w.stack = stack;
+		
+		return w;
 	}
 	
-	public ConcreteContainer createContainer(IInventory player, IInventory tile, TileEntity te) {
-		return supplier.apply(player, tile, te);
+	@Override
+	public int getWidth() {
+		return 18;
 	}
 	
-	public static EnumGui forId(int id) {
-		return EnumGui.values()[id % EnumGui.values().length];
+	@Override
+	public int getHeight() {
+		return 18;
 	}
 	
-	public static interface GuiSupplier {
-		public ConcreteContainer apply(IInventory player, IInventory tile, TileEntity te);
+	@Override
+	public void createPeers(ConcreteContainer c) {}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void paintBackground(int x, int y) {
+		if (stack!=null) {
+			RenderHelper.enableGUIStandardItemLighting();
+			Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+			RenderHelper.disableStandardItemLighting();
+		}
+	}
+
+	public void setItemStack(ItemStack stack) {
+		this.stack = stack;
 	}
 }

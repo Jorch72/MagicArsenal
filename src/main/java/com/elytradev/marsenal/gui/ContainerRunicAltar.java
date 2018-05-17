@@ -30,7 +30,6 @@ import com.elytradev.concrete.inventory.gui.widget.WGridPanel;
 import com.elytradev.concrete.inventory.gui.widget.WImage;
 import com.elytradev.concrete.inventory.gui.widget.WItemSlot;
 import com.elytradev.concrete.inventory.gui.widget.WPlainPanel;
-import com.elytradev.marsenal.client.WRadianceBar;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;

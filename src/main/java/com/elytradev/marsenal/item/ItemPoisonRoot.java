@@ -59,7 +59,7 @@ public class ItemPoisonRoot extends ItemSeeds {
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		tooltip.add("§e"+I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id+".taxonomy")+"§r");
 		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id);
-		List<String> lines = StringExtras.WordWrap(flavortext, 35);
+		List<String> lines = StringExtras.wordWrap(flavortext, 35);
 		for(String s : lines) {
 			tooltip.add("§9§o"+s+"§r");
 		}

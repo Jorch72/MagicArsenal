@@ -22,32 +22,19 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.item;
 
-import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import net.minecraft.item.ItemStack;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
+public class ItemMagicIngredient extends ItemSubtyped<EnumIngredient> {
 
-public enum EnumGui {
-	RUNIC_ALTAR(ContainerRunicAltar::new),
-	TOME(ContainerCodex::new);
-	
-private final GuiSupplier supplier;
-	
-	EnumGui(GuiSupplier supplier) {
-		this.supplier = supplier;
+	public ItemMagicIngredient() {
+		super("ingredient", EnumIngredient.values(), false);
 	}
-	
-	public ConcreteContainer createContainer(IInventory player, IInventory tile, TileEntity te) {
-		return supplier.apply(player, tile, te);
-	}
-	
-	public static EnumGui forId(int id) {
-		return EnumGui.values()[id % EnumGui.values().length];
-	}
-	
-	public static interface GuiSupplier {
-		public ConcreteContainer apply(IInventory player, IInventory tile, TileEntity te);
+
+	@Override
+	public int getItemBurnTime(ItemStack itemStack) {
+		EnumIngredient ingredient = EnumIngredient.values()[itemStack.getMetadata() % EnumIngredient.values().length];
+		return ingredient.getFuelValue();
 	}
 }

@@ -30,17 +30,29 @@ import net.minecraft.util.IStringSerializable;
 public enum EnumIngredient implements IStringSerializable {
 	FOCUS_CORE("focuscore"),
 	PETAL_WOLFSBANE("petalwolfsbane"),
-	BERRY_NIGHTSHADE("berrynightshade");
+	BERRY_NIGHTSHADE("berrynightshade"),
+	PORTAL_SEARED_TOME("portalsearedtome", 150); //Might burn for only 150 ticks, but it gets to 451 fahrenheit
 	
 	private final String name;
+	private final int fuelValue;
 	
 	EnumIngredient(String name) {
 		this.name = name;
+		this.fuelValue = 0;
+	}
+	
+	EnumIngredient(String name, int fuelValue) {
+		this.name = name;
+		this.fuelValue = fuelValue;
 	}
 
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public int getFuelValue() {
+		return this.fuelValue;
 	}
 	
 	public ItemStack getItem() {

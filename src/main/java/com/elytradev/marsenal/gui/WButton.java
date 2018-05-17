@@ -24,30 +24,46 @@
 
 package com.elytradev.marsenal.gui;
 
-import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.ResourceLocation;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
-
-public enum EnumGui {
-	RUNIC_ALTAR(ContainerRunicAltar::new),
-	TOME(ContainerCodex::new);
+public class WButton extends WSwappableImage {
+	private boolean enabled;
+	private Runnable onClick;
+	private ResourceLocation disabledImage;
 	
-private final GuiSupplier supplier;
-	
-	EnumGui(GuiSupplier supplier) {
-		this.supplier = supplier;
+	public boolean isEnabled() {
+		return enabled;
 	}
 	
-	public ConcreteContainer createContainer(IInventory player, IInventory tile, TileEntity te) {
-		return supplier.apply(player, tile, te);
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
-	public static EnumGui forId(int id) {
-		return EnumGui.values()[id % EnumGui.values().length];
+	public void setOnClick(Runnable r) {
+		this.onClick = r;
 	}
 	
-	public static interface GuiSupplier {
-		public ConcreteContainer apply(IInventory player, IInventory tile, TileEntity te);
+	@Override
+	public void onClick(int x, int y, int button) { //PURELY CLIENTSIDE
+		if (enabled) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			if (onClick!=null) onClick.run();
+		}
+	}
+	
+	@Override
+	public void paintBackground(int x, int y) {
+		if (enabled) {
+			super.paintBackground(x, y);
+		} else {
+			if (disabledImage!=null) {
+				rect(image, x, y, getWidth(), getHeight(), 0,0,1,1);
+			} else {
+				//No disabled image, so draw nothing
+			}
+		}
 	}
 }
