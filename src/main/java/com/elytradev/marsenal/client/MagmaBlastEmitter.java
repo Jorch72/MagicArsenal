@@ -28,17 +28,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
 public class MagmaBlastEmitter extends Emitter {
 	private int ticksRemaining = 20;
 	private Random random = new Random();
-	
-	private ArrayList<Star> dead = new ArrayList<>();
 	private ArrayList<Star> stars = new ArrayList<>();
-	//                      still
-	//                      burn
 	
 	@Override
 	public void tick() {
@@ -73,21 +68,6 @@ public class MagmaBlastEmitter extends Emitter {
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
 		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
-		/*
-		GlStateManager.disableLighting();
-		GlStateManager.disableTexture2D();
-		for(Star star : stars) {
-			star.tick(partialFrameTime);
-			star.paint(dx, dy, dz);
-			if (star.lifetime<=0) dead.add(star);
-		}
-		for(Star star : dead) {
-			stars.remove(star);
-		}
-		dead.clear();
-
-		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();*/
 	}
 
 }

@@ -281,8 +281,6 @@ public class ArsenalItems {
 				'r', EnumRuneCarving.NONE.getUnwardedItem()
 				).setRegistryName("magicarsenal_runicaltar"));
 		
-		
-		
 		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(ArsenalBlocks.ROSETTA_STONE),
 				1, 200,
 				ItemIngredient.of(Blocks.BOOKSHELF),

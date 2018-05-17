@@ -51,6 +51,7 @@ import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 import com.elytradev.probe.api.IProbeDataProvider;
+import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -63,6 +64,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -70,6 +77,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -185,6 +193,9 @@ public class MagicArsenal {
 		
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_WOLFSBANE), 2);
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_NIGHTSHADE), 2);
+		
+		LootTableList.register(new ResourceLocation(MODID, "inject/simple_dungeon"));
+		LootTableList.register(new ResourceLocation(MODID, "inject/mob_death"));
 	}
 	
 	@Mod.EventHandler
@@ -322,5 +333,33 @@ public class MagicArsenal {
 		if (tag.hasKey("magicarsenal:Poisoned")) {
 			event.getEntityLiving().addPotionEffect(new PotionEffect(ArsenalItems.POTION_WOLFSBANE, 20*30));
 		}
+	}
+	
+	private static final ImmutableSet<String> PORTAL_SEARED_FOES = ImmutableSet.of(
+			"zombie", "husk", "zombie_pigman", "skeleton"
+	);
+	
+	@SubscribeEvent
+	public void onLootTableLoad(LootTableLoadEvent event) {
+		String entityPrefix = "minecraft:entities/";
+		if (event.getName().toString().startsWith(entityPrefix)) {
+			String tableName = event.getName().toString().substring(event.getName().toString().indexOf(entityPrefix) + entityPrefix.length());
+			if (PORTAL_SEARED_FOES.contains(tableName)) {
+				event.getTable().addPool(getInjectPool("mob_death"));
+			}
+		}
+		
+		if (event.getName().toString().equals("minecraft:chests/simple_dungeon")) {
+			event.getTable().addPool(getInjectPool("simple_dungeon"));
+		}
+	}
+	
+	//Utility methods below adapted from Botania and originally written by Vazkii. I can't take credit for these gems but they make editing drops 900% easier
+	private LootPool getInjectPool(String entryName) {
+		return new LootPool(new LootEntry[] { getInjectEntry(entryName, 1) }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "magicarsenal_inject_pool");
+	}
+
+	private LootEntryTable getInjectEntry(String name, int weight) {
+		return new LootEntryTable(new ResourceLocation(MODID, "inject/" + name), weight, 0, new LootCondition[0], "magicarsenal_inject_entry");
 	}
 }

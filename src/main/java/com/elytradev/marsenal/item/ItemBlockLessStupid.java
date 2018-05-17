@@ -24,16 +24,10 @@
 
 package com.elytradev.marsenal.item;
 
-import java.util.List;
-
 import com.elytradev.marsenal.block.IItemVariants;
-import com.elytradev.marsenal.block.ITooltip;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 /** ItemBlock with more sensible defaults */
 public class ItemBlockLessStupid extends ItemBlock {
