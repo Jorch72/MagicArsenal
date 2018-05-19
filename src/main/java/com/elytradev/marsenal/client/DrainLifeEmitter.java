@@ -27,6 +27,8 @@ package com.elytradev.marsenal.client;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.elytradev.marsenal.client.star.LegacyLineSegmentStar;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.util.math.Vec3d;
@@ -36,8 +38,8 @@ public class DrainLifeEmitter extends Emitter {
 	private int ticksRemaining = 20;
 	//private float partialTicks = 0f;
 	
-	private ArrayList<Star> dead = new ArrayList<>();
-	private ArrayList<Star> stars = new ArrayList<>();
+	private ArrayList<LegacyLineSegmentStar> dead = new ArrayList<>();
+	private ArrayList<LegacyLineSegmentStar> stars = new ArrayList<>();
 	private boolean         still = true;
 	//                      burn
 	
@@ -66,7 +68,7 @@ public class DrainLifeEmitter extends Emitter {
 			Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
 					.normalize().scale(-0.2f);
 		
-			Star star = new Star();
+			LegacyLineSegmentStar star = new LegacyLineSegmentStar();
 			star.width = 0.05f;
 			star.move((float)startX, (float)startY, (float)startZ);
 			star.color = 0x668b0722;
@@ -96,7 +98,7 @@ public class DrainLifeEmitter extends Emitter {
 			stars.add(star);
 		} else {
 			//Continue to track the source
-			for(Star star : stars) {
+			for(LegacyLineSegmentStar star : stars) {
 				star.tx = (float) source.posX;
 				star.ty = (float) (source.posY + (source.height/2));
 				star.tz = (float) source.posZ;

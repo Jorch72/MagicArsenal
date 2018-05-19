@@ -28,24 +28,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.client.renderer.GlStateManager;
+import com.elytradev.marsenal.client.star.IStar;
+import com.elytradev.marsenal.client.star.MultiSegmentStar;
+import com.elytradev.marsenal.client.star.StarFlinger;
 
 public class CoalesceEmitter extends Emitter {
 	private static final float TAU = (float)(2*Math.PI);
-	private static final int MAX_STARS = 100;
 	private static final float ROTATION_SPEED = TAU/4f;
-	private static final int FADEOUT_TICKS = 20*2;
 	private Random rnd = new Random();
-	private List<Star> dead  = new ArrayList<>();
-	private List<Star> stars = new ArrayList<>();
+	private List<MultiSegmentStar> stars = new ArrayList<>();
+	//private List<LegacyLineSegmentStar> dead  = new ArrayList<>();
+	//private List<LegacyLineSegmentStar> stars = new ArrayList<>();
 	//                 still
 	//                 burn
 	private int ticksRemaining = 20*5;
 	
 	@Override
 	public void tick() {
+		//if (ticksRemaining>20*4)
+		{
+			MultiSegmentStar star = new MultiSegmentStar();
+			star.setNumSegments(4);
+			star.setSegmentLength(0.03f);
+			star.setPosition(this.x + (float)rnd.nextGaussian()*0.75f, this.y + 3f, this.z + (float)rnd.nextGaussian()*0.75f);
+			
+			//Kill any weird positioning artifacts
+			//rotateStar(star, 1f);
+			//star.setPosition(star.getX(), star.getY(), star.getZ());
+			//Doesn't work. We'll have to search elsewhere
+			
+			star.setVelocity(0f, -0.16f, 0f);
+			star.setColorVelocity(20f, 8f, -8f, -6f);
+			star.setLifetime(20);
+			
+			star.setThickness(0.05f + (float)(Math.random()*0.05f));
+			star.setColor(0x7766CC99);
+			star.fuzzColor(0.4f, 0.4f, 0.5f);
+			stars.add(star);
+			StarFlinger.spawn(star);
+		}
+		/*
 		if (stars.size()<MAX_STARS && ticksRemaining>=FADEOUT_TICKS) {
-			Star star = new Star();
+			LegacyLineSegmentStar star = new LegacyLineSegmentStar();
 			star.move(this.x + (float)rnd.nextGaussian()*0.25f, this.y + 3f, this.z + (float)rnd.nextGaussian());
 			star.setVelocity(0f, -0.16f, 0f);
 			star.lifetime = 20;
@@ -55,17 +79,17 @@ public class CoalesceEmitter extends Emitter {
 			star.fuzzColor(0.4f, 0.4f, 0.5f);
 			
 			stars.add(star);
-		}
-		
+		}*/
+		/*
 		if (ticksRemaining<FADEOUT_TICKS) {
-			for(Star star : stars) {
+			for(MultiSegmentStar star : stars) {
 				int alpha = (star.color >> 24) & 0xFF;
 				float a = alpha / (float)0xFF;
 				a = a * 0.90f;
 				alpha = (int)(a * 0xFF);
 				star.color = (star.color & 0xFFFFFF) | (alpha << 24);
 			}
-		}
+		}*/
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) this.kill();
@@ -73,12 +97,17 @@ public class CoalesceEmitter extends Emitter {
 
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
+		for(MultiSegmentStar star : stars) {
+			rotateStar(star, partialFrameTime);
+		}
+		stars.removeIf(IStar::isDead);
+		/*
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		
-		for(Star star : stars) {
+		for(LegacyLineSegmentStar star : stars) {
 			star.paint(dx, dy, dz);
 			star.tick(partialFrameTime);
 			rotateStar(star, partialFrameTime);
@@ -89,19 +118,23 @@ public class CoalesceEmitter extends Emitter {
 		
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture2D();*/
 	}
 	
 	
-	public void rotateStar(Star star, float partialTime) {
-		float dx = star.x - this.x;
-		float dz = star.z - this.z;
+	public void rotateStar(MultiSegmentStar star, float partialTime) {
+		float dx = star.getX() - this.x;
+		float dz = star.getZ() - this.z;
 		float r = (float)Math.sqrt(dx*dx + dz*dz); //JVM intrinsics JIT this to either fsqrt or sqrtsd, making this faster than Carmack/Mojang's fastSqrt
 		                                           //Reminder: BENCHMARK EVERYTHING YOU INTEND TO OPTIMIZE
+		if (r>2) r=2;
 		float theta = (float)Math.atan2(dz, dx);
 		
 		theta+= ROTATION_SPEED*partialTime;
-		star.x = x + (float)(Math.cos(theta)*r);
-		star.z = z + (float)(Math.sin(theta)*r);
+		star.adjustPosition(
+				x + (float)(Math.cos(theta)*r),
+				star.getY(),
+				z + (float)(Math.sin(theta)*r)
+				);
 	}
 }

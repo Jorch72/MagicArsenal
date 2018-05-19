@@ -22,13 +22,17 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.client;
+package com.elytradev.marsenal.client.star;
 
 import java.util.function.Consumer;
 
+import com.elytradev.marsenal.client.Draw;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
-public strictfp class Star {
+@Deprecated
+public strictfp class LegacyLineSegmentStar {
 	public float x;
 	public float y;
 	public float z;
@@ -48,7 +52,7 @@ public strictfp class Star {
 	public float ty;
 	public float tz;
 	public float interceptRange;
-	public Consumer<Star> onIntercept;
+	public Consumer<LegacyLineSegmentStar> onIntercept;
 	
 	public float lifetime = 20*1;
 	
@@ -122,13 +126,17 @@ public strictfp class Star {
 	}
 	
 	public void paint(double dx, double dy, double dz) {
-		Draw.fakeLine(tailx-dx, taily-dy, tailz-dz, x-dx, y-dy, z-dz, width, color, true);
+		GlStateManager.translate(-dx, -dy, -dz);
+		//Draw.fakeLine(tailx-dx, taily-dy, tailz-dz, x-dx, y-dy, z-dz, width, color, true);
+		Draw.fakeLine(tailx, taily, tailz, x, y, z, width, color, true);
+		GlStateManager.translate(dx, dy, dz);
+		
 	}
 	
 	public void fuzzColor(float r, float g, float b) {
-		float rFuzz = (float)(Math.random()*r)+(r*0.5f);
-		float gFuzz = (float)(Math.random()*g)+(g*0.5f);
-		float bFuzz = (float)(Math.random()*b)+(b*0.5f);
+		float rFuzz = (float)(Math.random()*r)-(r*0.5f);
+		float gFuzz = (float)(Math.random()*g)-(g*0.5f);
+		float bFuzz = (float)(Math.random()*b)-(b*0.5f);
 		
 		int rf = (int)(rFuzz*255);
 		int gf = (int)(gFuzz*255);

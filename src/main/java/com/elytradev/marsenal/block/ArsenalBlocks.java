@@ -27,6 +27,7 @@ package com.elytradev.marsenal.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
@@ -51,6 +52,7 @@ public class ArsenalBlocks {
 	public static BlockRaidhoStele       STELE_RAIDHO    = null;
 	
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
+	public static BlockChaosOrb          CHAOS_ORB       = null;
 	
 	
 	@SubscribeEvent
@@ -67,10 +69,13 @@ public class ArsenalBlocks {
 		STELE_KENAZ    = block(r, new BlockKenazStele());
 		
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
+		CHAOS_ORB      = block(r, new BlockChaosOrb());
 		
 		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,  "magicarsenal.altar");
 		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class, "magicarsenal.stele.raidho");
 		GameRegistry.registerTileEntity(TileEntityKenazStele.class,  "magicarsenal.stele.kenaz");
+		
+		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
 		
 		//No, you can't carry the crops around.
 		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());

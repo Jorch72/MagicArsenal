@@ -32,6 +32,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.elytradev.marsenal.MagicArsenal;
+import com.elytradev.marsenal.client.star.LegacyLineSegmentStar;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -89,18 +90,18 @@ public abstract class Emitter {
 	}
 	
 	
-	public static void drawStars(double dx, double dy, double dz, Collection<Star> stars) {
+	public static void drawStars(double dx, double dy, double dz, Collection<LegacyLineSegmentStar> stars) {
 		drawStars(0, dx, dy, dz, stars, false);
 	}
 	
-	private static List<Star> deadStars = new ArrayList<>();
-	public static void drawStars(float partialFrameTime, double dx, double dy, double dz, Collection<Star> stars, boolean doPhysics) {
+	private static List<LegacyLineSegmentStar> deadStars = new ArrayList<>();
+	public static void drawStars(float partialFrameTime, double dx, double dy, double dz, Collection<LegacyLineSegmentStar> stars, boolean doPhysics) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		
-		for(Star star : stars) {
+		for(LegacyLineSegmentStar star : stars) {
 			star.paint(dx, dy, dz);
 			if (doPhysics) {
 				star.tick(partialFrameTime);

@@ -24,8 +24,12 @@
 
 package com.elytradev.marsenal.client;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Random;
+
+import com.elytradev.marsenal.client.star.CubeStar;
+//import com.elytradev.marsenal.client.star.LegacyLineSegmentStar;
+import com.elytradev.marsenal.client.star.StarFlinger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.Vec3d;
@@ -33,30 +37,31 @@ import net.minecraft.util.math.Vec3d;
 public class MagmaBlastEmitter extends Emitter {
 	private int ticksRemaining = 20;
 	private Random random = new Random();
-	private ArrayList<Star> stars = new ArrayList<>();
+	//private ArrayList<LegacyLineSegmentStar> stars = new ArrayList<>();
 	
 	@Override
 	public void tick() {
 		if (entity!=null && ticksRemaining>15) {
-			int spawns = 32;
-			if (Minecraft.getMinecraft().gameSettings.particleSetting==1) spawns=16;
-			if (Minecraft.getMinecraft().gameSettings.particleSetting==2) spawns=8;
+			int spawns = 128;
+			if (Minecraft.getMinecraft().gameSettings.particleSetting==1) spawns/=2;
+			if (Minecraft.getMinecraft().gameSettings.particleSetting==2) spawns/=4;
 			
 			for(int i=0; i<spawns; i++) {
 				Vec3d lookVec = entity.getLookVec();
-				lookVec = lookVec.addVector(random.nextGaussian()*0.5f, random.nextGaussian()*0.5f, random.nextGaussian()*0.5f).normalize(); //Fuzz
-				lookVec = lookVec.scale(0.9f); //velocity magnitude
+				lookVec = lookVec.addVector(random.nextGaussian()*1f, random.nextGaussian()*1.5f, random.nextGaussian()*1f).normalize(); //Fuzz
+				lookVec = lookVec.scale(0.4f); //velocity magnitude
 				
-				Star star = new Star();
-				star.width = 0.4f;
-				star.taild2 = 0.5f*0.5f;
-				//star.limit = 0.4f;
-				star.move((float)entity.posX, (float)entity.posY+entity.getEyeHeight(), (float)entity.posZ);
-				star.color = 0xccff3300;
-				star.fuzzColor(0.6f, 0.6f, 0.3f);
-				star.lifetime = 4;
-				star.setVelocity(lookVec);
-				stars.add(star);
+				CubeStar star = new CubeStar();
+				star.setSize(0.1f);
+				star.setPosition((float)entity.posX, (float)entity.posY+entity.getEyeHeight(), (float)entity.posZ);
+				star.setColor(0xccff3300);
+				star.fuzzColor(0.8f, 0.8f, 0.3f);
+				star.setColorVelocity(-4, -30, -45, - (0xcc * (1/32f)));
+				star.setLifetime(32);
+				star.setCollides(true);
+				star.setVelocity(lookVec.addVector(0, Math.random()*0.5, 0));
+				star.setAcceleration(0, -0.05f, 0);
+				StarFlinger.spawn(star);
 			}
 		}
 		
@@ -67,7 +72,7 @@ public class MagmaBlastEmitter extends Emitter {
 	
 	@Override
 	public void draw(float partialFrameTime, double dx, double dy, double dz) {
-		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
+		//Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
 	}
 
 }

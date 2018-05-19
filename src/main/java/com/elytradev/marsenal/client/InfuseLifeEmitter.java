@@ -27,20 +27,23 @@ package com.elytradev.marsenal.client;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.elytradev.marsenal.client.star.LineStar;
+import com.elytradev.marsenal.client.star.StarFlinger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.util.math.Vec3d;
 
 public class InfuseLifeEmitter extends Emitter {
 	Random random = new Random();
 	private int ticksRemaining = 30;
-	
-	private ArrayList<Star> stars = new ArrayList<>();
+	private ArrayList<LineStar> stars = new ArrayList<>();
 	
 	@Override
 	public void tick() {
 		if (entity.isDead) {
 			ticksRemaining = 0;
-			//kill();
+			kill();
 			return;
 		}
 		
@@ -50,19 +53,16 @@ public class InfuseLifeEmitter extends Emitter {
 				double startX = entity.posX + random.nextGaussian()*0.3d;
 				double startY = entity.posY + entity.height + 2.5d;
 				double startZ = entity.posZ + random.nextGaussian()*0.3d;
-				//Vec3d towardsEntity = new Vec3d(entity.posX-startX, entity.posY-startY, this.entity.posZ-startZ)
-				//		.normalize().scale(512.0f);
-			
-				Star star = new Star();
-				star.taild2 = (float)(Math.pow(0.1f+(Math.random()*0.3f), 2));
-				star.width = 0.04f;
-				star.move((float)startX, (float)startY, (float)startZ);
-				star.color = 0x8874aa00;
-				star.fuzzColor(0.3f, 0.7f, 0.3f);
 				
-				star.lifetime = 20*2;
-				//star.setAcceleration(towardsEntity);
+				LineStar star = new LineStar();
+				star.setLength(0.1f+ (float)(Math.random()*0.3f));
+				star.setThickness(0.04f);
+				star.setPosition((float)startX, (float)startY, (float)startZ);
+				star.setColor(0x8874aa00);
+				star.fuzzColor(0.3f, 0.7f, 0.3f);
 				star.setVelocity(0, -0.4f + -(float)(Math.random()*0.2f), 0);
+				star.setLifetime(20*2);
+				StarFlinger.spawn(star);
 				stars.add(star);
 			}
 			
@@ -85,42 +85,20 @@ public class InfuseLifeEmitter extends Emitter {
 			}
 		}
 		
-		for(Star star : stars) {
-			if (star.y<entity.posY) {
-				star.vy = 0.05f;
-				star.vx += random.nextGaussian()*0.01f;
-				star.vy += random.nextGaussian()*0.01f;
+		for(LineStar star : stars) {
+			if (star.getY()<entity.posY) {
+				Vec3d old = star.getVelocity();
+				star.setVelocity(
+						(float)old.x + (float)random.nextGaussian()*0.01f,
+						0.05f,
+						(float)old.z + (float)random.nextGaussian()*0.01f);
 			}
 		}
 		
 		ticksRemaining--;
-		if (ticksRemaining<=0) {
-			if (stars.isEmpty()) {
-				kill();
-			}
-		}
+		if (ticksRemaining<=0) kill(); //Flung stars will persist
 	}
 
 	@Override
-	public void draw(float partialFrameTime, double dx, double dy, double dz) {
-		Emitter.drawStars(partialFrameTime, dx, dy, dz, stars, true);
-		/*
-		GlStateManager.disableLighting();
-		GlStateManager.disableTexture2D();
-		
-		//this.partialTicks += partialFrameTime*1.5f;
-		
-		for(Star star : stars) {
-			star.tick(partialFrameTime);
-			star.paint(dx, dy, dz);
-			if (star.lifetime<=0) dead.add(star);
-		}
-		for(Star star : dead) {
-			stars.remove(star);
-		}
-		dead.clear();
-
-		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();*/
-	}
+	public void draw(float partialFrameTime, double dx, double dy, double dz) {}
 }

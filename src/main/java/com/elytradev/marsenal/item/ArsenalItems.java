@@ -212,11 +212,7 @@ public class ArsenalItems {
 				Items.MAGMA_CREAM
 				).setRegistryName("magicarsenal_spellfocus_will_o_wisp"));
 		
-		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
-				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
-				Items.CLOCK,
-				Items.GLOWSTONE_DUST
-				).setRegistryName("magicarsenal_spellfocus_chain_lightning"));
+		
 		
 		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromStacks(EnumIngredient.PETAL_WOLFSBANE.getItem()), POTIONTYPE_WOLFSBANE1);
 		PotionHelper.addMix(POTIONTYPE_WOLFSBANE1, Items.GLOWSTONE_DUST, POTIONTYPE_WOLFSBANE2);
@@ -290,6 +286,19 @@ public class ArsenalItems {
 				ItemIngredient.of(Blocks.BOOKSHELF),
 				ItemIngredient.of(Blocks.BOOKSHELF)
 				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
+				1, 1800,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Items.CLOCK),
+				ItemIngredient.of(Items.GLOWSTONE_DUST)
+				));
+		/*//Old recipe
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
+				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
+				Items.CLOCK,
+				Items.GLOWSTONE_DUST
+				).setRegistryName("magicarsenal_spellfocus_chain_lightning"));*/
 	}
 	
 	

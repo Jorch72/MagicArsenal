@@ -32,19 +32,18 @@ import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
 import com.elytradev.probe.api.IProbeData;
 import com.elytradev.probe.api.IProbeDataProvider;
-import com.elytradev.probe.api.IUnit;
 import com.elytradev.probe.api.UnitDictionary;
 import com.elytradev.probe.api.impl.ProbeData;
-import com.elytradev.probe.api.impl.SIUnit;
-import com.elytradev.probe.api.impl.Unit;
+import com.google.common.collect.ImmutableList;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class RuneProducerDataProvider implements IProbeDataProvider {
-	private static IUnit RADIANCE = null;
-	private static IUnit EMC = null;
 	
 	TileEntity te;
 	RuneProducer producer;
@@ -52,9 +51,6 @@ public class RuneProducerDataProvider implements IProbeDataProvider {
 	public RuneProducerDataProvider(TileEntity te, RuneProducer producer) {
 		this.te = te;
 		this.producer = producer;
-		
-		if (RADIANCE==null) RADIANCE = new SIUnit("info.magicarsenal.radiance.name", "", 0xFFFFFFFF);
-		if (EMC==null) EMC = new SIUnit("info.magicarsenal.emc.name", "", 0xFFeedd00);
 	}
 	
 	@Override
@@ -100,6 +96,17 @@ public class RuneProducerDataProvider implements IProbeDataProvider {
 			data.add(new ProbeData()
 					.withLabel(new TextComponentTranslation("info.magicarsenal.label.emc", new TextComponentString(""+emc))));
 					//.withBar(0, emc, emc, EMC));
+		}
+		
+		if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+			IItemHandler storage = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			ImmutableList.Builder<ItemStack> items = ImmutableList.builder();
+			for(int i=0; i<storage.getSlots(); i++) {
+				items.add(storage.getStackInSlot(i));
+			}
+			
+			data.add(new ProbeData()
+					.withInventory(items.build()));
 		}
 	}
 

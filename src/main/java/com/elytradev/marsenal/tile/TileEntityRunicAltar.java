@@ -56,6 +56,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileEntityRunicAltar extends TileEntity implements ITickable, IContainerInventoryHolder {
+	private static final int NBTTAG_COMPOUND = 10;
+	
+	
 	public static final int SLOT_OUTPUT = 6;
 	private static final int MAX_DEPTH = 20;
 	private static final int RESCAN_PERIOD = 20*10;
@@ -93,15 +96,16 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if (tag.hasKey("Inventory")) {
-			CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(storage, null, tag.getTag("Inventory"));
+		if (tag.hasKey("Inventory", NBTTAG_COMPOUND)) {
+			storage.deserializeNBT((NBTTagCompound) tag.getTag("Inventory"));
 		}
 	}
 	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		tag.setTag("Inventory", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(storage, null));
-		
+		super.writeToNBT(tag);
+		tag.setTag("Inventory", storage.serializeNBT());
 		return tag;
 	}
 	

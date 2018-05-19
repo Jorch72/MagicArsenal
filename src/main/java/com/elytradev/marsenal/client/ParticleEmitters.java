@@ -27,6 +27,9 @@ package com.elytradev.marsenal.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.marsenal.client.star.StarFlinger;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -60,6 +63,14 @@ public class ParticleEmitters {
 		double dx = player.prevPosX + (player.posX - player.prevPosX) * partialTicks;
 		double dy = player.prevPosY + (player.posY - player.prevPosY) * partialTicks;
 		double dz = player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
+		
+		GlStateManager.translate(-dx, -dy, -dz);
+		
+		StarFlinger.startBatch();
+		StarFlinger.paintAndTickGlobalStars();
+		StarFlinger.endBatch();
+		
+		GlStateManager.translate(dx, dy, dz);
 		
 		synchronized(emitters) {
 			
