@@ -226,7 +226,7 @@ public class ArsenalItems {
 		PotionUtils.addPotionToItemStack(nightshadePotion, POTIONTYPE_NIGHTSHADE1);
 		
 		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runestone"),
-				new ItemStack(ArsenalBlocks.RUNESTONE1, 8, 1),
+				new ItemStack(ArsenalBlocks.RUNESTONE1, 8, 0),
 				"sss", "sps", "sss",
 				's', "stone",
 				'p', new IngredientNBT(nightshadePotion)
@@ -261,6 +261,12 @@ public class ArsenalItems {
 		ItemStack wolfsbanePotion = new ItemStack(Items.POTIONITEM);
 		PotionUtils.addPotionToItemStack(wolfsbanePotion, POTIONTYPE_WOLFSBANE1);
 		IngredientNBT wolfsbaneIngredient = new IngredientNBT(wolfsbanePotion);
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.uncarved"),
+				new ItemStack(ArsenalBlocks.STELE_UNCARVED),
+				EnumRuneCarving.NONE.getUnwardedItem(),
+				wolfsbaneIngredient
+				).setRegistryName("ward.uncarved"));
 		
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.kenaz"),
 				new ItemStack(ArsenalBlocks.STELE_KENAZ),

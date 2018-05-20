@@ -81,7 +81,7 @@ public class BlockRunicAltar extends BlockSimple implements ITileEntityProvider 
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (world.isRemote) return true;
+		//if (world.isRemote) return true;
 		player.openGui(MagicArsenal.INSTANCE, EnumGui.RUNIC_ALTAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}

@@ -39,6 +39,8 @@ import com.elytradev.concrete.inventory.ValidatedItemHandlerView;
 import com.elytradev.concrete.inventory.Validators;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.capability.IRuneProducer;
+import com.elytradev.marsenal.capability.impl.FlexibleItemHandler;
+import com.elytradev.marsenal.capability.impl.ValidatedInventoryWrapperTakeTwo;
 import com.elytradev.marsenal.compat.ProbeDataCompat;
 import com.elytradev.marsenal.magic.SpellEffect;
 import com.elytradev.marsenal.recipe.RunicAltarRecipes;
@@ -64,6 +66,15 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	private static final int RESCAN_PERIOD = 20*10;
 	private static final int EMC_TIMER = 20;
 	private static final int CRAFTING_TIMER = (int)(20*2.5f);
+	
+	private FlexibleItemHandler storage = new FlexibleItemHandler(7)
+			.setName("tile.magicarsenal.altar.name")
+			.setCanExtract(false, false, false, false, false, false, true)
+			.setMaxStackSize(1)
+			.setValidators(Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.NOTHING)
+			;
+			
+	/*
 	private ConcreteItemStorage storage = new ConcreteItemStorage(7)
 			.withName("tile.magicarsenal.altar.name")
 			.setCanExtract(0, false)
@@ -75,7 +86,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 			.setCanExtract(6, true)
 			.withValidators(
 					Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING,
-					Validators.NOTHING);
+					Validators.NOTHING);*/
 	private int rescanTimer = 0;
 	Set<BlockPos> transmitterCache = new HashSet<>();
 	Set<BlockPos> lastProducerCache = new HashSet<>();
@@ -311,7 +322,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 
 	@Override
 	public IInventory getContainerInventory() {
-		ValidatedInventoryView result = new ValidatedInventoryView(storage);
+		ValidatedInventoryView result = new ValidatedInventoryWrapperTakeTwo(storage);
 		if (!world.isRemote) {
 			result.withField(0, this::getEMC);
 			result.withField(1, this::getRadiance);
