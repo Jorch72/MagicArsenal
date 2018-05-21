@@ -39,6 +39,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 public abstract class TileEntityAbstractStele  extends TileEntity implements INetworkParticipant {
@@ -133,6 +135,7 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 			}
 		}
 		
+		Vec3d centerOfBlock = new Vec3d(pos).addVector(0.5, 0.5, 0.5);
 		//Throw a cone out from each face
 		for(EnumFacing face : openFaces) {
 			//plusD is already 'face'
@@ -151,6 +154,7 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 				plusY = EnumFacing.SOUTH;
 			}
 			
+			Vec3d faceCenter = centerOfBlock.add(new Vec3d(face.getDirectionVec()).scale(0.5 + (1/16f)));
 			
 			for(int d=0; d<range; d++) {
 				//X and Y are in rotated space. They are not X and Y.
@@ -158,10 +162,24 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 					for(int y=-d; y<=d; y++) {
 						BlockPos searchPos = pos.offset(face, d+1).offset(plusX, x).offset(plusY, y);
 						if (blockCache.contains(searchPos)) continue;
+						
 						int emc = getEffectiveEMC(searchPos, world.getBlockState(searchPos));
 						if (emc>0) {
-							blockCache.add(searchPos);
-							producer.addEMC(emc-inefficiency);
+							//Raycast over to the block
+							RayTraceResult trace = world.rayTraceBlocks(faceCenter, new Vec3d(searchPos).addVector(0.5, 0.5, 0.5), false);
+							boolean blocked = false;
+							if (trace!=null) {
+								if (trace.typeOfHit==RayTraceResult.Type.BLOCK) {
+									BlockPos pos = trace.getBlockPos();
+									if (!pos.equals(searchPos)) blocked = true;
+								}
+							} //else if trace is null, we hit air(?) and probably the trace is fine, we're just looking for a nonsolid block maybe.
+							
+							
+							if (!blocked) {
+								blockCache.add(searchPos);
+								producer.addEMC(emc-inefficiency);
+							}
 						}
 					}
 				}

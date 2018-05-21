@@ -27,6 +27,7 @@ package com.elytradev.marsenal.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elytradev.marsenal.tile.TileEntityBerkanoStele;
 import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
@@ -52,6 +53,7 @@ public class ArsenalBlocks {
 	public static BlockKenazStele        STELE_KENAZ     = null;
 	public static BlockRaidhoStele       STELE_RAIDHO    = null;
 	public static BlockWunjoStele        STELE_WUNJO     = null;
+	public static BlockBerkanoStele      STELE_BERKANO   = null;
 	
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
 	public static BlockChaosOrb          CHAOS_ORB       = null;
@@ -69,14 +71,16 @@ public class ArsenalBlocks {
 		STELE_RAIDHO   = block(r, new BlockRaidhoStele());
 		STELE_KENAZ    = block(r, new BlockKenazStele());
 		STELE_WUNJO    = block(r, new BlockWunjoStele());
+		STELE_BERKANO  = block(r, new BlockBerkanoStele());
 		
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		CHAOS_ORB      = block(r, new BlockChaosOrb());
 		
-		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,  "magicarsenal.altar");
-		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class, "magicarsenal.stele.raidho");
-		GameRegistry.registerTileEntity(TileEntityKenazStele.class,  "magicarsenal.stele.kenaz");
-		GameRegistry.registerTileEntity(TileEntityWunjoStele.class, "magicarsenal.stele.wunjo");
+		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,   "magicarsenal.altar");
+		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class,  "magicarsenal.stele.raidho");
+		GameRegistry.registerTileEntity(TileEntityKenazStele.class,   "magicarsenal.stele.kenaz");
+		GameRegistry.registerTileEntity(TileEntityWunjoStele.class,   "magicarsenal.stele.wunjo");
+		GameRegistry.registerTileEntity(TileEntityBerkanoStele.class, "magicarsenal.stele.berkano");
 		
 		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
 		

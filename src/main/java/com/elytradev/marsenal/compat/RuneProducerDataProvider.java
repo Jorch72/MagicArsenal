@@ -29,7 +29,6 @@ import java.util.List;
 import com.elytradev.marsenal.capability.impl.RuneProducer;
 import com.elytradev.marsenal.tile.INetworkParticipant;
 import com.elytradev.marsenal.tile.TileEntityAbstractStele;
-import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
 import com.elytradev.probe.api.IProbeData;
 import com.elytradev.probe.api.IProbeDataProvider;
@@ -70,19 +69,28 @@ public class RuneProducerDataProvider implements IProbeDataProvider {
 				data.add(new ProbeData()
 						.withLabel(new TextComponentTranslation("info.magicarsenal.label.sleeping")));
 			} else {
-				data.add(new ProbeData()
-						.withLabel(new TextComponentTranslation("info.magicarsenal.label.transmitting")));
-			}
-			
-			if (te instanceof TileEntityAbstractStele) {
-				int cacheSize = ((TileEntityAbstractStele)te).getBlockCache().size();
-				data.add(new ProbeData()
-						.withLabel(new TextComponentTranslation("info.magicarsenal.label.blockcache", cacheSize))
-						);
-				long ticksSinceLastScan = te.getWorld().getTotalWorldTime()-((TileEntityAbstractStele)te).getLastPollTick();
-				data.add(new ProbeData()
-						.withLabel(new TextComponentTranslation("info.magicarsenal.label.scanprogress"))
-						.withBar(0, ticksSinceLastScan, 20*10, UnitDictionary.TICKS));
+				if (te instanceof TileEntityAbstractStele) {
+					int cacheSize = ((TileEntityAbstractStele)te).getBlockCache().size();
+					long ticksSinceLastScan = te.getWorld().getTotalWorldTime()-((TileEntityAbstractStele)te).getLastPollTick();
+					
+					if (ticksSinceLastScan>20*11) {
+						data.add(new ProbeData()
+								.withLabel(new TextComponentTranslation("info.magicarsenal.label.sleeping")));
+					} else {
+						data.add(new ProbeData()
+								.withLabel(new TextComponentTranslation("info.magicarsenal.label.transmitting")));
+						
+						data.add(new ProbeData()
+								.withLabel(new TextComponentTranslation("info.magicarsenal.label.blockcache", cacheSize))
+								);
+						
+						long invertedNextScan = (20*10) - ticksSinceLastScan;
+						if (invertedNextScan<0) invertedNextScan = 0;
+						data.add(new ProbeData()
+								.withLabel(new TextComponentTranslation("info.magicarsenal.label.scanprogress"))
+								.withBar(0, invertedNextScan, 20*10, UnitDictionary.TICKS));
+					}
+				}
 			}
 		}
 		

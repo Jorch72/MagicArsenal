@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.elytradev.concrete.inventory.ConcreteItemStorage;
 import com.elytradev.concrete.inventory.IContainerInventoryHolder;
 import com.elytradev.concrete.inventory.ValidatedInventoryView;
 import com.elytradev.concrete.inventory.ValidatedItemHandlerView;
@@ -52,6 +51,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
@@ -60,6 +61,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public class TileEntityRunicAltar extends TileEntity implements ITickable, IContainerInventoryHolder {
 	private static final int NBTTAG_COMPOUND = 10;
 	
+	private static final double BLOCK_DIAGONAL = (Math.sqrt(3) * 0.5d) + (1/16d); //pythagorean theorem, but then add 1 chisel bit worth of wiggle room
 	
 	public static final int SLOT_OUTPUT = 6;
 	private static final int MAX_DEPTH = 20;
@@ -73,20 +75,6 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 			.setMaxStackSize(1)
 			.setValidators(Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.NOTHING)
 			;
-			
-	/*
-	private ConcreteItemStorage storage = new ConcreteItemStorage(7)
-			.withName("tile.magicarsenal.altar.name")
-			.setCanExtract(0, false)
-			.setCanExtract(1, false)
-			.setCanExtract(2, false)
-			.setCanExtract(3, false)
-			.setCanExtract(4, false)
-			.setCanExtract(5, false)
-			.setCanExtract(6, true)
-			.withValidators(
-					Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING, Validators.ANYTHING,
-					Validators.NOTHING);*/
 	private int rescanTimer = 0;
 	Set<BlockPos> transmitterCache = new HashSet<>();
 	Set<BlockPos> lastProducerCache = new HashSet<>();
@@ -206,7 +194,26 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 			!producerCache.contains(it.getPos()) &&
 			pos.distanceSqToCenter(it.getPos().getX()+0.5d, it.getPos().getY()+0.5d, it.getPos().getZ()+0.5d)<(16*16)
 		);
+		Vec3d center = new Vec3d(pos).addVector(0.5, 0.5, 0.5);
 		for(TileEntity te : pony) {
+			BlockPos target = te.getPos();
+			
+			Vec3d towardsBlock = new Vec3d(target.getX()-pos.getX(), target.getY()-pos.getY(), target.getZ()-pos.getZ()).normalize().scale(BLOCK_DIAGONAL); //Offset towards the target just enough that we don't collide with ourselves
+			
+			//Can we see the tile?
+			RayTraceResult trace = world.rayTraceBlocks(center.add(towardsBlock), new Vec3d(te.getPos()).addVector(0.5, 0.5, 0.5), false);
+			boolean blocked = false;
+			if (trace!=null) {
+				if (trace.typeOfHit==RayTraceResult.Type.BLOCK) {
+					BlockPos hit = trace.getBlockPos();
+					if (!hit.equals(target)) {
+						blocked = true;
+					}
+				}
+			} //else if trace is null, we hit air(?) and probably the trace is fine, we're just looking for a nonsolid block maybe.
+			
+			if (blocked) continue;
+			
 			INetworkParticipant cur = (INetworkParticipant)te;
 			if (lastProducerCache.contains(te.getPos())) {
 				cur.pollNetwork(getPos(), pos);
