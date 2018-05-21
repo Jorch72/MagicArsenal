@@ -28,6 +28,7 @@ import java.util.List;
 
 import com.elytradev.marsenal.capability.impl.RuneProducer;
 import com.elytradev.marsenal.tile.INetworkParticipant;
+import com.elytradev.marsenal.tile.TileEntityAbstractStele;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
 import com.elytradev.probe.api.IProbeData;
@@ -73,14 +74,14 @@ public class RuneProducerDataProvider implements IProbeDataProvider {
 						.withLabel(new TextComponentTranslation("info.magicarsenal.label.transmitting")));
 			}
 			
-			if (te instanceof TileEntityKenazStele) {
-				int cacheSize = ((TileEntityKenazStele)te).getBlockCache().size();
+			if (te instanceof TileEntityAbstractStele) {
+				int cacheSize = ((TileEntityAbstractStele)te).getBlockCache().size();
 				data.add(new ProbeData()
-						.withLabel("Bookcases: "+cacheSize)
+						.withLabel(new TextComponentTranslation("info.magicarsenal.label.blockcache", cacheSize))
 						);
-				long ticksSinceLastScan = te.getWorld().getTotalWorldTime()-((TileEntityKenazStele)te).getLastPollTick();
+				long ticksSinceLastScan = te.getWorld().getTotalWorldTime()-((TileEntityAbstractStele)te).getLastPollTick();
 				data.add(new ProbeData()
-						.withLabel("Scan Progress")
+						.withLabel(new TextComponentTranslation("info.magicarsenal.label.scanprogress"))
 						.withBar(0, ticksSinceLastScan, 20*10, UnitDictionary.TICKS));
 			}
 		}

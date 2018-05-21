@@ -36,6 +36,9 @@ tile.magicarsenal.altar.name=Runic Altar
 tile.magicarsenal.stele.uncarved.name=Uncarved Stele
 tile.magicarsenal.stele.raidho.name=Raidho Stele
 tile.magicarsenal.stele.kenaz.name=Kenaz Stele
+tile.magicarsenal.stele.wunjo.name=Wunjo Stele
+
+tile.magicarsenal.chaosorb.name=Chaos Nexus Crystal
 
 #Spell Damage Sources
 death.attack.spell.drainLife=%s wasted away
@@ -107,6 +110,8 @@ info.magicarsenal.label.radiance=Radiance: %s
 info.magicarsenal.label.emc=EMC: %s
 info.magicarsenal.label.transmitting=Transmitting
 info.magicarsenal.label.sleeping=Sleeping
+info.magicarsenal.label.blockcache=Blocks Found: %s
+info.magicarsenal.label.scanprogress=Next Scan
 
 #Spells
 spell.magicarsenal.healingWave=Healing Wave

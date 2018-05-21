@@ -24,18 +24,20 @@
 
 package com.elytradev.marsenal.block;
 
-import com.elytradev.marsenal.tile.TileEntityKenazStele;
+import com.elytradev.marsenal.tile.TileEntityWunjoStele;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockKenazStele extends BlockAbstractStele {
-	public BlockKenazStele() {
-		super("kenaz");
+public class BlockWunjoStele extends BlockAbstractStele {
+
+	public BlockWunjoStele() {
+		super("wunjo");
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityKenazStele();
+		return new TileEntityWunjoStele();
 	}
+
 }

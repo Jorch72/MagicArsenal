@@ -8,8 +8,8 @@
 		"y":0,
 		"uvlock":true,
 		"textures":{
-			"all":"magicarsenal:blocks/stele/uncarved",
-			"particle":"magicarsenal:blocks/stele/uncarved"
+			"all":"magicarsenal:blocks/stele/wunjo",
+			"particle":"magicarsenal:blocks/stele/wunjo"
 		}
 	},
 	

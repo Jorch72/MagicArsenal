@@ -31,6 +31,7 @@ import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
+import com.elytradev.marsenal.tile.TileEntityWunjoStele;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
@@ -50,10 +51,10 @@ public class ArsenalBlocks {
 	public static BlockSimple            STELE_UNCARVED  = null;
 	public static BlockKenazStele        STELE_KENAZ     = null;
 	public static BlockRaidhoStele       STELE_RAIDHO    = null;
+	public static BlockWunjoStele        STELE_WUNJO     = null;
 	
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
 	public static BlockChaosOrb          CHAOS_ORB       = null;
-	
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
@@ -67,6 +68,7 @@ public class ArsenalBlocks {
 		STELE_UNCARVED = block(r, new BlockSimple("stele.uncarved"));
 		STELE_RAIDHO   = block(r, new BlockRaidhoStele());
 		STELE_KENAZ    = block(r, new BlockKenazStele());
+		STELE_WUNJO    = block(r, new BlockWunjoStele());
 		
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		CHAOS_ORB      = block(r, new BlockChaosOrb());
@@ -74,11 +76,13 @@ public class ArsenalBlocks {
 		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,  "magicarsenal.altar");
 		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class, "magicarsenal.stele.raidho");
 		GameRegistry.registerTileEntity(TileEntityKenazStele.class,  "magicarsenal.stele.kenaz");
+		GameRegistry.registerTileEntity(TileEntityWunjoStele.class, "magicarsenal.stele.wunjo");
 		
 		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
 		
 		//No, you can't carry the crops around.
 		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());
+		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_NIGHTSHADE.getRegistryName());
 	}
 	
 	public static Iterable<Block> blocksForItems() {
