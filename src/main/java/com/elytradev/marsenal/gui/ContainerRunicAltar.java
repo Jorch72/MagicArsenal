@@ -44,9 +44,9 @@ public class ContainerRunicAltar extends ConcreteContainer {
 		this.setColor(0xFF155f5b);
 		this.setBevelStrength(0.25f);
 		this.setTitleColor(0xFF8cb5b3);
+		
 		WGridPanel root = new WGridPanel();
 		setRootPanel(root);
-		
 		WPlainPanel centerPanel = new WPlainPanel();
 		int leftMargin = (int)(18*1.5f);
 		int topMargin = 4;

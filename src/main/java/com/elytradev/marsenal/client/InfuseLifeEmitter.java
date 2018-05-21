@@ -41,7 +41,7 @@ public class InfuseLifeEmitter extends Emitter {
 	
 	@Override
 	public void tick() {
-		if (entity.isDead) {
+		if (entity==null || entity.isDead) {
 			ticksRemaining = 0;
 			kill();
 			return;

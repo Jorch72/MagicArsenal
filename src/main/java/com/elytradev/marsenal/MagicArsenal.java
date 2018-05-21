@@ -42,6 +42,7 @@ import com.elytradev.marsenal.compat.BaublesCompat;
 import com.elytradev.marsenal.compat.ChiselCompat;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
+import com.elytradev.marsenal.gui.GuiCodex;
 import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.gui.EnumGui;
 import com.elytradev.marsenal.item.ArsenalItems;
@@ -169,7 +170,7 @@ public class MagicArsenal {
 			@Override
 			public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 				EnumGui gui = EnumGui.forId(id);
-				if (gui==EnumGui.TOME) return new ConcreteGui(new ContainerCodex(player.inventory, x));
+				if (gui==EnumGui.TOME) return new GuiCodex(new ContainerCodex(player.inventory, x));
 				
 				TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 				ConcreteContainer container = null;

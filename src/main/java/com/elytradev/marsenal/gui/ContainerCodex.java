@@ -26,6 +26,7 @@ package com.elytradev.marsenal.gui;
 
 import com.elytradev.concrete.inventory.gui.ConcreteContainer;
 import com.elytradev.concrete.inventory.gui.widget.WImage;
+import com.elytradev.concrete.inventory.gui.widget.WPanel;
 import com.elytradev.concrete.inventory.gui.widget.WPlainPanel;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.item.ArsenalItems;

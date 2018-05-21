@@ -69,6 +69,7 @@ public class WTextArea extends WWidget {
 		if (text==null) return;
 		
 		float scaleOverride = scale;
+		/*
 		if (scale==2) {
 			int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
 			
@@ -90,7 +91,7 @@ public class WTextArea extends WWidget {
 						scaleOverride = 13/7f; break;
 					case 15:
 						scaleOverride = 15/8f; break;
-					default:
+					default:*.
 						/* If your screen is so huge that you need a bigger magnification than 15x to scale your gui,
 						 * you can also afford to pay me for a better solution than this. Right now it's not worth
 						 * generalizing.
@@ -100,12 +101,13 @@ public class WTextArea extends WWidget {
 						 * than or equal to 2. The higher the numerator, the finer we can tune the denominator and the
 						 * closer we can get to 2. That's why I picked the fractions that I did.
 						 */
-						scaleOverride = 2; break;
+						/*scaleOverride = 2; break;
 				}
 			}
 			
 			if (scaleOverride!=1f) GlStateManager.scale(1/(float)scaleOverride, 1/(float)scaleOverride, 1);
-		}
+		}*/
+		GlStateManager.scale(1/(float)scaleOverride, 1/(float)scaleOverride, 1);
 		Minecraft.getMinecraft().fontRenderer.drawSplitString("§r"+text.getFormattedText(), (int)(x*scaleOverride), (int)(y*scaleOverride), (int)(this.getWidth()*scaleOverride), color);
 		if (scale!=1) GlStateManager.scale(scaleOverride, scaleOverride, 1);
 	}
