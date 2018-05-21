@@ -28,3 +28,6 @@ hs_err_pid*
 
 # KDE bits
 **/.directory
+
+# Don't ever include these in a repo
+gradle.properties

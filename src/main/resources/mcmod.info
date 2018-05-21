@@ -3,7 +3,7 @@
   "modList": [{
     "modid": "magicarsenal",
     "name": "Magic Arsenal",
-    "description": "Creative Industrial Automation",
+    "description": "Extensible Magical Artifacts, Spells, and Runes",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "",

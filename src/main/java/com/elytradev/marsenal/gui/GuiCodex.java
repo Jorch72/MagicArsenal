@@ -132,7 +132,7 @@ public class GuiCodex extends ConcreteGui {
 		
 		root.paintBackground(marginLeft, marginTop);
 		
-		GuiDrawing.rect(mcToLocal(mouseX)-4, mcToLocal(mouseY)-4, 9, 9, 0xFFFF0000); //Debug mouse
+		//GuiDrawing.rect(mcToLocal(mouseX)-4, mcToLocal(mouseY)-4, 9, 9, 0xFFFF0000); //Debug mouse
 		
 		GlStateManager.scale(1/(float)actualScale, 1/(float)actualScale, 1/(float)actualScale);
 		

@@ -25,6 +25,7 @@ apply plugin: "java";
 apply plugin: "net.minecrell.licenser";
 apply plugin: "net.minecraftforge.gradle.forge";
 apply plugin: "com.github.johnrengelman.shadow";
+apply plugin: "signing";
 
 repositories {
 	maven {
@@ -110,7 +111,7 @@ dependencies {
 
 group = "com.elytradev";
 archivesBaseName = "MagicArsenal";
-version = "MC1.12_ver1.2.0";
+version = "MC1.12_ver1.2.1";
 
 sourceCompatibility = 1.8;
 targetCompatibility = 1.8;
@@ -163,4 +164,14 @@ license {
 
 	exclude "/doc/**";
 	exclude "/com/elytradev/concrete/**";
+}
+
+
+signing {
+	if (project.hasProperty("signing.keyId")) {
+		println("Key credentials found. Enabling jar signing.");
+		sign configurations.archives;
+	} else {
+		println("Skipping jar signing - do you have a gradle.properties set up with credentials?");
+	}
 }
