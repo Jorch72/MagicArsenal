@@ -37,6 +37,7 @@ tile.magicarsenal.stele.uncarved.name=Uncarved Stele
 tile.magicarsenal.stele.raidho.name=Raidho Stele
 tile.magicarsenal.stele.kenaz.name=Kenaz Stele
 tile.magicarsenal.stele.wunjo.name=Wunjo Stele
+tile.magicarsenal.stele.berkano.name=Berkano Stele
 
 tile.magicarsenal.chaosorb.name=Chaos Nexus Crystal
 
@@ -100,7 +101,13 @@ info.magicarsenal.element.arcane=Arcane
 info.magicarsenal.element.chaos=Chaos
 
 info.magicarsenal.altar=When Radiance is channeled onto this altar from carved Stele, powerful magical items become craftable here.
+
 info.magicarsenal.stele.uncarved=Even though this Stele is uncarved, placing it next to a carved Stele may increase its range and efficiency.
+info.magicarsenal.stele.raidho=Raidho governs journeys and the runes themselves. This stele moves radiance and EMC through the altar network. It does not survey.
+info.magicarsenal.stele.kenaz=Kenaz governs light and knowledge. This stele surveys for bookcases or other objects with enchanting power, as well as bright lights, and consumes them to produce EMC.
+info.magicarsenal.stele.berkano=Berkano governs trees, plants, and things natural. This stele surveys vegetation, tilled soil, mycelium, etc, and consumes it or reverts it to dirt to produce EMC.
+info.magicarsenal.stele.wunjo=Wunjo governs victory and well-completed tasks. This stele surveys monster trophies such as skulls or heads, and consumes them to produce EMC.
+
 info.magicarsenal.rosettastone=Concentrated, ossified arcane knowledge. Provides 12 levels for an enchanting table, and emits a cold, unearthly glow.
 
 #Probe Data

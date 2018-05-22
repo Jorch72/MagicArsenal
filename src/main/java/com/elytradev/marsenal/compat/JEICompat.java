@@ -146,6 +146,42 @@ public class JEICompat implements IModPlugin {
 				));
 		
 		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.RUNIC_ALTAR),
+				ItemStack.class,
+				"info.magicarsenal.altar"
+				);
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.STELE_UNCARVED),
+				ItemStack.class,
+				"info.magicarsenal.stele.uncarved"
+				);
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.STELE_RAIDHO),
+				ItemStack.class,
+				"info.magicarsenal.stele.raidho"
+				);
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.STELE_KENAZ),
+				ItemStack.class,
+				"info.magicarsenal.stele.kenaz"
+				);
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.STELE_BERKANO),
+				ItemStack.class,
+				"info.magicarsenal.stele.berkano"
+				);
+		
+		registry.addIngredientInfo(
+				new ItemStack(ArsenalBlocks.STELE_WUNJO),
+				ItemStack.class,
+				"info.magicarsenal.stele.wunjo"
+				);
+		
+		registry.addIngredientInfo(
 				new ItemStack(ArsenalBlocks.ROSETTA_STONE),
 				ItemStack.class,
 				"info.magicarsenal.rosettastone");
