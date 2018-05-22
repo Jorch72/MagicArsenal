@@ -37,7 +37,7 @@ public class WRadianceBar extends WBar {
 	private static final ResourceLocation FG = new ResourceLocation("magicarsenal","textures/guis/radiance_fg.png");
 	
 	private static final int[] LOG_SPECTRUM = {
-		0x13968e, 0x57e074, 0x57e074, 0xfff839, 0xffbb04, 0xff7800, 0xff0000, 0xff33a6, 0xdc73ff, 0xab55fb, 0x5c06ea, 0x0c00ff, 0x0027ba, 0x00334b, 0x00474b, 0x155f5b
+		0x13968e, 0x57e074, 0xfff839, 0xffbb04, 0xff7800, 0xff0000, 0xff33a6, 0xdc73ff, 0xab55fb, 0x5c06ea, 0x0c00ff, 0x0027ba, 0x00334b, 0x00474b, 0x155f5b
 	};
 
 	protected IInventory inventory;
@@ -77,9 +77,12 @@ public class WRadianceBar extends WBar {
 		int barMax = getWidth()-2;
 		if (dir == Direction.DOWN || dir == Direction.UP) barMax = getHeight()-2;
 		
-		int tmp = numBars+(LOG_SPECTRUM.length-1);
-		int lastBarColor = LOG_SPECTRUM[tmp%LOG_SPECTRUM.length] | 0xFF000000;
-		int thisBarColor = LOG_SPECTRUM[numBars%LOG_SPECTRUM.length] | 0xFF000000;
+		int thisBarIndex = numBars % LOG_SPECTRUM.length;
+		int lastBarIndex = (thisBarIndex+(LOG_SPECTRUM.length-1)) % LOG_SPECTRUM.length;
+		
+		int lastBarColor = LOG_SPECTRUM[lastBarIndex] | 0xFF000000;
+		int thisBarColor = LOG_SPECTRUM[thisBarIndex] | 0xFF000000;
+		//System.out.println("Bars: "+numBars+", Percent: "+percent+", LastBarIndex: "+lastBarIndex+", ThisBarIndex: "+thisBarIndex+", lastBarColor: "+Integer.toHexString(lastBarColor)+", thisBarColor: "+Integer.toHexString(thisBarColor));
 		if (numBars>0) {
 			GuiDrawing.rect(x+1, y+1, getWidth()-2, getHeight()-2, lastBarColor);
 		}

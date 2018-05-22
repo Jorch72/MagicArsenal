@@ -35,9 +35,11 @@ import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.capability.impl.RuneProducer;
 import com.elytradev.marsenal.compat.ProbeDataCompat;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -47,6 +49,7 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 	protected RuneProducer producer = new RuneProducer(getSteleKey(), this::produceEMC);
 	protected Set<EnumFacing> openFaces = new HashSet<>();
 	protected List<BlockPos> blockCache = new ArrayList<>();
+	protected List<BlockPos> removalCache = new ArrayList<>();
 	protected int range = 2;
 	
 	protected long lastPoll;
@@ -166,7 +169,34 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 						int emc = getEffectiveEMC(searchPos, world.getBlockState(searchPos));
 						if (emc>0) {
 							//Raycast over to the block
-							RayTraceResult trace = world.rayTraceBlocks(faceCenter, new Vec3d(searchPos).addVector(0.5, 0.5, 0.5), false);
+							AxisAlignedBB bounds = world.getBlockState(searchPos).getBoundingBox(world, searchPos);
+							Vec3d target = new Vec3d(searchPos).addVector(0.5, 0.5, 0.5);
+							
+							if (bounds==Block.NULL_AABB) {
+								target = target.add(new Vec3d(face.getOpposite().getDirectionVec()).scale(0.5 - (1/16d)));
+							} else {
+								target = new Vec3d(searchPos).add(bounds.getCenter());
+								
+								double halfDist = 0.5d;
+								
+								switch(face.getAxis()) {
+								case X:
+									halfDist = (bounds.maxX - bounds.minX) / 2;
+									break;
+								case Z:
+									halfDist = (bounds.maxZ - bounds.minZ) / 2;
+									break;
+								case Y:
+								default:
+									halfDist = (bounds.maxY - bounds.minY) / 2;
+									break;
+								}
+								
+								target = target.add( new Vec3d(face.getOpposite().getDirectionVec()).scale(halfDist - (1/16d)) );
+								//System.out.println("Raycasting to target:"+target);
+							}
+							
+							RayTraceResult trace = world.rayTraceBlocks(faceCenter, target, false);
 							boolean blocked = false;
 							if (trace!=null) {
 								if (trace.typeOfHit==RayTraceResult.Type.BLOCK) {
@@ -178,7 +208,9 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 							
 							if (!blocked) {
 								blockCache.add(searchPos);
-								producer.addEMC(emc-inefficiency);
+								int effectiveEMC = emc - inefficiency;
+								if (effectiveEMC<0) effectiveEMC = 0;
+								producer.addEMC(effectiveEMC);
 							}
 						}
 					}
@@ -196,18 +228,30 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 	
 	/** Override this method if your producer does not draw from the block cache */
 	public int produceEMC(int amount, boolean simulate) {
+		removalCache.clear();
 		int produced = 0;
 		for(int i=0; i<blockCache.size(); i++) {
 			BlockPos cur = blockCache.get(i);
 			int emcDrawn = getEffectiveEMC(cur, world.getBlockState(cur)) - inefficiency;
+			if (emcDrawn < 0) emcDrawn = 0;
 			if (!simulate) {
-				world.destroyBlock(cur, false); //TODO: MORE EFFECTS
+				consume(cur);
 			}
 			produced += emcDrawn;
-			if (emcDrawn>=amount) return emcDrawn;
+			if (emcDrawn>=amount) break;
 		}
 		
+		if (!simulate) {
+			blockCache.removeAll(removalCache);
+		}
+		removalCache.clear();
+		
 		return produced;
+	}
+	
+	public void consume(BlockPos pos) {
+		world.destroyBlock(pos, false); //TODO: MORE EFFECTS
+		removalCache.add(pos);
 	}
 	
 	/**

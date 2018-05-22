@@ -25,9 +25,11 @@
 package com.elytradev.marsenal.tile;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.BlockFluidClassic;
 
 public class TileEntityKenazStele extends TileEntityAbstractStele {
 	//private RuneProducer producer = new RuneProducer("kenaz", this::produceEMC);
@@ -40,10 +42,35 @@ public class TileEntityKenazStele extends TileEntityAbstractStele {
 	@Override
 	public int getEffectiveEMC(BlockPos pos, IBlockState state) {
 		Block block = state.getBlock();
-		if (block==Blocks.TORCH) return 9;
-		if (block==Blocks.BOOKSHELF) return 336; //Yep, EMC.
+		if (block.isAir(state, world, pos)) return 0; //Do not accept light air, enchanted or otherwise.
 		
-		return 0;
+		float enchantPower = block.getEnchantPowerBonus(world, pos);
+		if (enchantPower>0) {
+			//Prefer enchant value to light level
+			return (int)(336 * enchantPower);
+			/*
+			 * Bookcase:       336
+			 * Magical Wood:   840 (5 levels == 2.5 enchantPower)
+			 * Rosetta Stone: 2016 (12 levels == 6 enchantPower)
+			 */
+		}
+		
+		//Some lights have very clear values
+		if (block==Blocks.TORCH) return 9;
+		if (block==Blocks.GLOWSTONE) return 1536;
+		if (block==Blocks.SEA_LANTERN) return 1536;
+		
+		//REJECT some cases that would ruin heuristics
+		if (block==Blocks.LAVA || block==Blocks.FLOWING_LAVA) return 0; //These, while bright, don't match our nature.
+		if (block instanceof BlockFluidClassic && !((BlockFluidClassic)block).isSourceBlock(world, pos)) return 0; //Potential cheese
+		if (block instanceof BlockLiquid) return 0; //Same deal - we could potentially check against zero but this is probably a bad idea
+		
+		//Note: If it's a finite fluid block, value it exactly as much as its emitted light value, because Forge finite fluid scales light by quanta.
+		
+		//If there's no enchant power and isn't a Known Light, drastically undervalue this block based on its light level versus torches.
+		//Also prevent cheese by returning a light level > 15.
+		float lightLevel = (block.getLightValue(state, world, pos) & 0xF) / 16f;
+		return (int)(9 * lightLevel);
 	}
 
 	@Override
