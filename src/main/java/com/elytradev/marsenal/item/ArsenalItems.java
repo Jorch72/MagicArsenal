@@ -65,11 +65,14 @@ public class ArsenalItems {
 	public static ItemSpellFocus      SPELL_FOCUS = null;
 	public static ItemSpellBauble     SPELL_BAUBLE= null;
 	public static ItemMagicIngredient INGREDIENT  = null;
+	
 	public static ItemPoisonRoot      ROOT_WOLFSBANE = null;
 	public static ItemPoisonRoot      ROOT_NIGHTSHADE = null;
 	
-	public static ItemCodex         CODEX = null;
+	public static ItemCodex           CODEX = null;
+	public static ItemChisel          CHISEL = null;
 	
+	//Potions and Potion Bottles
 	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
 	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
 	public static PotionInfuseLife  POTION_INFUSELIFE = new PotionInfuseLife();
@@ -88,13 +91,13 @@ public class ArsenalItems {
 			item(r, new ItemBlockLessStupid(b));
 		}
 		
-		SPELL_FOCUS = item(r, new ItemSpellFocus());
-		SPELL_BAUBLE= item(r, new ItemSpellBauble());
-		INGREDIENT  = item(r, new ItemMagicIngredient());
+		SPELL_FOCUS     = item(r, new ItemSpellFocus());
+		SPELL_BAUBLE    = item(r, new ItemSpellBauble());
+		INGREDIENT      = item(r, new ItemMagicIngredient());
 		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
-		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND)); //FIXME: Switch to nightshade when the plant is done
-		//POISON_VIAL = item(r, new ItemPoisonVial());
-		CODEX       = item(r, new ItemCodex());
+		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND));
+		CODEX           = item(r, new ItemCodex());
+		CHISEL          = item(r, new ItemChisel());
 		
 		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
 		ArsenalBlocks.CROP_NIGHTSHADE.setHarvestItems(EnumPoisonPlant.NIGHTSHADE.getRoot(), EnumIngredient.BERRY_NIGHTSHADE.getItem());
@@ -211,6 +214,13 @@ public class ArsenalItems {
 				Items.ENDER_EYE,
 				Items.MAGMA_CREAM
 				).setRegistryName("magicarsenal_spellfocus_will_o_wisp"));
+		
+		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "chisel"), new ItemStack(CHISEL),
+				" n",
+				"s ",
+				'n', "nuggetIron",
+				's', "stickWood"
+				).setRegistryName("magicarsenal_chisel"));
 		
 		
 		

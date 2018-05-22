@@ -9,7 +9,9 @@ item.magicarsenal.ingredient.portal_seared_tome.name=Portal-Seared Tome
 item.magicarsenal.root.wolfsbane.name=Wolfsbane Root
 item.magicarsenal.root.nightshade.name=Nightshade Root
 
+#Important Tools
 item.magicarsenal.codex.name=Portal-Seared Codex
+item.magicarsenal.chisel.name=Simple Chisel
 
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=%s Spell Focus

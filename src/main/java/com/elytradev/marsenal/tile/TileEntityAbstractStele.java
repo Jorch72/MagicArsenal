@@ -237,8 +237,9 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 			if (!simulate) {
 				consume(cur);
 			}
+			System.out.println("Produced "+emcDrawn+" EMC for a total of "+(produced+emcDrawn)+" / "+amount);
 			produced += emcDrawn;
-			if (emcDrawn>=amount) break;
+			if (produced>=amount) break;
 		}
 		
 		if (!simulate) {
