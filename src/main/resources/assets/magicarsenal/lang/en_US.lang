@@ -165,6 +165,10 @@ tooltip.magicarsenal.poisonroot.wolfsbane=Long thought to be a treatment for lyc
 tooltip.magicarsenal.poisonroot.nightshade=Once the primary ingredient in witches' "flying ointment", every part of this plant is a poison of incredible potency.
 
 tooltip.magicarsenal.chisel.mode=Right-click to cycle through modes
+tooltip.magicarsenal.chisel.iron.lateral=Plane Size: 3x3
+tooltip.magicarsenal.chisel.iron.connected=Connected Fill Limit: 25
+tooltip.magicarsenal.chisel.diamond.lateral=Plane Size: 5x5
+tooltip.magicarsenal.chisel.diamond.connected=Connected Fill Limit: 100
 
 tooltip.magicarsenal.carvedwith=Carved with: §9%s
 tooltip.magicarsenal.rune.none=None

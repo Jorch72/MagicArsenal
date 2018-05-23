@@ -150,6 +150,8 @@ public class ItemChisel extends ItemTool {
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(I18n.translateToLocal("tooltip.magicarsenal.chisel.mode"));
+		tooltip.add(I18n.translateToLocal("tooltip.magicarsenal.chisel."+this.toolMaterial.name().toLowerCase(Locale.ROOT)+".lateral"));
+		tooltip.add(I18n.translateToLocal("tooltip.magicarsenal.chisel."+this.toolMaterial.name().toLowerCase(Locale.ROOT)+".connected"));
 	}
 	
 	
