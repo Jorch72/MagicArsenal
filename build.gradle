@@ -60,7 +60,7 @@ repositories {
 def mc_version        = "1.12.2";
 def mc_shortversion   = "1.12";
 
-def jei_version       = "4.9.1.175";
+def jei_version       = "4.9.1.189";
 def ctm_version       = "0.3.0.14";
 def chisel_version    = "0.2.0.31";
 def baubles_version   = "1.5.2";

@@ -71,6 +71,7 @@ public class ArsenalItems {
 	
 	public static ItemCodex           CODEX = null;
 	public static ItemChisel          CHISEL = null;
+	public static ItemChisel          DIAMONDCHISEL = null;
 	
 	//Potions and Potion Bottles
 	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
@@ -97,7 +98,10 @@ public class ArsenalItems {
 		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
 		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND));
 		CODEX           = item(r, new ItemCodex());
-		CHISEL          = item(r, new ItemChisel());
+		CHISEL          = item(r, new ItemChisel(Item.ToolMaterial.IRON));
+		DIAMONDCHISEL   = item(r, new ItemChisel(Item.ToolMaterial.DIAMOND));
+		DIAMONDCHISEL.lateralEffectiveness = 2;
+		DIAMONDCHISEL.connectedEffectiveness = 100;
 		
 		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
 		ArsenalBlocks.CROP_NIGHTSHADE.setHarvestItems(EnumPoisonPlant.NIGHTSHADE.getRoot(), EnumIngredient.BERRY_NIGHTSHADE.getItem());
@@ -222,6 +226,13 @@ public class ArsenalItems {
 				's', "stickWood"
 				).setRegistryName("magicarsenal_chisel"));
 		
+		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "chisel.diamond"), new ItemStack(DIAMONDCHISEL),
+				"s",
+				"n",
+				'n', "gemDiamond",
+				's', "stickWood"
+				).setRegistryName("magicarsenal_chisel_diamond"));
+		
 		
 		
 		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromStacks(EnumIngredient.PETAL_WOLFSBANE.getItem()), POTIONTYPE_WOLFSBANE1);
@@ -286,7 +297,11 @@ public class ArsenalItems {
 				EnumRuneCarving.KENAZ.getUnwardedItem()
 				).setRegistryName("ward.kenaz"));
 		
-		Ingredient skullIngredient = Ingredient.fromItem(Items.SKULL);
+		
+		//Block skullIngredient = Blocks.SKULL;
+		ItemStack skullIngredient = new ItemStack(Items.SKULL, 1, OreDictionary.WILDCARD_VALUE);
+		//Ingredient skullIngredient = Ingredient.fromStacks(new ItemStack(Items.SKULL));
+		//Ingredient skullIngredient = Ingredient.fromItem(Items.SKULL);
 		
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.wunjo"),
 				new ItemStack(ArsenalBlocks.STELE_WUNJO),

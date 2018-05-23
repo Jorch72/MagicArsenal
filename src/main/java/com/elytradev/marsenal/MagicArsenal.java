@@ -47,6 +47,7 @@ import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.gui.EnumGui;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumIngredient;
+import com.elytradev.marsenal.item.ItemChisel;
 import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
@@ -140,6 +141,7 @@ public class MagicArsenal {
 		MinecraftForge.EVENT_BUS.register(PROXY);
 		MinecraftForge.EVENT_BUS.register(ArsenalItems.class);
 		MinecraftForge.EVENT_BUS.register(ArsenalBlocks.class);
+		MinecraftForge.EVENT_BUS.register(ItemChisel.Handler.class);
 		
 		if (Loader.isModLoaded("baubles")) {
 			MinecraftForge.EVENT_BUS.register(BaublesCompat.class);

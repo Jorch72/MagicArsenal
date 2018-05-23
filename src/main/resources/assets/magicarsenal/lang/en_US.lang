@@ -11,7 +11,20 @@ item.magicarsenal.root.nightshade.name=Nightshade Root
 
 #Important Tools
 item.magicarsenal.codex.name=Portal-Seared Codex
-item.magicarsenal.chisel.name=Simple Chisel
+
+item.magicarsenal.chisel.iron.name=Simple Chisel
+item.magicarsenal.chisel.iron.single.name=Simple Chisel (Single)
+item.magicarsenal.chisel.iron.plane.name=Simple Chisel (Plane)
+item.magicarsenal.chisel.iron.vertical.name=Simple Chisel (Vertical)
+item.magicarsenal.chisel.iron.horizontal.name=Simple Chisel (Horizontal)
+item.magicarsenal.chisel.iron.connected.name=Simple Chisel (Connected)
+
+item.magicarsenal.chisel.diamond.name=Diamond Simple Chisel
+item.magicarsenal.chisel.diamond.single.name=Diamond Chisel (Single)
+item.magicarsenal.chisel.diamond.plane.name=Diamond Chisel (Plane)
+item.magicarsenal.chisel.diamond.vertical.name=Diamond Chisel (Vertical)
+item.magicarsenal.chisel.diamond.horizontal.name=Diamond Chisel (Horizontal)
+item.magicarsenal.chisel.diamond.connected.name=Diamond Chisel (Connected)
 
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=%s Spell Focus
@@ -150,6 +163,8 @@ tooltip.magicarsenal.poisonroot.wolfsbane.taxonomy=Aconitum lycoctonum
 tooltip.magicarsenal.poisonroot.nightshade.taxonomy=Atropa belladonna
 tooltip.magicarsenal.poisonroot.wolfsbane=Long thought to be a treatment for lycanthropy and a protective ward, this plant carries a powerful poison that paralyzes the nerves.
 tooltip.magicarsenal.poisonroot.nightshade=Once the primary ingredient in witches' "flying ointment", every part of this plant is a poison of incredible potency.
+
+tooltip.magicarsenal.chisel.mode=Right-click to cycle through modes
 
 tooltip.magicarsenal.carvedwith=Carved with: §9%s
 tooltip.magicarsenal.rune.none=None
