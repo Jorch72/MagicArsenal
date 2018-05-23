@@ -98,6 +98,7 @@ tipped_arrow.effect.nightshade.2=Deadly Nightshade-Tipped Arrow
 tipped_arrow.effect.nightshade.3=Extremely Deadly Nightshade-Tipped Arrow
 
 effect.magicarsenal.infuselife=Infuse Life
+effect.magicarsenal.gravitycontrol=Gravity Control
 
 #Info Pages
 info.magicarsenal.label.spell=§lSpell: §r%1$s

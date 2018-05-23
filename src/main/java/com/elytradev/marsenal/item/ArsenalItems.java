@@ -33,6 +33,7 @@ import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
 import com.elytradev.marsenal.block.EnumRuneCarving;
 import com.elytradev.marsenal.gui.ContainerCodex;
+import com.elytradev.marsenal.potion.PotionGravityControl;
 import com.elytradev.marsenal.potion.PotionInfuseLife;
 import com.elytradev.marsenal.potion.PotionNightshade;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
@@ -54,6 +55,7 @@ import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -63,8 +65,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ArsenalItems {
 	private static List<Item> itemsForModels = new ArrayList<>();
 	public static ItemSpellFocus      SPELL_FOCUS = null;
-	public static ItemSpellBauble     SPELL_BAUBLE= null;
+	//public static ItemSpellBauble     SPELL_BAUBLE= null;
 	public static ItemMagicIngredient INGREDIENT  = null;
+	
+	public static ItemGravityMantle   GRAVITY_MANTLE = null;
 	
 	public static ItemPoisonRoot      ROOT_WOLFSBANE = null;
 	public static ItemPoisonRoot      ROOT_NIGHTSHADE = null;
@@ -77,6 +81,7 @@ public class ArsenalItems {
 	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
 	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
 	public static PotionInfuseLife  POTION_INFUSELIFE = new PotionInfuseLife();
+	public static PotionGravityControl POTION_GRAVITYCONTROL = new PotionGravityControl();
 	public static PotionType        POTIONTYPE_WOLFSBANE1 = null;
 	public static PotionType        POTIONTYPE_WOLFSBANE2 = null;
 	public static PotionType        POTIONTYPE_WOLFSBANE3 = null;
@@ -93,8 +98,11 @@ public class ArsenalItems {
 		}
 		
 		SPELL_FOCUS     = item(r, new ItemSpellFocus());
-		SPELL_BAUBLE    = item(r, new ItemSpellBauble());
+		//SPELL_BAUBLE    = item(r, new ItemSpellBauble()); //Old, now-remapped. It was a bad idea to try to gang a bunch of gear up on the same ID
 		INGREDIENT      = item(r, new ItemMagicIngredient());
+		
+		GRAVITY_MANTLE  = item(r, new ItemGravityMantle());
+		
 		ROOT_WOLFSBANE  = item(r, new ItemPoisonRoot("wolfsbane", ArsenalBlocks.CROP_WOLFSBANE, Blocks.FARMLAND));
 		ROOT_NIGHTSHADE = item(r, new ItemPoisonRoot("nightshade", ArsenalBlocks.CROP_NIGHTSHADE, Blocks.FARMLAND));
 		CODEX           = item(r, new ItemCodex());
@@ -120,6 +128,7 @@ public class ArsenalItems {
 		potion(r, POTION_WOLFSBANE);
 		potion(r, POTION_NIGHTSHADE);
 		potion(r, POTION_INFUSELIFE);
+		potion(r, POTION_GRAVITYCONTROL);
 		EnumPoisonPlant.WOLFSBANE.registerPotion(POTION_WOLFSBANE);
 		EnumPoisonPlant.NIGHTSHADE.registerPotion(POTION_NIGHTSHADE);
 	}
@@ -360,5 +369,31 @@ public class ArsenalItems {
 		registry.register(t);
 		itemsForModels.add(t);
 		return t;
+	}
+	
+	@SubscribeEvent
+	public static void missingMappings(RegistryEvent.MissingMappings<Item> event) {
+		MagicArsenal.LOG.info("##################################################################################################################");
+		
+		for (Mapping<Item> mapping : event.getMappings()) {
+			
+			MagicArsenal.LOG.info("Caught missing mappings for "+mapping.key);
+			
+			String mod = mapping.key.getResourceDomain();
+			if (!mod.equals("magicarsenal")) continue;
+			
+			String oldid = mapping.key.getResourcePath();
+			
+			
+			
+			switch(oldid) {
+			case "spellbauble":
+				mapping.remap(GRAVITY_MANTLE);
+				break;
+			default:
+				//We don't know how to remap this.
+				break;
+			}
+		}
 	}
 }

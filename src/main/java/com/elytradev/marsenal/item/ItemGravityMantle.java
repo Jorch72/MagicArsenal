@@ -24,33 +24,60 @@
 
 package com.elytradev.marsenal.item;
 
+import com.elytradev.marsenal.MagicArsenal;
+
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 @Optional.Interface(modid="baubles", iface="baubles.api.IBauble")
-public class ItemSpellBauble extends ItemSubtyped<EnumSpellBauble> implements IBauble {
+public class ItemGravityMantle extends Item implements IBauble {
 
-	public ItemSpellBauble() {
-		super("spellbauble", EnumSpellBauble.values(), false);
+	public ItemGravityMantle() {
+		this.setRegistryName("spellbauble.gravitymantle");
+		this.setUnlocalizedName("magicarsenal.gravitymantle");
+		this.setHasSubtypes(false);
+		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
+		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
 	}
 
 	@Override
 	@Optional.Method(modid="baubles")
-	public BaubleType getBaubleType(ItemStack stack) {
-		EnumSpellBauble which = EnumSpellBauble.byId(stack.getMetadata());
-		switch(which.getType()) {
-		case "head"   : return BaubleType.HEAD;
-		case "body"   : return BaubleType.BODY;
-		case "amulet" : return BaubleType.AMULET;
-		case "belt"   : return BaubleType.BELT;
-		case "charm"  : return BaubleType.CHARM;
-		case "ring"   : return BaubleType.RING;
-		case "trinket": return BaubleType.TRINKET;
-		default:
-			return null;
+	public BaubleType getBaubleType(ItemStack arg0) {
+		return BaubleType.BODY;
+	}
+	
+	@Override
+	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
+		return armorType==EntityEquipmentSlot.CHEST;
+	}
+	
+	public void grantGravityControl(EntityLivingBase player, ItemStack stack) {
+		if (player.getEntityWorld().isRemote) return;
+		
+		if (player.getEntityWorld().getTotalWorldTime() % 80L == 0L) {
+			player.addPotionEffect(new PotionEffect(ArsenalItems.POTION_GRAVITYCONTROL, 20*10, 0, true, false));
 		}
+	}
+	
+	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+		grantGravityControl(player, stack);
+	}
+	
+	
+	@Override
+	@Optional.Method(modid="baubles")
+	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+		grantGravityControl(player, itemstack);
 	}
 }

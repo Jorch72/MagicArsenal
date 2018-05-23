@@ -29,16 +29,11 @@ import java.util.Map;
 import com.elytradev.concrete.reflect.accessor.Accessor;
 import com.elytradev.concrete.reflect.accessor.Accessors;
 import com.elytradev.marsenal.item.ArsenalItems;
-import com.elytradev.marsenal.item.EnumSpellBauble;
 import com.google.common.collect.MapMaker;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -68,7 +63,7 @@ public class BaublesCompat {
 	
 	public static final Vec3d UP = new Vec3d(0,1,0);
 	
-	
+	/*
 	public static boolean checkFor(EntityLivingBase player, EnumSpellBauble bauble) {
 		if (!(player instanceof EntityPlayer)) return false;
 		IBaublesItemHandler inv = BaublesApi.getBaublesHandler((EntityPlayer)player);
@@ -78,7 +73,7 @@ public class BaublesCompat {
 			if (bauble.equals(EnumSpellBauble.byId(stack.getMetadata()))) return true;
 		}
 		return false;
-	}
+	}*/
 	
 	public static double dampen(double d, double amount) {
 		if (d>0) {
@@ -120,7 +115,9 @@ public class BaublesCompat {
 	public static void onPlayerTick(TickEvent.PlayerTickEvent e) {
 		if (e.phase!=TickEvent.Phase.END) return;
 		
-		if (checkFor(e.player, EnumSpellBauble.GRAVITY_MANTLE)) {
+		if (e.player.isPotionActive(ArsenalItems.POTION_GRAVITYCONTROL)) {
+		
+		//if (checkFor(e.player, EnumSpellBauble.GRAVITY_MANTLE)) {
 			//System.out.println("GRAVITY MANTLE CLIENT TICK");
 			
 			//System.out.println("PrevMagnitude: "+prevMotion.lengthVector());
@@ -142,8 +139,13 @@ public class BaublesCompat {
 						if (flightData.checkLastJump(curJump)) {
 							flightData.clearLastJump();
 							flightData.flying = !flightData.flying;
-							
-							//TODO: Send the server a message that we're toggling flight, triggering changes in our particle effects?
+							if (flightData.flying) {
+								//Carry existing player velocity into the flight
+								flightData.velocity = new Vec3d(e.player.motionX, e.player.motionY, e.player.motionZ);
+							} else {
+								//Make sure we don't stop flying, change direction, then start flying and go the wrong direction for a half second.
+								flightData.velocity = Vec3d.ZERO;
+							}
 						} else {
 							flightData.setLastJump(curJump);
 						}
