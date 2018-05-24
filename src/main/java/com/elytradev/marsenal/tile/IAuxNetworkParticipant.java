@@ -24,44 +24,19 @@
 
 package com.elytradev.marsenal.tile;
 
-import java.util.Set;
-
-import com.elytradev.marsenal.capability.impl.DeepEnergyHandler;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-
-public class TileEntityChaosOrb extends TileEntity implements ITickable {
-	private DeepEnergyHandler energy;
-	private Set<BlockPos> crystalCache;
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability==CapabilityEnergy.ENERGY) return true;
-		return super.hasCapability(capability, facing);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability==CapabilityEnergy.ENERGY) return (T) energy;
-		// TODO Auto-generated method stub
-		return super.getCapability(capability, facing);
-	}
-	
-	@Override
-	public void update() {
-		if (!hasWorld() || world.isRemote) return; //We don't even need to tick on the client.
-		
-		
-		
-	}
-	
-	public void findBeacon() {
-		if (!this.hasWorld()) return;
-	}
+/**
+ * Tagging interface for Runic Altar network participants which aren't IRuneProducers or secondary transmitters;
+ * instead, Auxiliary Participants are special beacons, batteries, and other devices whose magnitude are in some way
+ * passively controlled by the altar network's Radiance.
+ */
+public interface IAuxNetworkParticipant extends INetworkParticipant {
+	/**
+	 * Get the participant's mutual exclusion keys. This namespace is shared with IRuneProducer's exclusion keys.
+	 */
+	public String getParticipantType();
+	/**
+	 * Notifies this Auxiliary Participant of the altar's radiance. This will happen once after every ping, once all the
+	 * producers have been pinged and the total radiance is known.
+	 */
+	public void pollAuxRadiance(int radiance);
 }

@@ -55,10 +55,12 @@ import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
 import com.elytradev.probe.api.IProbeDataProvider;
 import com.google.common.collect.ImmutableSet;
 
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
+import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -81,14 +83,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -116,6 +116,12 @@ public class MagicArsenal {
 	public static Capability<IRuneProducer> CAPABILITY_RUNEPRODUCER;
 	@CapabilityInject(value = IProbeDataProvider.class)
 	public static Object CAPABILITY_PROBEDATA;
+	@CapabilityInject(value = ITeslaHolder.class)
+	public static Object CAPABILITY_TESLA_HOLDER;
+	@CapabilityInject(value = ITeslaProducer.class)
+	public static Object CAPABILITY_TESLA_PRODUCER;
+	@CapabilityInject(value = ITeslaConsumer.class)
+	public static Object CAPABILITY_TESLA_CONSUMER;
 	
 	public static final CreativeTabs TAB_MARSENAL = new CreativeTabs("magicarsenal") {
 		@Override

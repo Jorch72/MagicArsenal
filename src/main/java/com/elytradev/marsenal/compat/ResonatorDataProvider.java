@@ -24,26 +24,39 @@
 
 package com.elytradev.marsenal.compat;
 
-import com.elytradev.marsenal.MagicArsenal;
-import com.elytradev.marsenal.capability.impl.RuneProducer;
+import java.util.List;
+
+import com.elytradev.marsenal.block.BlockChaosResonator;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
+import com.elytradev.probe.api.IProbeData;
+import com.elytradev.probe.api.IProbeDataProvider;
+import com.elytradev.probe.api.UnitDictionary;
+import com.elytradev.probe.api.impl.ProbeData;
 
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
-public class ProbeDataCompat {
-	public static Object getProvider(TileEntity te, RuneProducer producer) {
-		if (MagicArsenal.CAPABILITY_PROBEDATA!=null) {
-			return new RuneProducerDataProvider(te, producer);
-		} else {
-			return null;
-		}
+public class ResonatorDataProvider implements IProbeDataProvider {
+	private TileEntityChaosResonator resonator;
+	
+	public ResonatorDataProvider(TileEntityChaosResonator te) {
+		this.resonator = te;
 	}
 	
-	public static Object getProvider(TileEntityChaosResonator te) {
-		if (MagicArsenal.CAPABILITY_PROBEDATA!=null) {
-			return new ResonatorDataProvider(te);
-		} else {
-			return null;
+	@Override
+	public void provideProbeData(List<IProbeData> data) {
+		data.add(new ProbeData()
+				.withLabel(new TextComponentTranslation("info.magicarsenal.label.energybuffer"))
+				.withBar(0, resonator.getEnergyStorage().getLevel(), resonator.getEnergyStorage().getMax(), UnitDictionary.DANKS));
+		if (resonator.getWorld()==null) return;
+		try {
+			String s = resonator.getWorld().getBlockState(resonator.getPos()).getValue(BlockChaosResonator.MODE).getName();
+			data.add(new ProbeData()
+					.withLabel(new TextComponentTranslation("info.magicarsenal.label.resonator.mode."+s)));
+		} catch (Throwable t) {
+			data.add(new ProbeData()
+					.withLabel(new TextComponentString("Unknown Mode")));
 		}
 	}
+
 }

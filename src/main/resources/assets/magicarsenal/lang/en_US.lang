@@ -42,7 +42,7 @@ item.magicarsenal.spellfocus.will_o_wisp.name=Will O' Wisp Spell Focus
 item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 
 #Spell Baubles
-item.magicarsenal.spellbauble.gravity_mantle.name=Gravity Mantle
+item.magicarsenal.spellbauble.gravitymantle.name=Gravity Mantle
 
 #Blocks
 tile.magicarsenal.runestone.name=Runestone
@@ -55,6 +55,7 @@ tile.magicarsenal.stele.wunjo.name=Wunjo Stele
 tile.magicarsenal.stele.berkano.name=Berkano Stele
 
 tile.magicarsenal.chaosorb.name=Chaos Nexus Crystal
+tile.magicarsenal.chaosresonator.name=Chaos Resonator
 
 #Spell Damage Sources
 death.attack.spell.drainLife=%s wasted away
@@ -136,6 +137,12 @@ info.magicarsenal.label.sleeping=Sleeping
 info.magicarsenal.label.blockcache=Blocks Found: %s
 info.magicarsenal.label.scanprogress=Next Scan
 
+info.magicarsenal.label.energybuffer=Energy Buffer
+
+info.magicarsenal.label.resonator.mode.extract=Extract Mode
+info.magicarsenal.label.resonator.mode.insert=Insert Mode
+info.magicarsenal.label.resonator.mode.balance=Balance Mode
+
 #Spells
 spell.magicarsenal.healingWave=Healing Wave
 spell.magicarsenal.healingWave.desc=Heals one friendly entity in line of sight.
@@ -205,6 +212,8 @@ tooltip.magicarsenal.codex.common=Burnt scraps of barely-legible tomes from anot
 tooltip.magicarsenal.codex.uncommon=A slim volume of reconstructed magical designs from another universe.
 tooltip.magicarsenal.codex.rare=A detailed reconstruction of elaborate magical designs from another universe.
 tooltip.magicarsenal.codex.epic=A priceless metal-bound manual full of elaborate magical designs from another universe.
+
+tooltip.magicarsenal.chaosresonator=When placed directly east, west, north, south, up, or down from a Chaos Nexus, energy can be inserted or extracted with these crystals. But be careful how much you insert - the orb grows when it receives energy, and destroys anything it touches!
 
 #Resources
 resource.magicarsenal.stamina=Stamina

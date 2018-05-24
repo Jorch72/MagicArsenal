@@ -28,7 +28,6 @@ import java.util.List;
 
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.StringExtras;
-import com.elytradev.marsenal.block.EnumPoisonPlant;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -57,12 +56,9 @@ public class ItemPoisonRoot extends ItemSeeds {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-		tooltip.add("§e"+I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id+".taxonomy")+"§r");
-		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id);
-		List<String> lines = StringExtras.wordWrap(flavortext, 35);
-		for(String s : lines) {
-			tooltip.add("§9§o"+s+"§r");
-		}
+		//tooltip.add("§e"+I18n.translateToLocal("tooltip.magicarsenal.poisonroot."+id+".taxonomy")+"§r");
+		StringExtras.addInformation("tooltip.magicarsenal.poisonroot."+id+".taxonomy", "§e", tooltip);
+		StringExtras.addInformation("tooltip.magicarsenal.poisonroot."+id, "§9§o", tooltip);
 	}
 
 	@Override

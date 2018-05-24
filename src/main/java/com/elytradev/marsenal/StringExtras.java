@@ -28,8 +28,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import net.minecraft.util.text.translation.I18n;
+
+@SuppressWarnings("deprecation")
 public class StringExtras {
-	public static List<String> wordWrap(String str, int width) {
+	public static List<String> wrapForTooltips(String str) {
+		return wordWrap(str, 35);
+	}
+	
+	public static void addInformation(String key, List<String> tooltip) {
+		addInformation(key, "", tooltip);
+	}
+	
+	public static void addInformation(String key, String formatCodes, List<String> tooltip) {
+		String localized = I18n.translateToLocal(key);
+		List<String> wrapped = wrapForTooltips(localized);
+		for(String s : wrapped) tooltip.add(formatCodes+s);
+	}
+	
+	private static List<String> wordWrap(String str, int width) {
 		List<String> result = new ArrayList<>();
 		String[] words = str.split(" ");
 

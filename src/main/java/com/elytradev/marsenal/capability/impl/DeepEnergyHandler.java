@@ -128,11 +128,8 @@ public class DeepEnergyHandler implements IEnergyStorage {
 	}
 	
 	public void setEnergyLimit(BigInteger limit) {
-		this.limit = limit;
-		if (storage.compareTo(limit)>0) {
-			storage = limit;
-			onChanged();
-		}
+		this.limit = limit; //Don't set current energy; soft-cap instead.
+		onChanged();
 	}
 	
 	public void setEnergyStored(BigInteger energy) {

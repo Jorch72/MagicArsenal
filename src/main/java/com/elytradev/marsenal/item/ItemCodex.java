@@ -106,7 +106,7 @@ public class ItemCodex extends Item {
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.codex."+(stack.getRarity().rarityName.toLowerCase(Locale.ROOT)));
-		List<String> lines = StringExtras.wordWrap(flavortext, 35);
+		List<String> lines = StringExtras.wrapForTooltips(flavortext);
 		for(String s : lines) {
 			tooltip.add("§9§o"+s+"§r");
 		}

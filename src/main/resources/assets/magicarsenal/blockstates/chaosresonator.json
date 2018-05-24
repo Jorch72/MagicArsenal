@@ -1,0 +1,43 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"magicarsenal:chaosorb",
+		"transform":"forge:default-block",
+		"x":90,
+		"y":0,
+		"uvlock":false,
+		"textures":{
+			"all":"magicarsenal:blocks/chaosresonator"
+		}
+	},
+	
+	"variants": {
+		"facing": {
+			"north": {
+				"x": 90,
+				"y": 180
+			},
+			"east": {
+				"x": 90,
+				"y": 270
+			},
+			"south": {
+				"x": 90,
+				"y": 0
+			},
+			"west": {
+				"x": 90,
+				"y": 90
+			}
+		},
+		"mode": {
+			"insert": {
+			},
+			"extract": {
+			},
+			"balance": {
+			}
+		}
+    }
+}

@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.elytradev.marsenal.tile.TileEntityBerkanoStele;
 import com.elytradev.marsenal.tile.TileEntityChaosOrb;
+import com.elytradev.marsenal.tile.TileEntityChaosResonator;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
@@ -57,6 +58,7 @@ public class ArsenalBlocks {
 	
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
 	public static BlockChaosOrb          CHAOS_ORB       = null;
+	public static BlockChaosResonator    CHAOS_RESONATOR = null;
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
@@ -75,6 +77,7 @@ public class ArsenalBlocks {
 		
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		CHAOS_ORB      = block(r, new BlockChaosOrb());
+		CHAOS_RESONATOR= block(r, new BlockChaosResonator());
 		
 		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,   "magicarsenal.altar");
 		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class,  "magicarsenal.stele.raidho");
@@ -83,6 +86,7 @@ public class ArsenalBlocks {
 		GameRegistry.registerTileEntity(TileEntityBerkanoStele.class, "magicarsenal.stele.berkano");
 		
 		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
+		GameRegistry.registerTileEntity(TileEntityChaosResonator.class, "magicarsenal.chaosresonator");
 		
 		//No, you can't carry the crops around.
 		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());

@@ -49,6 +49,12 @@ repositories {
 		url = "http://maven.tterrag.com";
 	}
 	
+	maven {
+		//Darkhax / Tesla / Long Danks
+		name = "MCModDev"
+		url = "http://maven.mcmoddev.com";
+	}
+	
 	ivy {
 		//Resolves baubles. Consider just dropping Baubles in your libs folder or rehosting it
 		name "endless.blue dependency mirror";
@@ -66,6 +72,7 @@ def chisel_version    = "0.2.0.31";
 def baubles_version   = "1.5.2";
 def probedata_version = "1.1.1";
 def fruitphone_version= "2.84";
+def tesla_version     = "1.0.63";
 def concrete_version  = "0.3.6-SNAPSHOT";
 
 def concrete_modules  = ["common", "inventory", "recipe", "network", "reflect"];
@@ -104,6 +111,8 @@ dependencies {
 	
 	deobfCompile "com.elytradev:probedataproviderapi:MC${mc_shortversion}_ver${probedata_version}";
 	runtime "com.elytradev:fruitphone:${mc_version}-${fruitphone_version}";
+	
+	compile "net.darkhax.tesla:Tesla-${mc_version}:${tesla_version}";
 	
 	shadow "org.hjson:hjson:1.0.0";
 	compile "org.hjson:hjson:1.0.0";

@@ -373,11 +373,8 @@ public class ArsenalItems {
 	
 	@SubscribeEvent
 	public static void missingMappings(RegistryEvent.MissingMappings<Item> event) {
-		MagicArsenal.LOG.info("##################################################################################################################");
 		
 		for (Mapping<Item> mapping : event.getMappings()) {
-			
-			MagicArsenal.LOG.info("Caught missing mappings for "+mapping.key);
 			
 			String mod = mapping.key.getResourceDomain();
 			if (!mod.equals("magicarsenal")) continue;
