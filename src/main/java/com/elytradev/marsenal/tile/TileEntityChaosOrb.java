@@ -24,10 +24,13 @@
 
 package com.elytradev.marsenal.tile;
 
+import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.elytradev.marsenal.capability.impl.DeepEnergyHandler;
+import com.elytradev.marsenal.capability.impl.DeepEnergyStorage;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -36,8 +39,29 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 public class TileEntityChaosOrb extends TileEntity implements ITickable {
-	private DeepEnergyHandler energy;
-	private Set<BlockPos> crystalCache;
+	private static final BigInteger RADIANCE_SCALE = BigInteger.valueOf(1_000_000L);
+	private DeepEnergyStorage energy = new DeepEnergyStorage();
+	private Set<BlockPos> resonatorCache = new HashSet<>();
+	private Set<BlockPos> dead = new HashSet<>();
+	
+	public TileEntityChaosOrb() {
+		energy.setEnergyLimitInternal(BigInteger.ZERO); //No capacity until connected
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		if (compound.hasKey("Energy")) {
+			energy.readFromNBT(compound.getTag("Energy"));
+		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setTag("Energy", energy.writeToNBT());
+		return compound;
+	}
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
@@ -49,7 +73,6 @@ public class TileEntityChaosOrb extends TileEntity implements ITickable {
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability==CapabilityEnergy.ENERGY) return (T) energy;
-		// TODO Auto-generated method stub
 		return super.getCapability(capability, facing);
 	}
 	
@@ -57,11 +80,39 @@ public class TileEntityChaosOrb extends TileEntity implements ITickable {
 	public void update() {
 		if (!hasWorld() || world.isRemote) return; //We don't even need to tick on the client.
 		
-		
-		
+		for(BlockPos cur : resonatorCache) {
+			if (!world.isAreaLoaded(cur, 0)) {
+				System.out.println("Culling unloaded resonator at "+cur);
+				dead.add(cur);
+				continue;
+			}
+			
+			TileEntity te = world.getTileEntity(cur);
+			if (te instanceof TileEntityChaosResonator) {
+				TileEntityChaosResonator resonator = (TileEntityChaosResonator)te;
+				
+				resonator.transferFromOrb(energy);
+			} else {
+				System.out.println("ORB Removed dead/missing resonator at "+cur);
+				dead.add(cur);
+			}
+		}
+		resonatorCache.removeAll(dead);
+		if (resonatorCache.isEmpty()) {
+			energy.setEnergyLimit(BigInteger.ZERO); //No resonators means no radiance and no storage.
+		}
 	}
 	
-	public void findBeacon() {
-		if (!this.hasWorld()) return;
+	/**
+	 * Notifies this Chaos Orb that a resonator is positioned to beam energy in and out of it.
+	 */
+	public void pingFromResonator(BlockPos pos) {
+		System.out.println("ORB Connected to resonator at "+pos);
+		resonatorCache.add(pos);
+	}
+
+	public void updateRadiance(int radiance) {
+		energy.setEnergyLimit(BigInteger.valueOf(radiance).multiply(RADIANCE_SCALE));
+		System.out.println("Energy limit updated to "+energy.getFullEnergyLimit().toString());
 	}
 }

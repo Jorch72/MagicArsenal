@@ -25,8 +25,10 @@
 package com.elytradev.marsenal.block;
 
 import java.util.List;
+import java.util.Random;
 
 import com.elytradev.marsenal.StringExtras;
+import com.elytradev.marsenal.tile.INetworkParticipant;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
 
 import net.minecraft.block.BlockHorizontal;
@@ -45,6 +47,8 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockChaosResonator extends BlockSimple implements ITileEntityProvider {
 	public static final PropertyEnum<EnumFacing> FACING = BlockHorizontal.FACING;
@@ -130,5 +134,17 @@ public class BlockChaosResonator extends BlockSimple implements ITileEntityProvi
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityChaosResonator();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te!=null && te instanceof INetworkParticipant) {
+			BlockPos target = ((INetworkParticipant)te).getBeamTo();
+			if (target!=null) {
+				BlockAbstractStele.spawnBeamToEffect(world, pos, target, rand);
+			}
+		}
 	}
 }

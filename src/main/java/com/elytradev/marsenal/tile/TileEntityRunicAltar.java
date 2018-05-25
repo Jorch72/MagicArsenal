@@ -79,6 +79,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 	Set<BlockPos> transmitterCache = new HashSet<>();
 	Set<BlockPos> lastProducerCache = new HashSet<>();
 	Set<BlockPos> producerCache = new HashSet<>();
+	Set<BlockPos> participantCache = new HashSet<>();
 	Set<String> usedKeys = new HashSet<>();
 	private int emc = 0;
 	private int radiance = 0;
@@ -133,6 +134,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 		
 		transmitterCache.clear();
 		producerCache.clear();
+		participantCache.clear();
 		List<TileEntity> tiles = new ArrayList<TileEntity>();
 		List<TileEntity> nextTiles = new ArrayList<TileEntity>();
 		
@@ -175,6 +177,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 		usedKeys.clear();
 		for(BlockPos pos : producerCache) {
 			TileEntity te = world.getTileEntity(pos);
+			if (te==null) continue;
 			if (te.hasCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null)) {
 				IRuneProducer producer = te.getCapability(MagicArsenal.CAPABILITY_RUNEPRODUCER, null);
 				if (producer==null) continue;
@@ -182,6 +185,19 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 				emc += producer.getEMCAvailable();
 				radiance += producer.getProducerRadiance();
 				usedKeys.add(producer.getProducerType());
+			}// else if (te instanceof IAuxNetworkParticipant) {
+			//	participantCache.add(te.getPos());
+			//} else {
+			//	System.out.println("Whoops");
+			//}
+		}
+		
+		//producerCache.removeAll(participantCache);
+		for(BlockPos pos : participantCache) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te!=null && te instanceof IAuxNetworkParticipant) {
+				System.out.println("Polling auxRadiance");
+				((IAuxNetworkParticipant)te).pollAuxRadiance(radiance);
 			}
 		}
 	}
@@ -214,14 +230,19 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 			
 			if (blocked) continue;
 			
-			INetworkParticipant cur = (INetworkParticipant)te;
-			if (lastProducerCache.contains(te.getPos())) {
-				cur.pollNetwork(getPos(), pos);
-				producerCache.add(te.getPos());
+			
+			if (te instanceof IAuxNetworkParticipant) {
+				participantCache.add(te.getPos());
 			} else {
-				if (cur.canJoinNetwork(getPos())) {
-					cur.joinNetwork(getPos(), pos);
+				INetworkParticipant cur = (INetworkParticipant)te;
+				if (lastProducerCache.contains(te.getPos())) {
+					cur.pollNetwork(getPos(), pos);
 					producerCache.add(te.getPos());
+				} else {
+					if (cur.canJoinNetwork(getPos())) {
+						cur.joinNetwork(getPos(), pos);
+						producerCache.add(te.getPos());
+					}
 				}
 			}
 		}

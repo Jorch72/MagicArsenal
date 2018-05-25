@@ -29,6 +29,8 @@ import java.math.BigInteger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.elytradev.marsenal.compat.EnergyCompat;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -45,7 +47,7 @@ import net.minecraftforge.energy.IEnergyStorage;
  * never about RF.
  */
 
-public class DeepEnergyHandler implements IEnergyStorage {
+public class DeepEnergyStorage implements IEnergyStorage, EnergyCompat.IFusionEnergy {
 	protected BigInteger storage = BigInteger.ZERO;
 	protected BigInteger limit = BigInteger.valueOf(Long.MAX_VALUE); //Default us to 9,223,372,036,854,775,807 RF
 	protected BigInteger transferLimit = BigInteger.valueOf(200_000_000L); //200 million per tick should be a decent starting speed
@@ -64,7 +66,7 @@ public class DeepEnergyHandler implements IEnergyStorage {
 	 * TileEntities, it's reccommended they call {@code listen(this::markDirty);} from their constructor or chained from
 	 * their field initializer.
 	 */
-	public DeepEnergyHandler listen(Runnable r) {
+	public DeepEnergyStorage listen(Runnable r) {
 		this.listener = r;
 		return this;
 	}
@@ -206,6 +208,59 @@ public class DeepEnergyHandler implements IEnergyStorage {
 	
 	public void onChanged() {
 		if (listener!=null) listener.run();
+	}
+	
+	
+	
+	/*
+	 * #### IFUSIONPOWER IMPL ####
+	 */
+	
+	@Override
+	public long insert(long amount, boolean simulate) {
+		if (amount<=0) return 0;
+		BigInteger toRecieve = BigInteger.valueOf(amount).min(transferLimit);
+		
+		BigInteger capacityLeft = (limit==null) ? storage.add(transferLimit) : limit.subtract(storage);
+		if (capacityLeft.compareTo(BigInteger.ZERO)<0) capacityLeft = BigInteger.ZERO;
+		
+		BigInteger received = toRecieve.min(capacityLeft);
+		if (!simulate && received.compareTo(BigInteger.ZERO)> 0) {
+			storage = storage.add(received);
+			onChanged();
+		}
+		return received.longValue(); //Since received can't exceed amount, we're okay to do this.
+	}
+
+	@Override
+	public long extract(long amount, boolean simulate) {
+		BigInteger toExtract = BigInteger.valueOf(amount).min(transferLimit);
+		
+		BigInteger extracted = storage.min(toExtract);
+		if (!simulate) {
+			storage = storage.subtract(extracted);
+			onChanged();
+		}
+		return extracted.longValue(); //Again, we shouldn't be able to exceed long capacity
+	}
+
+	@Override
+	public long getLevel() {
+		try {
+			return storage.longValueExact();
+		} catch (ArithmeticException ex) {
+			return Long.MAX_VALUE;
+		}
+	}
+
+	@Override
+	public long getMax() {
+		if (limit==null) return Long.MAX_VALUE;
+		try {
+			return limit.longValueExact();
+		} catch (ArithmeticException ex) {
+			return Long.MAX_VALUE;
+		}
 	}
 
 }

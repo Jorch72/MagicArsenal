@@ -24,10 +24,13 @@
 
 package com.elytradev.marsenal.tile;
 
+import java.util.Map;
+
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.BlockChaosResonator;
-import com.elytradev.marsenal.capability.impl.ShallowEnergyHandler;
+import com.elytradev.marsenal.capability.impl.DeepEnergyStorage;
+import com.elytradev.marsenal.capability.impl.ShallowEnergyStorage;
 import com.elytradev.marsenal.compat.EnergyCompat;
 import com.elytradev.marsenal.compat.ProbeDataCompat;
 
@@ -36,17 +39,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 public class TileEntityChaosResonator  extends TileEntity implements ITickable, IAuxNetworkParticipant {
+	public static final int SCAN_PERIOD = 20*30;
+	public static final int SCAN_DISTANCE = 40;
 	public static long BASE_MAX      = 10_000L;
 	public static long BASE_TRANSFER = 1_000L;
 	
 	protected boolean outputMode = false;
-	protected ShallowEnergyHandler storage = new ShallowEnergyHandler();
+	protected ShallowEnergyStorage storage = new ShallowEnergyStorage();
 	protected BlockPos orb = null;
-	protected long lastOrbPing = 0L;
+	//protected long lastOrbPing = 0L;
+	protected int scanTimer = 0;
 	
 	protected BlockPos controller = null;
 	protected long lastControllerPing = 0L;
@@ -94,26 +101,81 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 		BlockChaosResonator.EnumMode mode = state.getValue(BlockChaosResonator.MODE);
 		switch(mode) {
 		case INSERT:
-			//Don't push any powerout . In fact, try to shove it into the Orb if we can.
+			//Don't push any power out. We'll insert power from ourselves into the orb when we get an orb ping
 			break;
 		case EXTRACT:
-			//TODO: Extract energy from the Orb
+			//Push energy out to consumers. We'll extract power from the orb and put it in ourselves when we get an orb ping.
 			if (storage.getLevel()>0) pushEnergyOut(storage.getTransferLimit(), front);
 			break;
 		case BALANCE:
+			//Try to keep power at 50% by pulling from the orb or pushing to consumers
 			long halfPower = storage.getCapacity()/2;
 			if (storage.getLevel()>halfPower) {
 				pushEnergyOut(storage.getLevel()-halfPower, front);
 			} else if (storage.getLevel()<halfPower) {
-				long toFill = halfPower - storage.getLevel();
-				//TODO: Extract energy from the orb
+				//Do nothing - we're pulling from the orb
 			}
 			break;
 		}
 		
+		//Speaking of which, where's the orb these days?
+		if (orb!=null) {
+			//should we invalidate it?
+			if (world.isAreaLoaded(orb, 0)) {
+				TileEntity te = world.getTileEntity(orb);
+				if (te==null || !(te instanceof TileEntityChaosOrb)) orb = null;
+			} else {
+				orb = null;
+			}
+		} else {
+			//Should we search for it?
+			scanTimer--;
+			if (scanTimer<=0) {
+				scanTimer = SCAN_PERIOD;
+				
+				BlockPos scanTarget = pos;
+				for(int i=0; i<SCAN_DISTANCE; i++) {
+					if (!world.isAreaLoaded(scanTarget, 0)) continue;
+					Chunk chunk = world.getChunkFromBlockCoords(scanTarget);
+					
+					for(Map.Entry<BlockPos, TileEntity> entry : chunk.getTileEntityMap().entrySet()) {
+						if (isInLine(pos, entry.getKey(), front)) {
+							if (entry.getValue() instanceof TileEntityChaosOrb) {
+								//We found our orb
+								orb = entry.getKey();
+								((TileEntityChaosOrb)entry.getValue()).pingFromResonator(pos);
+								System.out.println("Connected to ORB at "+orb);
+								
+								return;
+							}
+						}
+					}
+					
+					scanTarget = scanTarget.offset(front, 16);
+				}
+				//System.out.println("No ORB found.");
+			}
+		}
 	}
 	
-	public ShallowEnergyHandler getEnergyStorage() {
+	public static boolean isInLine(BlockPos a, BlockPos b, EnumFacing facing) {
+		if (a.getY()!=b.getY()) return false; //can't face up or down
+		
+		switch(facing) {
+		case NORTH:
+			return a.getX()==b.getX() && a.getZ() > b.getZ();
+		case SOUTH:
+			return a.getX()==b.getX() && a.getZ() < b.getZ();
+		case EAST:
+			return a.getZ()==b.getZ() && a.getX() < b.getX();
+		case WEST:
+			return a.getZ()==b.getZ() && a.getX() > b.getX();
+		default:
+			return false;
+		}
+	}
+	
+	public ShallowEnergyStorage getEnergyStorage() {
 		return storage;
 	}
 	
@@ -137,13 +199,56 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 			toTransferRemaining -= transferred;
 			if (toTransferRemaining<=0L) break;
 		}
-		
 	}
 	
-	public void connectOrb(BlockPos pos) {
-		this.orb = pos;
-		if (world!=null) this.lastOrbPing = world.getTotalWorldTime();
+	/**
+	 * Called by the orb in a kind of cooperative multitasking
+	 */
+	public void transferFromOrb(DeepEnergyStorage orbStorage) {
+		if (world==null || world.isRemote) return;
+
+		//this.lastOrbPing = world.getTotalWorldTime();
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock()!=ArsenalBlocks.CHAOS_RESONATOR) return;
+		BlockChaosResonator.EnumMode mode = state.getValue(BlockChaosResonator.MODE);
+		
+		switch(mode) {
+			case INSERT: {
+				long amount = storage.getLevel();
+				long inserted = orbStorage.insert(amount, false);
+				storage.setLevel(storage.getLevel()-inserted);
+				break;
+			}
+			case EXTRACT: {
+				if (storage.getLevel()>=storage.getMax()) return;
+				long amount = storage.getMax()-storage.getLevel();
+				long extracted = orbStorage.extract(amount, false);
+				storage.setLevel(amount+extracted);
+				break;
+			}
+			case BALANCE: {
+				long halfPower = storage.getCapacity()/2;
+				if (storage.getLevel()>halfPower) {
+					//Push energy back towards the orb
+					long amount = storage.getLevel() - halfPower;
+					long pushed = orbStorage.insert(amount, false);
+					//System.out.println("Pushed "+pushed+" out of desired "+amount+" to Chaos ORB");
+					
+					storage.setLevel(storage.getLevel()-pushed);
+				} else if (storage.getLevel()<halfPower) {
+					//Extract energy from the orb
+					long amount = halfPower - storage.getLevel();
+					long pulled = orbStorage.extract(amount, false);
+					storage.setLevel(storage.getLevel()+pulled);
+				}
+				break;
+			}
+		}
 	}
+	
+	/*
+	 * #### IAUXNETWORKPARTICIPANT IMPL ####
+	 */
 	
 	@Override
 	public boolean canJoinNetwork(BlockPos controller) {
@@ -155,6 +260,7 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 	
 	@Override
 	public void joinNetwork(BlockPos controller, BlockPos beamTo) {
+		System.out.println("Resonator joined an altar network.");
 		this.controller = controller;
 		this.beamTo = beamTo;
 	}
@@ -179,5 +285,12 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 	public void pollAuxRadiance(int radiance) {
 		this.storage.setMax(BASE_MAX + radiance*10);
 		storage.setTransferLimit(BASE_TRANSFER + radiance);
+		
+		if (orb!=null) {
+			TileEntity te = world.getTileEntity(orb);
+			if (te!=null && te instanceof TileEntityChaosOrb) {
+				((TileEntityChaosOrb)te).updateRadiance(radiance);
+			}
+		}
 	}
 }

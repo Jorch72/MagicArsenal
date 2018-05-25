@@ -39,7 +39,7 @@ import net.minecraftforge.fml.common.Optional;
 		@Optional.Interface(modid="tesla", iface = "net.darkhax.tesla.api.ITeslaProducer"),
 		@Optional.Interface(modid="tesla", iface = "net.darkhax.tesla.api.ITeslaHolder")
 })
-public class ShallowEnergyHandler implements IEnergyStorage, EnergyCompat.IFusionEnergy, ITeslaHolder, ITeslaProducer, ITeslaConsumer {
+public class ShallowEnergyStorage implements IEnergyStorage, EnergyCompat.IFusionEnergy, ITeslaHolder, ITeslaProducer, ITeslaConsumer {
 	
 	protected long storage = 0L;
 	protected long limit = Long.MAX_VALUE; //Default us to 9,223,372,036,854,775,807 RF

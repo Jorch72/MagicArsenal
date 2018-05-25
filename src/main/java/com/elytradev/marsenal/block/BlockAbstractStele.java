@@ -59,7 +59,7 @@ public abstract class BlockAbstractStele extends BlockSimple implements ITileEnt
     }
 	
 	@SideOnly(Side.CLIENT)
-	public void spawnBeamToEffect(World world, BlockPos self, BlockPos target, Random rand) {
+	public static void spawnBeamToEffect(World world, BlockPos self, BlockPos target, Random rand) {
 		float px = (float)(self.getX()+0.5f);
 		float py = (float)(self.getY()+0.5f);
 		float pz = (float)(self.getZ()+0.5f);
