@@ -351,4 +351,8 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 		}
 		return result;
 	}
+
+	public FlexibleItemHandler getStorage() {
+		return storage;
+	}
 }
