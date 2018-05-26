@@ -36,6 +36,7 @@ import com.elytradev.marsenal.client.star.LegacyLineSegmentStar;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
@@ -44,10 +45,28 @@ import net.minecraft.world.World;
  */
 public abstract class Emitter {
 	private static HashMap<String, Class<? extends Emitter>> registry = new HashMap<>();
+	private static HashMap<String, Class<? extends WorldEmitter>> worldEmitterRegistry = new HashMap<>();
+	
 	public static void register(String key, Class<? extends Emitter> impl) { registry.put(key, impl); }
+	public static void registerWorldEmitter(String key, Class<? extends WorldEmitter> impl) { worldEmitterRegistry.put(key, impl); }
+	
 	@Nullable
 	public static Emitter create(String key) {
 		Class<? extends Emitter> clazz = registry.get(key);
+		try {
+			if (clazz!=null) {
+				return clazz.getDeclaredConstructor().newInstance();
+			}
+		} catch (Throwable t) {
+			MagicArsenal.LOG.warn("Unable to create emitter for class {}. Thrown: {}", clazz, t);
+		}
+		
+		return null;
+	}
+	
+	@Nullable
+	public static WorldEmitter createWorldEmitter(String key, NBTTagCompound tag) {
+		Class<? extends WorldEmitter> clazz = worldEmitterRegistry.get(key);
 		try {
 			if (clazz!=null) {
 				return clazz.getDeclaredConstructor().newInstance();

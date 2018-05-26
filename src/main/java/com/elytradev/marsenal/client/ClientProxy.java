@@ -33,11 +33,13 @@ import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.block.IItemVariants;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.client.tesr.RenderChaosOrb;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
+import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -54,6 +56,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -73,8 +76,14 @@ public class ClientProxy extends Proxy {
 		Emitter.register("lightning", LightningEmitter.class);
 		Emitter.register("coalesce", CoalesceEmitter.class);
 		
+		Emitter.registerWorldEmitter("chaosorb", ChaosOrbEmitter.class);
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrostShard.class, RenderFrostShard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWillOWisp.class,  RenderWillOWisp::new);
+		
+		//Unsatisfactory behavior. Using WorldEmitter.
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChaosOrb.class, new RenderChaosOrb());
+		
 	}
 	
 	@Override

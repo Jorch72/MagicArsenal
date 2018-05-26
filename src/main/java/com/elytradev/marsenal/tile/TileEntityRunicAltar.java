@@ -185,18 +185,12 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 				emc += producer.getEMCAvailable();
 				radiance += producer.getProducerRadiance();
 				usedKeys.add(producer.getProducerType());
-			}// else if (te instanceof IAuxNetworkParticipant) {
-			//	participantCache.add(te.getPos());
-			//} else {
-			//	System.out.println("Whoops");
-			//}
+			}
 		}
 		
-		//producerCache.removeAll(participantCache);
 		for(BlockPos pos : participantCache) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te!=null && te instanceof IAuxNetworkParticipant) {
-				System.out.println("Polling auxRadiance");
 				((IAuxNetworkParticipant)te).pollAuxRadiance(radiance);
 			}
 		}

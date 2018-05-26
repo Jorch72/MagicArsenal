@@ -24,15 +24,21 @@
 
 package com.elytradev.marsenal.compat;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import com.elytradev.marsenal.block.BlockChaosResonator;
+import com.elytradev.marsenal.capability.impl.DeepEnergyStorage;
+import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
 import com.elytradev.probe.api.IProbeData;
 import com.elytradev.probe.api.IProbeDataProvider;
 import com.elytradev.probe.api.UnitDictionary;
 import com.elytradev.probe.api.impl.ProbeData;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -56,6 +62,38 @@ public class ResonatorDataProvider implements IProbeDataProvider {
 		} catch (Throwable t) {
 			data.add(new ProbeData()
 					.withLabel(new TextComponentString("Unknown Mode")));
+		}
+		
+		BlockPos orbPos = resonator.getOrbPosition();
+		TileEntity orbTe = null;
+		if (orbPos!=null) orbTe = resonator.getWorld().getTileEntity(orbPos);
+		
+		if (orbTe==null || !(orbTe instanceof TileEntityChaosOrb)) {
+			data.add(new ProbeData()
+					.withLabel(new TextComponentTranslation("info.magicarsenal.label.resonator.orb.missing")));
+		} else {
+			DeepEnergyStorage orbEnergy = ((TileEntityChaosOrb) orbTe).getEnergyStorage();
+			double level = orbEnergy.getFullEnergyStored().doubleValue();
+			BigInteger maxInt = orbEnergy.getFullEnergyLimit();
+			if (maxInt==null) {
+				data.add(new ProbeData().withLabel(new TextComponentTranslation("info.magicarsenal.label.resonator.orb.infinite", level)));
+			} else {
+				if (maxInt.compareTo(BigInteger.ZERO)==0) {
+					orbEnergy.getFullEnergyStored().doubleValue();
+					data.add(new ProbeData()
+							.withLabel(new TextComponentTranslation("info.magicarsenal.label.resonator.orb.finite"))
+							.withBar(0, level, level, UnitDictionary.DANKS)
+							);
+				} else {
+					double max = maxInt.doubleValue();
+					data.add(new ProbeData()
+							.withLabel(new TextComponentTranslation("info.magicarsenal.label.resonator.orb.finite"))
+							.withBar(0, level, max, UnitDictionary.DANKS)
+							);
+				}
+			}
+			
+			data.add(new ProbeData().withLabel(new TextComponentString("Radius: "+((TileEntityChaosOrb)orbTe).getRadius())));
 		}
 	}
 

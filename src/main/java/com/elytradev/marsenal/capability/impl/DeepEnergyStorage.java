@@ -222,7 +222,9 @@ public class DeepEnergyStorage implements IEnergyStorage, EnergyCompat.IFusionEn
 		BigInteger toRecieve = BigInteger.valueOf(amount).min(transferLimit);
 		
 		BigInteger capacityLeft = (limit==null) ? storage.add(transferLimit) : limit.subtract(storage);
-		if (capacityLeft.compareTo(BigInteger.ZERO)<0) capacityLeft = BigInteger.ZERO;
+		if (capacityLeft.compareTo(BigInteger.ZERO)<=0) {
+			capacityLeft = BigInteger.ZERO;
+		}
 		
 		BigInteger received = toRecieve.min(capacityLeft);
 		if (!simulate && received.compareTo(BigInteger.ZERO)> 0) {

@@ -39,6 +39,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -94,6 +95,17 @@ public class BlockChaosResonator extends BlockSimple implements ITileEntityProvi
 		StringExtras.addInformation("tooltip.magicarsenal.chaosresonator", "", tooltip);
 	}
 	
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (world.isRemote) return true;
+		int nextModeNum = state.getValue(MODE).ordinal()+1;
+		nextModeNum = nextModeNum % EnumMode.values().length;
+		EnumMode nextMode = EnumMode.values()[nextModeNum];
+		world.setBlockState(pos, state.withProperty(MODE, nextMode));
+		
+		return true;
+	}
+	
 	public static enum EnumMode implements IStringSerializable {
 		INSERT("insert"),
 		EXTRACT("extract"),
@@ -118,19 +130,19 @@ public class BlockChaosResonator extends BlockSimple implements ITileEntityProvi
 	
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-        return BlockFaceShape.UNDEFINED;
-    }
+		return BlockFaceShape.UNDEFINED;
+	}
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
+		return false;
+	}
+	
 	@Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityChaosResonator();
@@ -146,5 +158,10 @@ public class BlockChaosResonator extends BlockSimple implements ITileEntityProvi
 				BlockAbstractStele.spawnBeamToEffect(world, pos, target, rand);
 			}
 		}
+	}
+	
+	@Override
+	public String getVariantFromItem(ItemStack stack) {
+		return "facing=north,mode=balance";
 	}
 }

@@ -33,10 +33,19 @@
 		},
 		"mode": {
 			"insert": {
+				"textures": {
+					"all":"magicarsenal:blocks/chaosresonator.insert"
+				}
 			},
 			"extract": {
+				"textures": {
+					"all":"magicarsenal:blocks/chaosresonator.extract"
+				}
 			},
 			"balance": {
+				"textures": {
+					"all":"magicarsenal:blocks/chaosresonator.balance"
+				}
 			}
 		}
     }

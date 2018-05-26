@@ -142,4 +142,73 @@ public class Draw {
 			fakeLine(px1, py, pz1, px2, py, pz2, width, color, true);
 		}
 	}
+	
+	public static void fastLine(double x1, double y1, double z1, double x2, double y2, double z2, float width, int color, boolean endcap) {
+		int a = (color >> 24) & 0xFF;
+		int r = (color >> 16) & 0xFF;
+		int g = (color >>  8) & 0xFF;
+		int b = (color      ) & 0xFF;
+		fastLine(x1, y1, z1, x2, y2, z2, width, r, g, b, a, endcap);
+	}
+	
+	public static void fastLine(double x1, double y1, double z1, double x2, double y2, double z2, float width, int r, int g, int b, int a, boolean endcap) {
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder vb = tess.getBuffer();
+		
+		/* Labeling these vectors north, east, and up, doesn't really follow the right-hand rule, but helps us think
+		 * about what we're drawing. Pretend it's a skinny box with a local coordinate system that puts the "north"
+		 * axis line directly through the center of the box.
+		 */
+		Vec3d north = new Vec3d(x2-x1, y2-y1, z2-z1);
+		Vec3d east;
+		if (north.x==0 && north.z==0) { //Use a different vector than up
+			east = north.crossProduct(new Vec3d(1, 0, 0)).normalize().scale(width/2d);
+		} else {
+			east = north.crossProduct(new Vec3d(0, 1, 0)).normalize().scale(width/2d);
+		}
+		Vec3d up = north.crossProduct(east).normalize().scale(width/2d);
+		
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		
+		//Pretend north (+z) is parallel to the line
+		//This means
+		Vec3d usw = new Vec3d(x1-east.x+up.x, y1-east.y+up.y, z1-east.z+up.z);
+		Vec3d use = new Vec3d(x1+east.x+up.x, y1+east.y+up.y, z1+east.z+up.z);
+		Vec3d unw = new Vec3d(x2-east.x+up.x, y2-east.y+up.y, z2-east.z+up.z);
+		Vec3d une = new Vec3d(x2+east.x+up.x, y2+east.y+up.y, z2+east.z+up.z);
+		Vec3d dsw = new Vec3d(x1-east.x-up.x, y1-east.y-up.y, z1-east.z-up.z);
+		Vec3d dse = new Vec3d(x1+east.x-up.x, y1+east.y-up.y, z1+east.z-up.z);
+		Vec3d dnw = new Vec3d(x2-east.x-up.x, y2-east.y-up.y, z2-east.z-up.z);
+		Vec3d dne = new Vec3d(x2+east.x-up.x, y2+east.y-up.y, z2+east.z-up.z);
+		/*//Original face order... *all* backwards? O_o
+		_quad(vb, dsw, dnw, dne, dse, r, g, b, a);
+		_quad(vb, usw, use, une, unw, r, g, b, a);
+		_quad(vb, unw, usw, use, une, r, g, b, a);
+		_quad(vb, use, dse, dne, une, r, g, b, a); */
+		
+		_quad(vb, dsw, dse, dne, dnw, r, g, b, a);
+		_quad(vb, usw, unw, une, use, r, g, b, a);
+		_quad(vb, usw, dsw, dnw, unw, r, g, b, a);
+		_quad(vb, use, une, dne, dse, r, g, b, a);
+		if (endcap) {
+			_quad(vb, usw, use, dse, dsw, r, g, b, a);
+			_quad(vb, une, dne, dnw, unw, r, b, b, a);
+		}
+		
+		//tess.draw();
+	}
+	
+	public static void fastCircle(double x, double y, double z, double radius, float accuracy, float width, int color) {
+		if (accuracy<=0) accuracy = (TAU/16f);
+		for(float f = 0; f<TAU; f+=accuracy) {
+			double px1 = x + (radius * Math.cos(f));
+			double py = y;
+			double pz1 = z + (radius * Math.sin(f));
+			double px2 = x + (radius * Math.cos(f+accuracy));
+			double pz2 = z + (radius * Math.sin(f+accuracy));
+			
+			//line(px1, py, pz1, px2, py, pz2, width, color);
+			fastLine(px1, py, pz1, px2, py, pz2, width, color, true);
+		}
+	}
 }

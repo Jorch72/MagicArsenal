@@ -26,17 +26,30 @@ package com.elytradev.marsenal.client.star;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
+import com.elytradev.marsenal.client.Draw;
+import com.elytradev.marsenal.client.Emitter;
 import com.elytradev.marsenal.client.PartialTickTime;
+import com.elytradev.marsenal.client.WorldEmitter;
+import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class StarFlinger {
 	private static BufferBuilder buffer = null;
@@ -47,6 +60,8 @@ public class StarFlinger {
 	 */
 	private static List<IStar> globalStars = new ArrayList<>();
 	private static List<IStar> deadStars = new ArrayList<>();
+	private static Map<BlockPos, WorldEmitter> worldEmitters = new HashMap<>();
+	//private static Set<BlockPos> orbs = new HashSet<>();
 	private static float frameTime;
 	
 	public static BufferBuilder startBatch() {
@@ -69,6 +84,24 @@ public class StarFlinger {
 		return buffer;
 	}
 	
+	/**
+	 * Spawns an emitter at a given location. If an existing emitter is present at that location, refreshes its duration
+	 * and updates its parameters.
+	 */
+	public static void spawnWorldEmitter(BlockPos pos, String id, NBTTagCompound tag) {
+		if (worldEmitters.containsKey(pos)) {
+			worldEmitters.get(pos).refreshAndUpdate(tag);
+		} else {
+			WorldEmitter emitter = Emitter.createWorldEmitter(id, tag);
+			if (emitter!=null) {
+				emitter.x = pos.getX()+0.5f;
+				emitter.y = pos.getY()+0.5f;
+				emitter.z = pos.getZ()+0.5f;
+				worldEmitters.put(pos, emitter);
+			}
+		}
+	}
+	
 	public static void paint(Collection<IStar> stars, boolean tick) {
 		if (stars.size()<=0) return;
 		
@@ -89,13 +122,28 @@ public class StarFlinger {
 	
 	public static void paintAndTickGlobalStars() {
 		paint(globalStars, true);
+		
+		WorldClient world = Minecraft.getMinecraft().world;
+		if (world==null) return; //No world? No worldEmitters.
+		HashSet<BlockPos> deadWorldEmitters = new HashSet<BlockPos>();
+		for(Map.Entry<BlockPos, WorldEmitter> entry : worldEmitters.entrySet()) {
+			
+			if (!world.isAreaLoaded(entry.getKey(), 0)) {
+				deadWorldEmitters.add(entry.getKey());
+				continue;
+			}
+			
+			if (buffer!=null) entry.getValue().paint(buffer);
+			entry.getValue().tick(frameTime);
+			if (entry.getValue().isDead()) deadWorldEmitters.add(entry.getKey());
+		}
+		for(BlockPos it : deadWorldEmitters) worldEmitters.remove(it);
 	}
 	
 	public static void endBatch() {
 		Tessellator.getInstance().draw();
 		
 		GlStateManager.enableCull();
-		//GlStateManager.disableAlpha();
 		GlStateManager.depthMask(true);
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();

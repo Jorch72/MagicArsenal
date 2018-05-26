@@ -44,6 +44,8 @@ public class ShallowEnergyStorage implements IEnergyStorage, EnergyCompat.IFusio
 	protected long storage = 0L;
 	protected long limit = Long.MAX_VALUE; //Default us to 9,223,372,036,854,775,807 RF
 	protected long transferLimit = 200_000_000L; //200 million per tick should be a decent starting speed
+	protected long transferInThisTick = 0L;
+	protected long transferOutThisTick = 0L;
 	
 	protected Runnable listener;
 	
@@ -99,18 +101,8 @@ public class ShallowEnergyStorage implements IEnergyStorage, EnergyCompat.IFusio
 	
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		if (maxReceive<=0) return 0;
-		long toReceive = Math.min(maxReceive, transferLimit);
-		
-		long capacityLeft = limit - storage;
-		if (capacityLeft<0L) capacityLeft = 0L;
-		
-		long received = Math.min(toReceive, capacityLeft);
-		if (!simulate && received > 0) {
-			storage += received;
-			onChanged();
-		}
-		return EnergyCompat.saturateToInt(received);
+		int result = EnergyCompat.saturateToInt(insert(maxReceive, simulate));
+		return result;
 	}
 	
 	@Override
@@ -181,6 +173,7 @@ public class ShallowEnergyStorage implements IEnergyStorage, EnergyCompat.IFusio
 		long received = Math.min(toReceive, capacityLeft);
 		if (!simulate && received > 0) {
 			storage += received;
+			transferInThisTick += received;
 			onChanged();
 		}
 		return received;
@@ -193,6 +186,7 @@ public class ShallowEnergyStorage implements IEnergyStorage, EnergyCompat.IFusio
 		long extracted = Math.min(storage,toExtract);
 		if (!simulate) {
 			storage -= extracted;
+			transferOutThisTick += extracted;
 			onChanged();
 		}
 		return extracted;

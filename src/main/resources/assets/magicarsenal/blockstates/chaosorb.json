@@ -3,10 +3,13 @@
 	
 	"defaults":{
 		"model":"magicarsenal:chaosorb",
-		"transform":"forge:default-block",
+		"transform":{
+			"fixed": {},
+			"scale":1.5
+		},
 		"x":0,
 		"y":0,
-		"uvlock":true,
+		"uvlock":false,
 		"textures":{
 			"all":"magicarsenal:blocks/chaosorb"
 		}

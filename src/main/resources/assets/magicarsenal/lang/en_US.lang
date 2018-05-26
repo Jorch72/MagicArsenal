@@ -142,6 +142,8 @@ info.magicarsenal.label.energybuffer=Energy Buffer
 info.magicarsenal.label.resonator.mode.extract=Extract Mode
 info.magicarsenal.label.resonator.mode.insert=Insert Mode
 info.magicarsenal.label.resonator.mode.balance=Balance Mode
+info.magicarsenal.label.resonator.orb.infinite=Chaos Orb Storage: %s/§9∞§r
+info.magicarsenal.label.resonator.orb.finite=Chaos Orb Storage
 
 #Spells
 spell.magicarsenal.healingWave=Healing Wave
