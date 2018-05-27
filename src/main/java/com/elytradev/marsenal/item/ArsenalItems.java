@@ -36,6 +36,7 @@ import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.potion.PotionGravityControl;
 import com.elytradev.marsenal.potion.PotionInfuseLife;
 import com.elytradev.marsenal.potion.PotionNightshade;
+import com.elytradev.marsenal.potion.PotionStun;
 import com.elytradev.marsenal.potion.PotionWolfsbane;
 import com.elytradev.marsenal.recipe.RunicAltarRecipes;
 import com.elytradev.marsenal.recipe.ShapelessAltarRecipe;
@@ -78,16 +79,17 @@ public class ArsenalItems {
 	public static ItemChisel          DIAMONDCHISEL = null;
 	
 	//Potions and Potion Bottles
-	public static PotionWolfsbane   POTION_WOLFSBANE = new PotionWolfsbane();
-	public static PotionNightshade  POTION_NIGHTSHADE = new PotionNightshade();
-	public static PotionInfuseLife  POTION_INFUSELIFE = new PotionInfuseLife();
+	public static PotionWolfsbane      POTION_WOLFSBANE = new PotionWolfsbane();
+	public static PotionNightshade     POTION_NIGHTSHADE = new PotionNightshade();
+	public static PotionInfuseLife     POTION_INFUSELIFE = new PotionInfuseLife();
 	public static PotionGravityControl POTION_GRAVITYCONTROL = new PotionGravityControl();
-	public static PotionType        POTIONTYPE_WOLFSBANE1 = null;
-	public static PotionType        POTIONTYPE_WOLFSBANE2 = null;
-	public static PotionType        POTIONTYPE_WOLFSBANE3 = null;
-	public static PotionType        POTIONTYPE_NIGHTSHADE1 = null;
-	public static PotionType        POTIONTYPE_NIGHTSHADE2 = null;
-	public static PotionType        POTIONTYPE_NIGHTSHADE3 = null;
+	public static PotionStun           POTION_STUN       = new PotionStun();
+	public static PotionType           POTIONTYPE_WOLFSBANE1 = null;
+	public static PotionType           POTIONTYPE_WOLFSBANE2 = null;
+	public static PotionType           POTIONTYPE_WOLFSBANE3 = null;
+	public static PotionType           POTIONTYPE_NIGHTSHADE1 = null;
+	public static PotionType           POTIONTYPE_NIGHTSHADE2 = null;
+	public static PotionType           POTIONTYPE_NIGHTSHADE3 = null;
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {

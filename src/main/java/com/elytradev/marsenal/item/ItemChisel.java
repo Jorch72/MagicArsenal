@@ -347,7 +347,16 @@ public class ItemChisel extends ItemTool {
 		return chiselBlock(world, pos, player, hand, ray, true);
 	}
 	
+	protected static final Set<String> CHISEL_BLACKLIST = new HashSet<>();
+	static {
+		CHISEL_BLACKLIST.add("minecraft:stone_button");
+		CHISEL_BLACKLIST.add("minecraft:wooden_button");
+	}
+	
+	
 	public static boolean chiselBlock(World world, BlockPos pos, EntityPlayer player, EnumHand hand, RayTraceResult ray, boolean particles) {
+		if (world.getTileEntity(pos)!=null) return false;
+		
 		IBlockState state = world.getBlockState(pos);
 		
 		//Start chiseling.
@@ -360,10 +369,10 @@ outer:
 		for(IRecipe recipe : registry) {
 			/* What we're primarily looking for is:
 			 * + Not a dynamic recipe
-			 * + Fits in a 2x2 grid
-			 * + Has 1-4 ingredients
+			 * + Fits in a 3x3 grid
+			 * + Has 1-9 ingredients
 			 * + All ingredients match the pickBlock of this Block
-			 * + Produces as many items as you supply
+			 * + Produces exactly as many items as you supply
 			 * + Result is an ItemBlock
 			 * 
 			 * ? Can be shapeless or shaped
@@ -375,12 +384,12 @@ outer:
 			 */
 			
 			if (recipe.isDynamic()) continue;
-			if (!recipe.canFit(2, 2)) continue;
+			if (!recipe.canFit(3, 3)) continue;
 			
 			NonNullList<Ingredient> ingredients = recipe.getIngredients();
 			if (recipe.getRecipeOutput().getCount()!=ingredients.size()) continue;
 			
-			if (ingredients.size()>4) continue;
+			if (ingredients.size()>9) continue;
 			for(Ingredient i : ingredients) {
 				if (!i.test(item)) continue outer;
 			}
@@ -390,6 +399,9 @@ outer:
 			
 			ItemBlock blockItem = (ItemBlock)result.getItem();
 			Block resultBlock = blockItem.getBlock();
+			if (CHISEL_BLACKLIST.contains(resultBlock.getRegistryName().toString())) continue;
+			//I would love to additionally check for valid placement of the target state, but the canPlaceBlockAt and canPlaceBlockOnSide methods typically check if the block that's already present is replaceable.
+			
 			IBlockState toPlace = resultBlock.getStateForPlacement(world, pos, ray.sideHit, (float)ray.hitVec.x, (float)ray.hitVec.y, (float)ray.hitVec.z, result.getMetadata(), player, hand);
 			
 			if (particles) {

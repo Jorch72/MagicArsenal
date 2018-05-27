@@ -26,41 +26,19 @@ package com.elytradev.marsenal.potion;
 
 import java.util.Locale;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PotionNightshade extends Potion {
-	private static final ResourceLocation TEXTURE_WOLFSBANE = new ResourceLocation("magicarsenal", "textures/effects/nightshade.png");
+public class PotionNightshade extends PotionBase {
 	DamageSource DAMAGE_NIGHTSHADE = new DamageSource("magicarsenal.nightshade");
 	
 	public PotionNightshade() {
 		super(true, 0x2a0e49);
 		
+		setTexture("magicarsenal:textures/effects/nightshade.png");
 		setPotionName("effect.magicarsenal.nightshade");
 		setRegistryName("magicarsenal", "nightshade");
-	}
-
-	@SideOnly(Side.CLIENT)
-    public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc) {
-		mc.renderEngine.bindTexture(TEXTURE_WOLFSBANE);
-		GlStateManager.color(1, 1, 1);
-		Gui.drawModalRectWithCustomSizedTexture(x+6, y+7, 0, 0, 18, 18, 18, 18);
-	}
-	
-	@Override
-	public void renderHUDEffect(int x, int y, PotionEffect effect, Minecraft mc, float alpha) {
-		mc.renderEngine.bindTexture(TEXTURE_WOLFSBANE);
-		GlStateManager.color(1, 1, 1, alpha);
-		Gui.drawModalRectWithCustomSizedTexture(x+3, y+3, 0, 0, 18, 18, 18, 18);
 	}
 	
 	@Override
@@ -81,18 +59,18 @@ public class PotionNightshade extends Potion {
 		}
 		
 		if (toDamage > 0f) {
-            entity.attackEntityFrom(DAMAGE_NIGHTSHADE, toDamage);
-        }
+			entity.attackEntityFrom(DAMAGE_NIGHTSHADE, toDamage);
+		}
 	}
 	
 	@Override
 	public boolean isReady(int duration, int amplifier) {
-		int ticks = 25 >> (amplifier+1);
+		int ticks = 25 >> (amplifier + 1);
 		
-        if (ticks > 0) {
-            return duration % ticks == 0;
-        } else {
-            return true;
-        }
+		if (ticks > 0) {
+			return duration % ticks == 0;
+		} else {
+			return true;
+		}
 	}
 }

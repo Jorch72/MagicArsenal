@@ -161,6 +161,7 @@ public class ArsenalConfig {
 		
 		public StatusSpellEntry healingWave = new StatusSpellEntry( 0, 20*10, 120, 20*15);
 		public StatusSpellEntry recovery    = new StatusSpellEntry( 0, 20*10, 180, 20*10);
+		public StatusSpellEntry stun        = new StatusSpellEntry( 0, 20*10, 120, (int)(20* 3.5));
 	}
 	
 	public SpellsSection spells = new SpellsSection();
