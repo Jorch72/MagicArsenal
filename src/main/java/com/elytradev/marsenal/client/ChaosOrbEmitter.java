@@ -24,9 +24,6 @@
 
 package com.elytradev.marsenal.client;
 
-import com.elytradev.marsenal.client.star.CubeStar;
-import com.elytradev.marsenal.client.star.StarFlinger;
-
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
@@ -34,6 +31,10 @@ import net.minecraft.util.math.Vec3d;
 public class ChaosOrbEmitter extends WorldEmitter {
 	private int idleTime = 0;
 	private double radius = 0;
+	private double lastRadius = 0;
+	
+	private float wubsPerTick = (float)(Math.PI/128f);
+	private float wub = 0;
 	
 	@Override
 	public void tick() {
@@ -53,18 +54,61 @@ public class ChaosOrbEmitter extends WorldEmitter {
 	}
 	
 	@Override
+	public void tick(float partialTicks) {
+		super.tick(partialTicks);
+		
+		if (lastRadius<radius) {
+			double delta = radius - lastRadius;
+			lastRadius += (delta/16d) * partialTicks;
+		} else if (lastRadius>radius) {
+			double delta = lastRadius - radius;
+			lastRadius -= (delta/16d)*partialTicks;
+		}
+		
+		wub += wubsPerTick;
+		if (wub>Math.PI*2) wub-= (Math.PI*2);
+	}
+	
+	@Override
 	public void paint(BufferBuilder buffer) {
-		//System.out.println("Painting at "+x+","+y+","+z+" r="+radius);
-		//Draw.fastCircle(this.x, this.y, this.z, radius, 12, 1, 0xFF000000);
-		//Draw.fastCircle(this.x, this.y, this.z, radius, 12, 2, 0x33000000);
+		double wubAmplitude = lastRadius / 64f;
+		double curWub = Math.sin(wub)*wubAmplitude;
 		
-		cube(buffer, x, y, z, radius, 255, 255, 255, 64);
-		cube(buffer, x, y, z, radius*0.9, 255, 255, 255, 175);
-		cube(buffer, x, y, z, radius*0.8, 255, 255, 255, 195);
-		cube(buffer, x, y, z, radius*0.7, 255, 255, 255, 215);
-		cube(buffer, x, y, z, radius*0.6, 255, 255, 255, 235);
-		cube(buffer, x, y, z, radius*0.5, 255, 255, 255, 255);
+		int steps = (int)(lastRadius * 2f);
+		if (steps>8) steps=8;
+		for(int i=0; i<steps; i++) {
+			int a = 255 - (i*24); if (a<0) a=0;
+			int g = 128 + (i*24); if (g<0) g=0;
+			sphere(buffer, x, y, z, 14, lastRadius*((i+1)/(float)steps) + curWub, 255, g, 255, a);
+		}
+	}
+	
+	public static void sphere(BufferBuilder buffer, double x, double y, double z, int steps, double radius, int r, int g, int b, int a) {
+		float harc = Draw.TAU / steps;
 		
+		for(int yi=0; yi<steps; yi++) {
+			double curTheta = (yi / (float)steps) * Math.PI;
+			double nextTheta = ((yi+1) / (float)steps) * Math.PI;
+			
+			double curElevation = Math.cos(curTheta);
+			double nextElevation = Math.cos(nextTheta);
+			
+			double curRadius = Math.sin(curTheta)*radius;
+			double nextRadius = Math.sin(nextTheta)*radius;
+			
+			for(int hi=0; hi<steps; hi++) {
+				double curYModel = curElevation * radius;
+				double nextYModel = nextElevation * radius;
+				
+				double x1i = Math.sin(hi*harc);
+				double z1i = Math.cos(hi*harc);
+				
+				double x2i = Math.sin((hi+1)*harc);
+				double z2i = Math.cos((hi+1)*harc);
+				
+				Draw._quad(buffer, x+(x1i*curRadius), y+curYModel, z+(z1i*curRadius), x+(x2i*curRadius), y+curYModel, z+(z2i*curRadius), x+(x2i*nextRadius), y+nextYModel, z+(z2i*nextRadius), x+(x1i*nextRadius), y+nextYModel, z+(z1i*nextRadius), r, g, b, a);
+			}
+		}
 	}
 	
 	public static void cube(BufferBuilder buffer, double x, double y, double z, double size, int r, int g, int b, int a) {

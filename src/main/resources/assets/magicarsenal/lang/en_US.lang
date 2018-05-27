@@ -49,6 +49,7 @@ tile.magicarsenal.runestone.name=Runestone
 tile.magicarsenal.rosettastone.name=Rosetta Stone
 tile.magicarsenal.altar.name=Runic Altar
 tile.magicarsenal.stele.uncarved.name=Uncarved Stele
+tile.magicarsenal.stele.fehu.name=Fehu Stele
 tile.magicarsenal.stele.raidho.name=Raidho Stele
 tile.magicarsenal.stele.kenaz.name=Kenaz Stele
 tile.magicarsenal.stele.wunjo.name=Wunjo Stele
@@ -209,6 +210,20 @@ tooltip.magicarsenal.rune.laguz=Laguz
 tooltip.magicarsenal.rune.ingwaz=Ingwaz
 tooltip.magicarsenal.rune.dagaz=Dagaz
 tooltip.magicarsenal.rune.othala=Othala
+
+#Note: Interpretations are drawn most heavily from the Icelandic and Old English poems. However, the actual text here is VERY MIXED.
+#      So if you see shifts in tone here, or inaccuracies, you're not crazy: The reconstructed poem here takes many liberties!
+
+tooltip.magicarsenal.stele.fehu=Money is the cause / of strife among kin / and the fire of the flood-tide / and the serpent within
+tooltip.magicarsenal.stele.uruz=Auroch is fearsome / with fierce horns to fight / it roams the moor / with courageous might
+tooltip.magicarsenal.stele.thurisaz=Thorns are very sharp / for anyone to touch / and anyone who sleeps on them / will not sleep very much
+tooltip.magicarsenal.stele.ansuz=The voices of the wise / are a comfort to all / a mainstay to the noble / and a hope to the small
+tooltip.magicarsenal.stele.raidho=Riding is easy / to a warrior in the hall / but it is harder to sit / on a real horse and not fall
+tooltip.magicarsenal.stele.kenaz=Torch is known by its fire / it is clear and bright / it guards the hero when / they rest inside at night
+tooltip.magicarsenal.stele.gebo=Gift is for everyone / a worthiness and pride / help to the homeless / and a confidence inside
+tooltip.magicarsenal.stele.wunjo=Victory is hard / with not much to use / but harder still / with a lot to lose
+tooltip.magicarsenal.stele.hagalaz=Hail is the whitest grain / it comes from the skies / showers of wind / and then water as it dies
+tooltip.magicarsenal.stele.nauthiz=Need is constricting / felt in the chest / though if heeded in time / a help and a rest
 
 tooltip.magicarsenal.codex.common=Burnt scraps of barely-legible tomes from another universe, rebound into a sturdy codex.
 tooltip.magicarsenal.codex.uncommon=A slim volume of reconstructed magical designs from another universe.

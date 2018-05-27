@@ -30,6 +30,7 @@ import java.util.List;
 import com.elytradev.marsenal.tile.TileEntityBerkanoStele;
 import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
+import com.elytradev.marsenal.tile.TileEntityFehuStele;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
@@ -55,6 +56,7 @@ public class ArsenalBlocks {
 	public static BlockRaidhoStele       STELE_RAIDHO    = null;
 	public static BlockWunjoStele        STELE_WUNJO     = null;
 	public static BlockBerkanoStele      STELE_BERKANO   = null;
+	public static BlockFehuStele         STELE_FEHU      = null;
 	
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
 	public static BlockChaosOrb          CHAOS_ORB       = null;
@@ -74,6 +76,7 @@ public class ArsenalBlocks {
 		STELE_KENAZ    = block(r, new BlockKenazStele());
 		STELE_WUNJO    = block(r, new BlockWunjoStele());
 		STELE_BERKANO  = block(r, new BlockBerkanoStele());
+		STELE_FEHU     = block(r, new BlockFehuStele());
 		
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		CHAOS_ORB      = block(r, new BlockChaosOrb());
@@ -84,6 +87,7 @@ public class ArsenalBlocks {
 		GameRegistry.registerTileEntity(TileEntityKenazStele.class,   "magicarsenal.stele.kenaz");
 		GameRegistry.registerTileEntity(TileEntityWunjoStele.class,   "magicarsenal.stele.wunjo");
 		GameRegistry.registerTileEntity(TileEntityBerkanoStele.class, "magicarsenal.stele.berkano");
+		GameRegistry.registerTileEntity(TileEntityFehuStele.class,    "magicarsenal.stele.fehu");
 		
 		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
 		GameRegistry.registerTileEntity(TileEntityChaosResonator.class, "magicarsenal.chaosresonator");
