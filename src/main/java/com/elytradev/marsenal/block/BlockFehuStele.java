@@ -47,6 +47,6 @@ public class BlockFehuStele extends BlockAbstractStele {
 	
 	@Override
 	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-		StringExtras.addInformation("tooltip.magicarsenal.stele.fehu", "§9§o", tooltip);
+		StringExtras.addSplitInformation("tooltip.magicarsenal.stele.fehu", "§9§o", tooltip);
 	}
 }

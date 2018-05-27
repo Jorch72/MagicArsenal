@@ -24,8 +24,13 @@
 
 package com.elytradev.marsenal.block;
 
+import java.util.List;
+
+import com.elytradev.marsenal.StringExtras;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
 
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -37,5 +42,10 @@ public class BlockKenazStele extends BlockAbstractStele {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityKenazStele();
+	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		StringExtras.addSplitInformation("tooltip.magicarsenal.stele.kenaz", "§9§o", tooltip);
 	}
 }

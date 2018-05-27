@@ -216,14 +216,32 @@ tooltip.magicarsenal.rune.othala=Othala
 
 tooltip.magicarsenal.stele.fehu=Money is the cause / of strife among kin / and the fire of the flood-tide / and the serpent within
 tooltip.magicarsenal.stele.uruz=Auroch is fearsome / with fierce horns to fight / it roams the moor / with courageous might
-tooltip.magicarsenal.stele.thurisaz=Thorns are very sharp / for anyone to touch / and anyone who sleeps on them / will not sleep very much
-tooltip.magicarsenal.stele.ansuz=The voices of the wise / are a comfort to all / a mainstay to the noble / and a hope to the small
+tooltip.magicarsenal.stele.thurisaz=Thorns are very sharp / for a person to touch / and anyone who sleeps on them / will not sleep very much
+tooltip.magicarsenal.stele.ansuz=The voice of the wise / is a comfort to all / a mainstay to the noble / and a hope to the small
 tooltip.magicarsenal.stele.raidho=Riding is easy / to a warrior in the hall / but it is harder to sit / on a real horse and not fall
 tooltip.magicarsenal.stele.kenaz=Torch is known by its fire / it is clear and bright / it guards the hero when / they rest inside at night
 tooltip.magicarsenal.stele.gebo=Gift is for everyone / a worthiness and pride / help to the homeless / and a confidence inside
-tooltip.magicarsenal.stele.wunjo=Victory is hard / with not much to use / but harder still / with a lot to lose
-tooltip.magicarsenal.stele.hagalaz=Hail is the whitest grain / it comes from the skies / showers of wind / and then water as it dies
+tooltip.magicarsenal.stele.wunjo=Victory is difficult / with not much to use / but harder still / with a lot to lose
+
+tooltip.magicarsenal.stele.hagalaz=Hail is the whitest grain / it comes from the skies / showers of wind / then as water it dies
 tooltip.magicarsenal.stele.nauthiz=Need is constricting / felt in the chest / though if heeded in time / a help and a rest
+tooltip.magicarsenal.stele.isa=Ice is cold / it glistens like glass / very much like gems / don't fall on your . . . head
+tooltip.magicarsenal.stele.jera=Harvest is the bounty / of all people on earth / for the year's hard work / now shows its great worth
+tooltip.magicarsenal.stele.eihwaz=Yew has rough bark / but its hard, sturdy core / is perfect for bows / and supporting a floor
+tooltip.magicarsenal.stele.perthro=Dice-cup is play / and laughter of the bold / where the warriors sit / and share stories of old
+tooltip.magicarsenal.stele.elhaz=Sedge makes its home / in low marshy lands / it burns with blood / when grasped in the hands
+tooltip.magicarsenal.stele.sowilo=Sun is the clouds' shield / and a glorious shining / destroyer of ice / and the earth's silver lining
+
+tooltip.magicarsenal.stele.tiwaz=Tyr is a star / it keeps faith well / through the mists of night / your direction it will tell
+tooltip.magicarsenal.stele.berkano=Birch has no fruit, but / it is not worried or forlorn / sturdy, beautiful, and tall / its limbs fine leaves adorn
+tooltip.magicarsenal.stele.ehwaz=Horses are delighted / when riders come aside / and stand tall on their hooves / displaying their pride
+tooltip.magicarsenal.stele.mannaz=Humans are dear to kin / valued in their mirth / although each shall depart / committed to the earth
+tooltip.magicarsenal.stele.laguz=Water seems unending / whether falling from a mountain / tossing ships in storms / or rising from a fountain
+tooltip.magicarsenal.stele.ingwaz=Earth to a traveler / is both friend and foe / the place that they're leaving / and the place where they'll go
+tooltip.magicarsenal.stele.dagaz=Day is time's messenger / ruler's famous light / it is mirth and hope / and an end to the night
+tooltip.magicarsenal.stele.othala=Home is very dear / to any who know it / and source of great pride / when one can bestow it
+
+# (End of rune poem)
 
 tooltip.magicarsenal.codex.common=Burnt scraps of barely-legible tomes from another universe, rebound into a sturdy codex.
 tooltip.magicarsenal.codex.uncommon=A slim volume of reconstructed magical designs from another universe.

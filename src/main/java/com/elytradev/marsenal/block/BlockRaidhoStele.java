@@ -24,8 +24,10 @@
 
 package com.elytradev.marsenal.block;
 
+import java.util.List;
 import java.util.Random;
 
+import com.elytradev.marsenal.StringExtras;
 import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.tile.INetworkParticipant;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
@@ -34,6 +36,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -85,5 +88,10 @@ public class BlockRaidhoStele extends BlockSimple implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityRaidhoStele();
+	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		StringExtras.addSplitInformation("tooltip.magicarsenal.stele.raidho", "§9§o", tooltip);
 	}
 }

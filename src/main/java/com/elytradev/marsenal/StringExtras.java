@@ -46,6 +46,16 @@ public class StringExtras {
 		for(String s : wrapped) tooltip.add(formatCodes+s);
 	}
 	
+	/**
+	 * Adds text pre-split with '/', such as poems with metered lines
+	 */
+	public static void addSplitInformation(String key, String formatCodes, List<String> tooltip) {
+		String localized = I18n.translateToLocal(key);
+		for(String s : localized.split("/")) {
+			tooltip.add(formatCodes + s.trim());
+		}
+	}
+	
 	private static List<String> wordWrap(String str, int width) {
 		List<String> result = new ArrayList<>();
 		String[] words = str.split(" ");
