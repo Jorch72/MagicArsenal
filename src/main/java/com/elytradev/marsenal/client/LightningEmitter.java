@@ -26,6 +26,9 @@ package com.elytradev.marsenal.client;
 
 import java.util.Random;
 
+import com.elytradev.marsenal.client.star.BoltStar;
+import com.elytradev.marsenal.client.star.StarFlinger;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 
@@ -36,6 +39,22 @@ public class LightningEmitter extends Emitter {
 	
 	@Override
 	public void tick() {
+		/*
+		BoltStar bolt = new BoltStar();
+		if (source!=null) {
+			bolt.setPosition((float)source.posX, (float)source.posY, (float)source.posZ);
+		} else {
+			bolt.setPosition(x, y, z);
+		}
+		if (entity!=null) {
+			bolt.pointAt((float)entity.posX, (float)entity.posY+(entity.height/2), (float)entity.posZ, 1.9f);
+			
+		} else {
+			bolt.pointAt(x, y, z, 1.9f);
+		}
+		bolt.setLifetime(24.0f);
+		
+		StarFlinger.spawn(bolt);*/
 		
 		ticksRemaining--;
 		if (ticksRemaining<=0) kill();
@@ -47,6 +66,7 @@ public class LightningEmitter extends Emitter {
 			kill();
 			return;
 		}
+		
 		
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();

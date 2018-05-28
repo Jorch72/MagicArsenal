@@ -245,7 +245,6 @@ public class ArsenalItems {
 				).setRegistryName("magicarsenal_chisel_diamond"));
 		
 		
-		
 		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromStacks(EnumIngredient.PETAL_WOLFSBANE.getItem()), POTIONTYPE_WOLFSBANE1);
 		PotionHelper.addMix(POTIONTYPE_WOLFSBANE1, Items.GLOWSTONE_DUST, POTIONTYPE_WOLFSBANE2);
 		PotionHelper.addMix(POTIONTYPE_WOLFSBANE2, Items.GLOWSTONE_DUST, POTIONTYPE_WOLFSBANE3);
@@ -348,11 +347,28 @@ public class ArsenalItems {
 				));
 		
 		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
+				1, 3600,
+				ItemIngredient.of(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.LIT_BOLT.ordinal())),
+				ItemIngredient.of(Blocks.GLOWSTONE),
+				ItemIngredient.of(Items.CLOCK),
+				ItemIngredient.of(Items.EMERALD)
+				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.LIT_BOLT.ordinal()),
 				1, 1800,
 				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
-				ItemIngredient.of(Items.CLOCK),
+				ItemIngredient.of(Blocks.IRON_BARS),
 				ItemIngredient.of(Items.GLOWSTONE_DUST)
 				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.STUN.ordinal()),
+				1, 1800,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Blocks.SOUL_SAND),
+				ItemIngredient.of(Items.SLIME_BALL),
+				ItemIngredient.of(Items.STICK)
+				));
+		
 		/*//Old recipe
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
 				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),

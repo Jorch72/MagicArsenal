@@ -175,7 +175,8 @@ public abstract class TileEntityAbstractStele  extends TileEntity implements INe
 							if (bounds==Block.NULL_AABB) {
 								target = target.add(new Vec3d(face.getOpposite().getDirectionVec()).scale(0.5 - (1/16d)));
 							} else {
-								target = new Vec3d(searchPos).add(bounds.getCenter());
+								Vec3d center = new Vec3d(bounds.minX + (bounds.maxX - bounds.minX) * 0.5D, bounds.minY + (bounds.maxY - bounds.minY) * 0.5D, bounds.minZ + (bounds.maxZ - bounds.minZ) * 0.5D);
+								target = new Vec3d(searchPos).add(center);
 								
 								double halfDist = 0.5d;
 								

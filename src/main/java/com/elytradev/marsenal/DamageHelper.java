@@ -42,6 +42,10 @@ public class DamageHelper {
 	public static float fireSpellDamage(SpellDamageSource damageSource, EntityLivingBase target, float amount) {
 		if (target.isDead || !isAttackable(damageSource.getCaster(), target)) return 0f;
 		
+		if (damageSource.isElectrical() && target.isWet()) {
+			amount = amount * 1.5f;
+		}
+		
 		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity(damageSource, target).setDamage(amount);
 		if (event.isCanceled()) return 0f;
 		

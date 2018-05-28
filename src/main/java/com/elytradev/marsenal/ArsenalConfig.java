@@ -158,6 +158,7 @@ public class ArsenalConfig {
 		public SpellEntry frostShards    = new SpellEntry( 2.0f,  120, 20* 1);
 		public SpellEntry willOWisp      = new SpellEntry( 4.0f,  180, 20* 4);
 		public SpellEntry chainLightning = new SpellEntry( 3.0f,  180, 20* 4);
+		public SpellEntry litBolt        = new SpellEntry( 4.0f,  180, 20* 4);
 		
 		public StatusSpellEntry healingWave = new StatusSpellEntry( 0, 20*10, 120, 20*15);
 		public StatusSpellEntry recovery    = new StatusSpellEntry( 0, 20*10, 180, 20*10);

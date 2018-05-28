@@ -38,6 +38,7 @@ import com.elytradev.marsenal.magic.FrostShardsSpell;
 import com.elytradev.marsenal.magic.ChainLightningSpell;
 import com.elytradev.marsenal.magic.WillOWispSpell;
 import com.elytradev.marsenal.magic.StunSpell;
+import com.elytradev.marsenal.magic.LitBoltSpell;
 import com.elytradev.marsenal.magic.ISpellEffect;
 import com.elytradev.marsenal.capability.IMagicResources;
 
@@ -61,6 +62,7 @@ public enum EnumSpellFocus implements ISpellFocus {
 	CHAIN_LIGHTNING(ChainLightningSpell.class,IMagicResources.RESOURCE_STAMINA, false, true ),
 	WILL_O_WISP    (WillOWispSpell.class,     IMagicResources.RESOURCE_STAMINA, false, true ),
 	STUN           (StunSpell.class,          IMagicResources.RESOURCE_STAMINA, false, false),
+	LIT_BOLT       (LitBoltSpell.class,       IMagicResources.RESOURCE_STAMINA, false, true ),
 	;
 	
 	private Class<? extends ISpellEffect> effectClass;
