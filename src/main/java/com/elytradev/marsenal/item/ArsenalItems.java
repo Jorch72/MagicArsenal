@@ -329,6 +329,22 @@ public class ArsenalItems {
 				EnumRuneCarving.BERKANO.getUnwardedItem()
 				).setRegistryName("ward.berkano"));
 		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.fehu"),
+				new ItemStack(ArsenalBlocks.STELE_FEHU),
+				new ItemStack(Items.DIAMOND),
+				new ItemStack(Items.EMERALD),
+				wolfsbaneIngredient,
+				EnumRuneCarving.FEHU.getUnwardedItem()
+				).setRegistryName("ward.fehu"));
+		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.raidho"),
+				new ItemStack(ArsenalBlocks.STELE_RAIDHO),
+				new ItemStack(Items.FEATHER),
+				new ItemStack(Items.ENDER_PEARL),
+				wolfsbaneIngredient,
+				EnumRuneCarving.RAIDHO.getUnwardedItem()
+				).setRegistryName("ward.raidho"));
+		
 		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runicaltar"),
 				new ItemStack(ArsenalBlocks.RUNIC_ALTAR),
 				"s s", "sss", "rrr",
