@@ -91,7 +91,9 @@ public class BlockRaidhoStele extends BlockSimple implements ITileEntityProvider
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		StringExtras.addInformation("info.magicarsenal.stele.raidho", "", tooltip);
 		StringExtras.addSplitInformation("tooltip.magicarsenal.stele.raidho", "§9§o", tooltip);
 	}
 }

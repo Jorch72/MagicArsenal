@@ -27,6 +27,7 @@ package com.elytradev.marsenal.magic;
 import java.util.List;
 
 import com.elytradev.marsenal.ArsenalConfig;
+import com.elytradev.marsenal.DamageHelper;
 import com.elytradev.marsenal.SpellEvent;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
@@ -44,6 +45,7 @@ public class HealingCircleSpell implements ISpellEffect {
 	private World world;
 	private BlockPos epicenter;
 	private AxisAlignedBB aoe;
+	private EntityLivingBase caster;
 	
 	@Override
 	public void activate(EntityLivingBase caster, IMagicResources res) {
@@ -51,6 +53,7 @@ public class HealingCircleSpell implements ISpellEffect {
 		
 		world = caster.getEntityWorld();
 		epicenter = caster.getPosition();
+		this.caster = caster;
 		
 		SpellEvent event = new SpellEvent.CastOnArea("healingCircle", caster, caster.getPosition(), RADIUS, EnumElement.HOLY, EnumElement.AIR)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.healingCircle.cost);
@@ -91,6 +94,12 @@ public class HealingCircleSpell implements ISpellEffect {
 				);
 		
 		for(EntityLivingBase target: withinCircle) {
+			if (target.isEntityUndead()) {
+				DamageHelper.fireSpellDamage(new SpellDamageSource(caster, "healingCircle", EnumElement.HOLY, EnumElement.AIR), target, ArsenalConfig.get().spells.healingCircle.potency);
+				
+				continue;
+			}
+			
 			if (TargetData.NON_HOSTILE.test(target)) { //We can't go healing zombies, can we?
 				target.heal(ArsenalConfig.get().spells.healingCircle.potency);
 			}

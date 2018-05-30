@@ -24,21 +24,18 @@
 
 package com.elytradev.marsenal.client.star;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.lwjgl.opengl.GL11;
 
-import com.elytradev.marsenal.client.Draw;
 import com.elytradev.marsenal.client.Emitter;
 import com.elytradev.marsenal.client.PartialTickTime;
 import com.elytradev.marsenal.client.WorldEmitter;
-import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -47,9 +44,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class StarFlinger {
 	private static BufferBuilder buffer = null;
@@ -58,9 +53,9 @@ public class StarFlinger {
 	 * ping stars back and forth between two arrays like a double-buffer, and potentially use Arrays.fill() on the size
 	 * difference to clear out any extra old entries so they can GC after two frames. Let's keep benchmarking, friends!
 	 */
-	private static List<IStar> globalStars = new ArrayList<>();
-	private static List<IStar> deadStars = new ArrayList<>();
-	private static Map<BlockPos, WorldEmitter> worldEmitters = new HashMap<>();
+	private static Set<IStar> globalStars = new ConcurrentSkipListSet<>();
+	private static Set<IStar> deadStars = new ConcurrentSkipListSet<>();
+	private static Map<BlockPos, WorldEmitter> worldEmitters = new ConcurrentSkipListMap<>();
 	//private static Set<BlockPos> orbs = new HashSet<>();
 	private static float frameTime;
 	
@@ -97,6 +92,7 @@ public class StarFlinger {
 				emitter.x = pos.getX()+0.5f;
 				emitter.y = pos.getY()+0.5f;
 				emitter.z = pos.getZ()+0.5f;
+				
 				worldEmitters.put(pos, emitter);
 			}
 		}

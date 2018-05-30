@@ -72,32 +72,36 @@ public class EntityWillOWisp extends EntityThrowable {
 	@Override
 	protected void onImpact(RayTraceResult result) {
 		if (!this.world.isRemote) {
-            if (result.entityHit != null && this.thrower!=null) {
-            	if (result.entityHit instanceof EntityLivingBase && result.entityHit!=thrower) {
-            		
-            		DamageHelper.fireSpellDamage(
-            				new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE),
-            				(EntityLivingBase)result.entityHit,
-            				ArsenalConfig.get().spells.willOWisp.potency);
-            		
-            		
-            		/*
-            		SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("willOWisp", this.thrower, (EntityLivingBase)result.entityHit, EnumElement.UNDEATH, EnumElement.FIRE)
-            				.setDamage(ArsenalConfig.get().spells.willOWisp.potency);
-            		
-            		if (!event.isCanceled()) {
-            			result.entityHit.attackEntityFrom(new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE), event.getDamage());
-            			
-            			result.entityHit.setFire(2+random.nextInt(5)); //2..6 seconds
-            		}*/
-            	}
-            } else {
-            	Vec3i vec = result.sideHit.getDirectionVec();
-            	if (vec.getX()!=0) motionX *= -vec.getX();
-            	if (vec.getY()!=0) motionY *= -vec.getY();
-            	if (vec.getZ()!=0) motionZ *= -vec.getZ();
-            }
-        }
+			if (result.entityHit != null && this.thrower!=null) {
+				if (result.entityHit instanceof EntityLivingBase && result.entityHit!=thrower) {
+					
+					DamageHelper.fireSpellDamage( new SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH, EnumElement.FIRE),
+							(EntityLivingBase) result.entityHit, ArsenalConfig.get().spells.willOWisp.potency);
+					
+					result.entityHit.setFire(3);
+					
+					/*
+					 * SpellEvent.DamageEntity event = new SpellEvent.DamageEntity("willOWisp",
+					 * this.thrower, (EntityLivingBase)result.entityHit, EnumElement.UNDEATH,
+					 * EnumElement.FIRE) .setDamage(ArsenalConfig.get().spells.willOWisp.potency);
+					 * 
+					 * if (!event.isCanceled()) { result.entityHit.attackEntityFrom(new
+					 * SpellDamageSource(this.thrower, "willOWisp", EnumElement.UNDEATH,
+					 * EnumElement.FIRE), event.getDamage());
+					 * 
+					 * result.entityHit.setFire(2+random.nextInt(5)); //2..6 seconds }
+					 */
+				}
+			} else {
+				Vec3i vec = result.sideHit.getDirectionVec();
+				if (vec.getX() != 0)
+					motionX *= -vec.getX();
+				if (vec.getY() != 0)
+					motionY *= -vec.getY();
+				if (vec.getZ() != 0)
+					motionZ *= -vec.getZ();
+			}
+		}
 	}
 	
 	@Override

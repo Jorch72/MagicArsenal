@@ -43,9 +43,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
-public class BlockRunestone extends Block implements IItemVariants, ITooltip {
+public class BlockRunestone extends Block implements IItemVariants {
 	EnumRuneCarving[] varieties;
 	public static final PropertyEnum<EnumRuneCarving> CARVING = PropertyEnum.create("carving", EnumRuneCarving.class);
 	
@@ -105,6 +107,7 @@ public class BlockRunestone extends Block implements IItemVariants, ITooltip {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flags) {
 		EnumRuneCarving carving = getStateFromMeta(stack.getMetadata()).getValue(CARVING);
 		String localizedCarving = I18n.translateToLocal("tooltip.magicarsenal.rune."+carving.getName());

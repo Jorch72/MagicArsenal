@@ -29,7 +29,7 @@ item.magicarsenal.chisel.diamond.connected.name=Diamond Chisel (Connected)
 #Spell Focus Items
 item.magicarsenal.spellfocus.name=%s Spell Focus
 
-item.magicarsenal.spellfocus.healing_wave.name=Healing Wave Spell Focus
+item.magicarsenal.spellfocus.healing_wave.name=Healing Rain Spell Focus
 item.magicarsenal.spellfocus.healing_circle.name=Healing Circle Spell Focus
 item.magicarsenal.spellfocus.recovery.name=Recovery Spell Focus
 item.magicarsenal.spellfocus.drain_life.name=Drain Life Spell Focus
@@ -69,6 +69,7 @@ death.attack.spell.chainLightning=%s has discovered electricity
 death.attack.magicarsenal.wolfsbane=%s succumbed to wolfsbane poison
 death.attack.magicarsenal.nightshade=%s succumbed to nightshade poison
 death.attack.magicarsenal.infuselife=%s was unmade by healing energy
+death.attack.magicarsenal.healingCircle=%s was unmade by healing energy
 
 #Potion Effects
 effect.magicarsenal.wolfsbane=Wolfsbane
@@ -120,11 +121,12 @@ info.magicarsenal.element.chaos=Chaos
 
 info.magicarsenal.altar=When Radiance is channeled onto this altar from carved Stele, powerful magical items become craftable here.
 
-info.magicarsenal.stele.uncarved=Even though this Stele is uncarved, placing it next to a carved Stele may increase its range and efficiency.
+info.magicarsenal.stele.uncarved=Even though this Stele is uncarved, placing it next to a carved Stele will increase the range it can survey for EMC, and increase its conversion efficiency.
 info.magicarsenal.stele.raidho=Raidho governs journeys and the runes themselves. This stele moves radiance and EMC through the altar network. It does not survey.
 info.magicarsenal.stele.kenaz=Kenaz governs light and knowledge. This stele surveys for bookcases or other objects with enchanting power, as well as bright lights, and consumes them to produce EMC.
 info.magicarsenal.stele.berkano=Berkano governs trees, plants, and things natural. This stele surveys vegetation, tilled soil, mycelium, etc, and consumes it or reverts it to dirt to produce EMC.
 info.magicarsenal.stele.wunjo=Wunjo governs victory and well-completed tasks. This stele surveys monster trophies such as skulls or heads, and consumes them to produce EMC.
+info.magicarsenal.stele.fehu=Fehu governs wealth and prosperity. This stele surveys anything that looks expensive, like gold, diamonds, or emeralds, and consumes them to produce EMC.
 
 info.magicarsenal.rosettastone=Concentrated, ossified arcane knowledge. Provides 12 levels for an enchanting table, and emits a cold, unearthly glow.
 
@@ -147,7 +149,7 @@ info.magicarsenal.label.resonator.orb.infinite=Chaos Orb Storage: %s/§9∞§r
 info.magicarsenal.label.resonator.orb.finite=Chaos Orb Storage
 
 #Spells
-spell.magicarsenal.healingWave=Healing Wave
+spell.magicarsenal.healingWave=Healing Rain
 spell.magicarsenal.healingWave.desc=Heals one friendly entity in line of sight.
 spell.magicarsenal.healingCircle=Healing Circle
 spell.magicarsenal.healingCircle.desc=Places a luminous sigil at the caster's location. Entities within the area will heal slowly over time.

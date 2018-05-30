@@ -28,7 +28,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
 public class PotionInfuseLife extends PotionBase {
-	DamageSource DAMAGE_INFUSE_LIFE = new DamageSource("magicarsenal.infuselife");
+	public static final DamageSource DAMAGE_INFUSE_LIFE = new DamageSource("magicarsenal.infuselife");
 	
 	public PotionInfuseLife() {
 		super(false, 0xFF74aa00);
