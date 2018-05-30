@@ -1,0 +1,155 @@
+<codex>
+	<!-- 
+		Notes on document structure:
+	
+		Tabs and spaces before and after a newline are folded, so text can be wrapped and indented to a convenient
+		column-width for editing. ResourceLocations *can be changed* per-localization, even to a different resource
+		domain. Each locale gets the full book API, so if pages must be added to fit the text in a locale, or it needs
+		to be entirely rewritten, this can be done arbitrarily.
+		
+		This also means that if a modpack minetweaks this mod in a drastic way, a resource pack can amend the book,
+		so that it can continue to be an effective guide to the mod and perhaps more.
+		
+		Numeric page IDs are *ignored*! These are just to help the author keep track of what's supposed to go where in
+		the book, and may go away at any time. Pages will be presented in the book in the order they're listed in this
+		XML.
+	 -->
+	
+	<page id="0">
+		<header ref="magicarsenal:textures/guis/codex/intro.png"/>
+		<left>
+			After extensive testing, I have more questions than answers about the Portal-Seared Tomes. They were once
+			very well-made books, bound in sturdy leather and clad in a silvery metal, neither of which I can quite
+			identify. There are traces of a Protection enchant at higher levels than I've ever thought possible, but
+			whatever happened to these books shattered those enchantments like glass.
+		</left>
+		<right>
+			However, when comparing the books to each other, some things clear up: They are all copies of the §osame§r
+			tome. The foreward seems to be the most legible part, and if it's to be believed, the Tomes come from
+			§oanother universe§r. As it isn't named in the book, I will simply call it Elsewhere.
+		</right>
+	</page>
+	<page id="1">
+		<left>
+			The tome that these copies are made of must be filled with magical spells and contrivances far beyond
+			anything I've studied in this world. Every new scrap I find has another crazy spell or machine on it! If I
+			could reconstruct even a small fraction of these devices, I'd be one of the most powerful wizards of my age.
+		</left>
+		<item id="magicarsenal:root.wolfsbane"/>
+		<background ref="magicarsenal:textures/guis/codex/feature.poison.png"/>
+		<right>
+			The pages detailing most of the contraptions are frequently splattered with poison. §oStrong§r poison. It's
+			definitely important to the magic. I have a feeling I can't just brew up a spider eye though. I've heard of
+			plants called §lWolfsbane§r and §lNightshade§r, and if I could just track down roots for them, I could
+			cultivate these plants and have better poison for my arrows, too.
+		</right>
+	</page>
+	<page id="2">
+		<left>
+			Nightshade is potent beyond my wildest imaginings. It's even more toxic to reptiles than to humans, and
+			undead seem to be able to feed off its corruption, unlike spider venoms. Wolfsbane is slightly less potent,
+			but my pets seem unusually wary of the substance, giving it a wide berth in the lab. I don't have the heart
+			to test it, but I suspect the name "Wolfsbane" isn't random.
+		</left>
+		<item id="magicarsenal:runestone.1" data="0"/> <!-- Uncarved Runestone-->
+		<right>
+			As far as I can decipher, the tomes seem to indicate that poisons can be used to ward stone. I tried the
+			stronger venom first, figuring it'd make a stronger ward. While it has definitely transformed the stone, and
+			I can etch symbols from the books into it, there doesn't seem to be anything magical about it at all.
+			Perhaps it'll make a good decoration.
+		</right>
+	</page>
+	<page id="3">
+		<left>
+			In my poison research, it's becoming clear that Nightshade doesn't just paralyze the nerves, but also
+			carries within it the unmalleable magical toxin that the tomes are calling "Chaos". According to the texts,
+			the spaces between worlds are vast, dark oceans of this energy, and that nothing living has ever crossed the
+			divide. I don't plan on trying either.
+		</left>
+		<item id="magicarsenal:stele.uncarved"/>
+		<right>
+			The reaction to Wolfsbane was instantly, completely different. While toxic to living things, stone becomes
+			warded so well that I can't even carve magical symbols into it. This §lUncarved Stele§r hums with energy
+			flowing through it. I can only guess that I need to carve the stone before I ward it, but that doesn't seem
+			to be the whole picture.
+		</right>
+	</page>
+	<page id="4">
+		<left>
+			The breakthrough I needed came from the book. Deciphering it has become strangely easier as I've added more
+			pages to my codex. Every single one of these runes has an affinity! Rune stele are sympathetic magic, and so
+			their making requires a physical "link" to the concept that the symbol represents. It seems that my research
+			will be at a standstill unless I can learn about the affinities of some of these runes.
+		</left>
+		<background ref="magicarsenal:textures/guis/codex/feature.runes.png"/>
+	</page>
+	<page id="5">
+		<header ref="magicarsenal:textures/guis/codex/header.kenaz.png"/>
+		<left>
+			This rune seems to be a good place to start. Its nature seems deeply tied to wisdom and light, so if I can
+			affix it properly, it should be of great use to me in unraveling the secrets of magic. In order to link the
+			concept to the material world, I'll use a torch and an enchanted book.
+		</left>
+		<background ref="magicarsenal:textures/guis/codex/feature.kenaz.png"/>
+		<right>
+			It's supposed to react with bookcases and torches it "sees".
+		</right>
+	</page>
+	<page id="6">
+		<left>
+			After staring at the inert Kenaz rune, questioning my direction in life, I realized there's simply nowhere
+			for the energy to §ogo§r. I've become so familiar with the tomes at this point I very quickly found a design
+			for an altar that looks perfect for gathering "Radiant Energy". This §lRunic Altar§r will probably become
+			central to my endeavor.
+		</left>
+		<item id="magicarsenal:altar"/>
+		<background ref="magicarsenal:textures/guis/codex/feature.altar.png"/>
+		<right>
+			The tomes plead for caution here: "Don't put anything in front of a Stele you don't want to lose." Whatever
+			that means.
+		</right>
+	</page>
+	<page id="7">
+		<left>
+			That did it! As soon as the altar and the stele got within 16 meters of each other, I started seing what can
+			only be described as magical energy moving from the stele to the altar. The tomes describe a "Luminiferous
+			Aether" with this radiant energy perpetually moving through it and pushing Chaos away. The altar is like a
+			delta near the end of a river of Radiance.
+		</left>
+		<right>
+			And just like flowing water can turn a wheel or erode a stone, moving Radiance can transmute matter, usually
+			in ways that deepen its affinity with magic. Like all transmutation, this relies on the principle of
+			equivalent exchange, so if the result contains properties the original does not have, the stele will balance
+			the equation somehow. The manner in which they do so clearly depends on their affinity.
+		</right>
+	</page>
+	<page id="8">
+		<left>
+			I hit a snag when I tried to scale up my system. Two of the same rune wouldn't connect, no matter how I
+			arranged them. It looked random which stele got to contribute. It looks like I'll need to diversify my runes
+			in order to reach higher radiance levels. In the meantime, if our world is anything like Elsewhere, living
+			things should have energy moving through them too.
+		</left>
+		<background ref="magicarsenal:textures/guis/codex/feature.focuscore.png"/>
+		<right>
+			The book describes a more portable device to channel this energy into very temporary supernatural phenomena.
+			To work well, it needs to be carved out of a material which is already strongly-attuned to magic. Once the
+			forces are in motion, some kind of resonating crystal is needed to manage the effect's duration and, if it's
+			shaped just right, prevent energy from being wasted in a big puff of psychic pollution.
+		</right>
+	</page>
+	<page id="9">
+		<left>
+			Strangely, in our sister land of Elsewhere, they have tales of a Prometheus-like benefactor bringing them
+			§oFrost§r, not fire. The bones of the universe, the tomes say, are bitter cold and frozen-through,
+			unmoveable and eternal. The foundations of magic are thus manifestations of cold. And they, in turn, have
+			shouted it across the void so that the magic doesn't die. I won't disappoint them.
+		</left>
+		<background ref="magicarsenal:textures/guis/codex/feature.frostshards.png"/>
+		<right>
+			I'm putting it all together. If I combine these objects at the altar, and there's enough radiance, I can
+			make a spell focus that can manifest the cold and direct it in an attack. It doesn't seem like it ever
+			matters what order they're in, as long as it's the right combination.
+		</right>
+	</page>
+</codex>

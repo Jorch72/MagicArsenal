@@ -33,12 +33,14 @@ import com.elytradev.marsenal.Proxy;
 import com.elytradev.marsenal.block.IItemVariants;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
+import com.elytradev.marsenal.client.codex.XMLResourceLoader;
 import com.elytradev.marsenal.client.tesr.RenderChaosOrb;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
+import com.elytradev.marsenal.item.ItemCodex;
 import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 
 import net.minecraft.block.Block;
@@ -84,6 +86,7 @@ public class ClientProxy extends Proxy {
 		//Unsatisfactory behavior. Using WorldEmitter.
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChaosOrb.class, new RenderChaosOrb());
 		
+		XMLResourceLoader.getInstance().preInit();
 	}
 	
 	@Override
@@ -93,6 +96,10 @@ public class ClientProxy extends Proxy {
 	@SubscribeEvent
 	public void registerItemModels(ModelRegistryEvent event) {
 		for(Item item : ArsenalItems.itemsForModels()) {
+			//if (item instanceof ItemCodex) {
+			//	ModelLoader.setCustomModelResourceLocation(item, metadata, model);
+			//}
+			
 			if (item instanceof IMetaItemModel) {
 				String[] models = ((IMetaItemModel)item).getModelLocations();
 				for(int i=0; i<models.length; i++) {

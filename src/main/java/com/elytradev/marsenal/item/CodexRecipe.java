@@ -90,7 +90,7 @@ public class CodexRecipe extends ShapelessRecipes {
 				if (item==ArsenalItems.CODEX) {
 					if (codexFound) return ItemStack.EMPTY;  //Two codices are invalid
 					codexFound = true;
-					codexStrength = cur.getMetadata();
+					codexStrength = cur.getItemDamage();
 					continue;
 				}
 				
@@ -105,11 +105,11 @@ public class CodexRecipe extends ShapelessRecipes {
 		}
 		int combinedStrength = codexStrength+tomeStrength;
 		if (tomeStrength==0) return ItemStack.EMPTY;
-		if (combinedStrength<ItemCodex.MAX_PAGES) { //Consider allowing more
+		//if (combinedStrength<ItemCodex.MAX_PAGES) { //Consider allowing more
 			return new ItemStack(ArsenalItems.CODEX, 1, combinedStrength);
-		} else {
-			return ItemStack.EMPTY;
-		}
+		//} else {
+		//	return ItemStack.EMPTY;
+		//}
 	}
 
 	@Override
@@ -126,8 +126,8 @@ public class CodexRecipe extends ShapelessRecipes {
 		NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 		
 		boolean codexFound = false;
-		int codexStrength = 0;
-		int tomeStrength = 0;
+		//int codexStrength = 0;
+		//int tomeStrength = 0;
 		
 		for(int y=0; y<inv.getHeight(); y++) {
 			for(int x=0; x<inv.getWidth(); x++) {
@@ -143,20 +143,20 @@ public class CodexRecipe extends ShapelessRecipes {
 						stacks.set(index, cur); //Don't mangle additional codices. We shouldn't need this but YOU NEVER KNOW :/
 					} else {
 						stacks.set(index, ItemStack.EMPTY);
-						if (codexFound)
-							codexFound = true;
-						codexStrength = cur.getMetadata();
+						//if (codexFound)
+						codexFound = true;
+						//codexStrength = cur.getItemDamage();
 					}
 					continue;
 				}
 				
 				if (item==ArsenalItems.INGREDIENT && cur.getMetadata()==EnumIngredient.PORTAL_SEARED_TOME.ordinal()) {
-					if (codexStrength+tomeStrength+1>=ItemCodex.MAX_PAGES) {
-						stacks.set(index, cur);
-					} else {
-						tomeStrength++;
+					//if (codexStrength+tomeStrength+1>=ItemCodex.MAX_PAGES) {
+					//	stacks.set(index, cur);
+					//} else {
+						//tomeStrength++;
 						stacks.set(index, ItemStack.EMPTY);
-					}
+					//}
 					continue;
 				}
 				

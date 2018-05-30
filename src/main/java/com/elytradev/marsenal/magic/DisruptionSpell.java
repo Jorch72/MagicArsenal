@@ -47,6 +47,7 @@ public class DisruptionSpell implements ISpellEffect {
 		if (res.getGlobalCooldown()>0) return;
 		
 		target.targetRaycast(20);
+		if (!target.hasTarget()) return;
 		
 		SpellEvent event = new SpellEvent.CastOnEntity("disruption", target, EnumElement.ARCANE, EnumElement.FIRE)
 				.withCost(IMagicResources.RESOURCE_STAMINA, ArsenalConfig.get().spells.disruption.cost);

@@ -43,10 +43,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
 public class ItemCodex extends Item {
-	public static int MAX_PAGES = 1; //1;
+	//public static int MAX_PAGES = 12; //TODO: Get from res manager
 	
 	public ItemCodex() {
 		this.setRegistryName(new ResourceLocation("magicarsenal","codex"));
@@ -54,26 +56,27 @@ public class ItemCodex extends Item {
 		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
 		this.setHasSubtypes(false);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(MAX_PAGES);
 		this.setNoRepair();
 	}
 	
 	public void updatePages() {
-		MAX_PAGES = ContainerCodex.CODEX_PAGES.length;
+		//MAX_PAGES = ContainerCodex.CODEX_PAGES.length;
+		//MAX_PAGES = 12;
 	}
 	
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		if (stack.getMetadata()<MAX_PAGES*0.25f) return EnumRarity.COMMON;
-		if (stack.getMetadata()<MAX_PAGES*0.50f) return EnumRarity.UNCOMMON;
-		if (stack.getMetadata()<MAX_PAGES*0.75f) return EnumRarity.RARE;
+		int maxPages = ContainerCodex.CODEX_PAGES.size();
+		if (stack.getItemDamage()<maxPages*0.25f) return EnumRarity.COMMON;
+		if (stack.getItemDamage()<maxPages*0.50f) return EnumRarity.UNCOMMON;
+		if (stack.getItemDamage()<maxPages*0.75f) return EnumRarity.RARE;
 		return EnumRarity.EPIC;
 	}
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if (world.isRemote) {
-			player.openGui(MagicArsenal.INSTANCE, EnumGui.TOME.ordinal(), world, player.getHeldItem(hand).getMetadata(), 0, 0);
+			player.openGui(MagicArsenal.INSTANCE, EnumGui.TOME.ordinal(), world, player.getHeldItem(hand).getItemDamage(), 0, 0);
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
@@ -85,7 +88,8 @@ public class ItemCodex extends Item {
 	
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
-		return 1 - stack.getMetadata()/(double)(MAX_PAGES-1);
+		return 1 - stack.getItemDamage()/(double)(ContainerCodex.CODEX_PAGES.size()-1);
+		//return 1 - stack.getMetadata()/(double)(MAX_PAGES-1);
 	}
 	
 	@Override
@@ -95,6 +99,8 @@ public class ItemCodex extends Item {
 	
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
+		if (stack.getItemDamage()>=ContainerCodex.CODEX_PAGES.size()) return false;
+		//if (stack.getMetadata()>=MAX_PAGES) return false;
 		return true;
 	}
 	
@@ -103,6 +109,14 @@ public class ItemCodex extends Item {
 		return false;
 	}
 	
+	@Override
+	public int getMetadata(ItemStack stack) {
+		// TODO Auto-generated method stub
+		return 0;
+		//return super.getMetadata(stack);
+	}
+	
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		String flavortext = I18n.translateToLocal("tooltip.magicarsenal.codex."+(stack.getRarity().rarityName.toLowerCase(Locale.ROOT)));

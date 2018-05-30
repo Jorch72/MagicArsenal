@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.elytradev.concrete.recipe.ItemIngredient;
+import com.elytradev.concrete.recipe.impl.OreItemIngredient;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
@@ -218,11 +219,7 @@ public class ArsenalItems {
 				Items.FIRE_CHARGE
 				).setRegistryName("magicarsenal_spellfocus_magma_blast"));
 		
-		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.FROST_SHARDS.ordinal()),
-				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
-				"gemDiamond",
-				Items.ENDER_PEARL
-				).setRegistryName("magicarsenal_spellfocus_frost_shards"));
+		
 		
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.WILL_O_WISP.ordinal()),
 				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
@@ -383,6 +380,13 @@ public class ArsenalItems {
 				ItemIngredient.of(Blocks.SOUL_SAND),
 				ItemIngredient.of(Items.SLIME_BALL),
 				ItemIngredient.of(Items.STICK)
+				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.FROST_SHARDS.ordinal()),
+				1, 1800,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Blocks.SNOW),
+				ItemIngredient.of(Blocks.IRON_BARS)
 				));
 		
 		/*//Old recipe

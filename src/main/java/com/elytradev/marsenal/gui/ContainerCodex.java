@@ -24,6 +24,9 @@
 
 package com.elytradev.marsenal.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.elytradev.concrete.inventory.gui.ConcreteContainer;
 import com.elytradev.concrete.inventory.gui.widget.WImage;
 import com.elytradev.concrete.inventory.gui.widget.WPanel;
@@ -33,16 +36,19 @@ import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumSpellFocus;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 public class ContainerCodex extends ConcreteContainer {
-	public static CodexPage[] CODEX_PAGES;
+	public static List<CodexPage> CODEX_PAGES = new ArrayList<>();
 	
 	public static void initCodex() {
+		/*
 		CODEX_PAGES = new CodexPage[] {
 			new CodexPage(
 				new ResourceLocation("magicarsenal:textures/guis/codex/intro.png"),
@@ -107,7 +113,7 @@ public class ContainerCodex extends ConcreteContainer {
 				null,
 				new TextComponentTranslation("codex.magicarsenal.page.8.right")
 			),
-		};
+		};*/
 	}
 	
 	private int pages = 1;
@@ -174,10 +180,11 @@ public class ContainerCodex extends ConcreteContainer {
 	}
 	
 	public void setCurPage() {
-		if (CODEX_PAGES.length<1) return; //Just in case I do something REALLY dumb
-		if (curPage>=CODEX_PAGES.length) curPage = CODEX_PAGES.length-1;
+		if (CODEX_PAGES.size()<1) return; //Just in case I do something REALLY dumb
+		if (curPage>=CODEX_PAGES.size()) curPage = CODEX_PAGES.size()-1;
 		if (curPage<0) curPage=0;
-		setToPage(CODEX_PAGES[curPage]);
+		if (CODEX_PAGES.isEmpty()) return;
+		setToPage(CODEX_PAGES.get(curPage));
 		checkButtons();
 	}
 	
@@ -190,7 +197,7 @@ public class ContainerCodex extends ConcreteContainer {
 			leftPage.setLocation(leftPage.getX(), 10 + 3 + 24);
 		}
 		
-		spotlight.setItemStack(page.spotlight);
+		spotlight.setItemStack(page.getSpotlight());
 		rightPage.setText(page.rightPage);
 		if (page.spotlight==null || page.spotlight.isEmpty()) {
 			rightPage.setLocation(rightPage.getX(), 13);
@@ -224,6 +231,8 @@ public class ContainerCodex extends ConcreteContainer {
 		/** A 50x50 image to be displayed on the full right page */
 		private ItemStack spotlight = null;
 		private ResourceLocation feature = null;
+		private ResourceLocation spotlightLoc = null;
+		private int spotlightData = 0;
 		/** Text to be displayed on the right page. Bottom-aligned if there's a spotlight. */
 		private ITextComponent rightPage;
 		
@@ -237,6 +246,47 @@ public class ContainerCodex extends ConcreteContainer {
 			this.spotlight = spotlight;
 			this.feature = feature;
 			this.rightPage = right;
+		}
+		
+		public CodexPage() {
+		}
+		
+		public void setLeftPage(String leftPage) {
+			this.leftPage = new TextComponentString(leftPage);
+		}
+		
+		public void setRightPage(String rightPage) {
+			this.rightPage = new TextComponentString(rightPage);
+		}
+		
+		public void setHeader(String header) {
+			this.header = new ResourceLocation(header);
+		}
+		
+		public void setSpotlight(String item, int meta) {
+			//Item lookup = Item.getByNameOrId(item);
+			//if (lookup==null) return;
+			//this.spotlight = new ItemStack(lookup, 1, meta);
+			this.spotlightLoc = new ResourceLocation(item);
+			this.spotlightData = meta;
+		}
+		
+		public ItemStack getSpotlight() {
+			if (spotlight==null) {
+				if (spotlightLoc!=null) {
+					Item lookup = Item.REGISTRY.getObject(spotlightLoc);
+					if (lookup==null) return null;
+					spotlight = new ItemStack(lookup, 1, spotlightData);
+				} else {
+					return null;
+				}
+			}
+			
+			return spotlight;
+		}
+
+		public void setFeature(String feature) {
+			this.feature = new ResourceLocation(feature);
 		}
 	}
 }
