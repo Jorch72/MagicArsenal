@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.elytradev.concrete.recipe.ItemIngredient;
-import com.elytradev.concrete.recipe.impl.OreItemIngredient;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
@@ -360,7 +359,7 @@ public class ArsenalItems {
 				));
 		
 		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
-				1, 3600,
+				100, 3600,
 				ItemIngredient.of(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.LIT_BOLT.ordinal())),
 				ItemIngredient.of(Blocks.GLOWSTONE),
 				ItemIngredient.of(Items.CLOCK),
@@ -368,7 +367,7 @@ public class ArsenalItems {
 				));
 		
 		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.LIT_BOLT.ordinal()),
-				1, 1800,
+				10, 1800,
 				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
 				ItemIngredient.of(Blocks.IRON_BARS),
 				ItemIngredient.of(Items.GLOWSTONE_DUST)
@@ -387,6 +386,16 @@ public class ArsenalItems {
 				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
 				ItemIngredient.of(Blocks.SNOW),
 				ItemIngredient.of(Blocks.IRON_BARS)
+				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(ArsenalBlocks.RADIANT_BEACON),
+				100, 6400,
+				ItemIngredient.of(Blocks.BEACON),
+				ItemIngredient.of(Blocks.DIAMOND_BLOCK),
+				ItemIngredient.of(Blocks.DIAMOND_BLOCK),
+				ItemIngredient.of(Blocks.DIAMOND_BLOCK),
+				ItemIngredient.of(Blocks.DIAMOND_BLOCK),
+				ItemIngredient.of(ArsenalBlocks.ROSETTA_STONE)
 				));
 		
 		/*//Old recipe

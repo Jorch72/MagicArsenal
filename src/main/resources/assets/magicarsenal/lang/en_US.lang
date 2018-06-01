@@ -57,6 +57,7 @@ tile.magicarsenal.stele.berkano.name=Berkano Stele
 
 tile.magicarsenal.chaosorb.name=Chaos Nexus Crystal
 tile.magicarsenal.chaosresonator.name=Chaos Resonator
+tile.magicarsenal.beacon.name=Radiant Beacon
 
 #Spell Damage Sources
 death.attack.spell.drainLife=%s wasted away

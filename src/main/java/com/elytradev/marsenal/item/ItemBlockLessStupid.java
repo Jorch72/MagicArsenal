@@ -25,9 +25,14 @@
 package com.elytradev.marsenal.item;
 
 import com.elytradev.marsenal.block.IItemVariants;
+import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 
 /** ItemBlock with more sensible defaults */
 public class ItemBlockLessStupid extends ItemBlock {
@@ -43,5 +48,23 @@ public class ItemBlockLessStupid extends ItemBlock {
 	@Override
 	public int getMetadata(int damage) {
 		return damage;
+	}
+	
+	@Override
+	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
+		if (block instanceof IArmor) {
+			return ((IArmor)block).isValidArmor(stack, armorType, entity);
+		} else {
+			return super.isValidArmor(stack, armorType, entity);
+		}
+	}
+	
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+		if (block instanceof IArmor) {
+			return ((IArmor)block).getAttributeModifiers(slot, stack);
+		} else {
+			return super.getAttributeModifiers(slot, stack);
+		}
 	}
 }

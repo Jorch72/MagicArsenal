@@ -22,33 +22,11 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.item;
 
-import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import net.minecraft.entity.Entity;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
-
-public enum EnumGui {
-	RUNIC_ALTAR(ContainerRunicAltar::new),
-	TOME(ContainerCodex::new),
-	BEACON(ContainerBeacon::new);
-	
-	private final GuiSupplier supplier;
-	
-	EnumGui(GuiSupplier supplier) {
-		this.supplier = supplier;
-	}
-	
-	public ConcreteContainer createContainer(IInventory player, IInventory tile, TileEntity te) {
-		return supplier.apply(player, tile, te);
-	}
-	
-	public static EnumGui forId(int id) {
-		return EnumGui.values()[id % EnumGui.values().length];
-	}
-	
-	public static interface GuiSupplier {
-		public ConcreteContainer apply(IInventory player, IInventory tile, TileEntity te);
-	}
+public interface IBeaconSigil {
+	public float getColorHue();
+	public void applyEffect(Entity entity);
 }

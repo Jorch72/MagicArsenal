@@ -1,0 +1,19 @@
+{
+	"forge_marker":1,
+	
+	"defaults":{
+		"model":"magicarsenal:beacon",
+		"transform":"forge:default-block",
+		"x":0,
+		"y":0,
+		"uvlock":false,
+		"textures":{
+			"base":"magicarsenal:blocks/stele/uncarved",
+			"crystal":"magicarsenal:blocks/beacon.crystal"
+		}
+	},
+	
+	"variants": {
+		"normal": [{}]
+    }
+}

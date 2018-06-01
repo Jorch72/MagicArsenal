@@ -32,6 +32,7 @@ import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
 import com.elytradev.marsenal.tile.TileEntityFehuStele;
 import com.elytradev.marsenal.tile.TileEntityKenazStele;
+import com.elytradev.marsenal.tile.TileEntityRadiantBeacon;
 import com.elytradev.marsenal.tile.TileEntityRaidhoStele;
 import com.elytradev.marsenal.tile.TileEntityRunicAltar;
 import com.elytradev.marsenal.tile.TileEntityWunjoStele;
@@ -61,6 +62,7 @@ public class ArsenalBlocks {
 	public static BlockRosettaStone      ROSETTA_STONE   = null;
 	public static BlockChaosOrb          CHAOS_ORB       = null;
 	public static BlockChaosResonator    CHAOS_RESONATOR = null;
+	public static BlockRadiantBeacon     RADIANT_BEACON  = null;
 	
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
@@ -81,16 +83,18 @@ public class ArsenalBlocks {
 		ROSETTA_STONE  = block(r, new BlockRosettaStone());
 		CHAOS_ORB      = block(r, new BlockChaosOrb());
 		CHAOS_RESONATOR= block(r, new BlockChaosResonator());
+		RADIANT_BEACON = block(r, new BlockRadiantBeacon());
 		
-		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,   "magicarsenal.altar");
-		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class,  "magicarsenal.stele.raidho");
-		GameRegistry.registerTileEntity(TileEntityKenazStele.class,   "magicarsenal.stele.kenaz");
-		GameRegistry.registerTileEntity(TileEntityWunjoStele.class,   "magicarsenal.stele.wunjo");
-		GameRegistry.registerTileEntity(TileEntityBerkanoStele.class, "magicarsenal.stele.berkano");
-		GameRegistry.registerTileEntity(TileEntityFehuStele.class,    "magicarsenal.stele.fehu");
+		GameRegistry.registerTileEntity(TileEntityRunicAltar.class,     "magicarsenal.altar");
+		GameRegistry.registerTileEntity(TileEntityRaidhoStele.class,    "magicarsenal.stele.raidho");
+		GameRegistry.registerTileEntity(TileEntityKenazStele.class,     "magicarsenal.stele.kenaz");
+		GameRegistry.registerTileEntity(TileEntityWunjoStele.class,     "magicarsenal.stele.wunjo");
+		GameRegistry.registerTileEntity(TileEntityBerkanoStele.class,   "magicarsenal.stele.berkano");
+		GameRegistry.registerTileEntity(TileEntityFehuStele.class,      "magicarsenal.stele.fehu");
 		
-		GameRegistry.registerTileEntity(TileEntityChaosOrb.class, "magicarsenal.chaosorb");
+		GameRegistry.registerTileEntity(TileEntityChaosOrb.class,       "magicarsenal.chaosorb");
 		GameRegistry.registerTileEntity(TileEntityChaosResonator.class, "magicarsenal.chaosresonator");
+		GameRegistry.registerTileEntity(TileEntityRadiantBeacon.class,  "magicarsenal.radiantbeacon");
 		
 		//No, you can't carry the crops around.
 		FMLInterModComms.sendMessage("charset", "removeCarry", CROP_WOLFSBANE.getRegistryName());

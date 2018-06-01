@@ -22,33 +22,37 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.block;
 
-import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import java.util.List;
 
-import net.minecraft.inventory.IInventory;
+import com.elytradev.marsenal.StringExtras;
+import com.elytradev.marsenal.tile.TileEntityBerkanoStele;
+import com.elytradev.marsenal.tile.TileEntityJeraStele;
+
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum EnumGui {
-	RUNIC_ALTAR(ContainerRunicAltar::new),
-	TOME(ContainerCodex::new),
-	BEACON(ContainerBeacon::new);
+public class BlockJeraStele extends BlockAbstractStele {
+
+	public BlockJeraStele() {
+		super("jera");
+	}
+
 	
-	private final GuiSupplier supplier;
-	
-	EnumGui(GuiSupplier supplier) {
-		this.supplier = supplier;
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileEntityJeraStele();
 	}
 	
-	public ConcreteContainer createContainer(IInventory player, IInventory tile, TileEntity te) {
-		return supplier.apply(player, tile, te);
-	}
-	
-	public static EnumGui forId(int id) {
-		return EnumGui.values()[id % EnumGui.values().length];
-	}
-	
-	public static interface GuiSupplier {
-		public ConcreteContainer apply(IInventory player, IInventory tile, TileEntity te);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		StringExtras.addInformation("info.magicarsenal.stele.jera", "", tooltip);
+		StringExtras.addSplitInformation("tooltip.magicarsenal.stele.jera", "§9§o", tooltip);
 	}
 }

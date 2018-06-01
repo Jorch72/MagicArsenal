@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.elytradev.marsenal.StringExtras;
+import com.elytradev.marsenal.client.ParticleVelocity;
 import com.elytradev.marsenal.tile.INetworkParticipant;
 import com.elytradev.marsenal.tile.TileEntityChaosResonator;
 
@@ -37,6 +38,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +49,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -156,6 +160,34 @@ public class BlockChaosResonator extends BlockSimple implements ITileEntityProvi
 			BlockPos target = ((INetworkParticipant)te).getBeamTo();
 			if (target!=null) {
 				BlockAbstractStele.spawnBeamToEffect(world, pos, target, rand);
+			}
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState stateIn, World world, BlockPos pos, Random rand) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te!=null && te instanceof INetworkParticipant) {
+			BlockPos target = ((INetworkParticipant)te).getBeamTo();
+			if (target!=null) {
+				//for(int i=0; i<3; i++) {
+					float px = (float)(pos.getX()+0.5f);
+					float py = (float)(pos.getY()+0.5f);
+					float pz = (float)(pos.getZ()+0.5f);
+					
+					Vec3d vec = new Vec3d(target.getX()-pos.getX(), target.getY()-pos.getY(), target.getZ()-pos.getZ()).scale(1/50d);
+					
+					Particle particle = new ParticleVelocity(world,
+							px, py, pz,
+							(float)vec.x, (float)vec.y, (float)vec.z
+							);
+					particle.setMaxAge(100);
+					particle.setParticleTextureIndex(225+rand.nextInt(25)); //Anywhere in the galactic alphabet is fine.
+					particle.setRBGColorF(0.6f, 0.6f, 0.9667f);
+					
+					Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+				//}
 			}
 		}
 	}
