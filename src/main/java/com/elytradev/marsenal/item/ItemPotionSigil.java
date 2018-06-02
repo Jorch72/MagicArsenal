@@ -24,16 +24,21 @@
 
 package com.elytradev.marsenal.item;
 
+import com.elytradev.marsenal.MagicArsenal;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 public class ItemPotionSigil extends Item implements IBeaconSigil {
 	protected Potion potion;
-	protected PotionEffect effect;
+	
+	protected int amplifier = 0;
 	
 	protected float hue = 0;
 	protected float saturation = 0;
@@ -59,9 +64,12 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 		if (value>0) saturation = chroma/value;
 		
 		this.potion = potion;
-		this.effect = new PotionEffect(potion, 20*5, amplifier, true, false);
+		this.amplifier = amplifier;
+		//this.effect = new PotionEffect(potion, 20*15, amplifier, true, false);
 		
 		this.setRegistryName(new ResourceLocation("magicarsenal:sigil."+id));
+		this.setUnlocalizedName("magicarsenal.sigil."+id);
+		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
 	}
 	
 	@Override
@@ -70,10 +78,9 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 	}
 	
 	@Override
-	public void applyEffect(Entity entity) {
+	public void applyEffect(Entity entity, ItemStack stack, BlockPos beacon) {
 		if (entity instanceof EntityLivingBase) {
-			((EntityLivingBase)entity).addPotionEffect(effect);
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(potion, 20*15, amplifier, true, false));
 		}
 	}
-
 }

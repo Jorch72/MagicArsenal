@@ -78,6 +78,10 @@ public class ArsenalItems {
 	public static ItemChisel          CHISEL = null;
 	public static ItemChisel          DIAMONDCHISEL = null;
 	
+	public static ItemPotionSigil       SIGIL_GRAVITY   = null;
+	public static ItemBaublePotionSigil SIGIL_SPEED     = null;
+	public static ItemBaublePotionSigil SIGIL_JUMPBOOST = null;
+	
 	//Potions and Potion Bottles
 	public static PotionWolfsbane      POTION_WOLFSBANE = new PotionWolfsbane();
 	public static PotionNightshade     POTION_NIGHTSHADE = new PotionNightshade();
@@ -112,6 +116,10 @@ public class ArsenalItems {
 		DIAMONDCHISEL   = item(r, new ItemChisel(Item.ToolMaterial.DIAMOND));
 		DIAMONDCHISEL.lateralEffectiveness = 2;
 		DIAMONDCHISEL.connectedEffectiveness = 100;
+		
+		SIGIL_GRAVITY   = item(r, new ItemPotionSigil("gravitycontrol", POTION_GRAVITYCONTROL, 0));
+		SIGIL_SPEED     = item(r, new ItemBaublePotionSigil("speed", Potion.getPotionFromResourceLocation("minecraft:speed"), 2));
+		SIGIL_JUMPBOOST = item(r, new ItemBaublePotionSigil("jumpboost", Potion.getPotionFromResourceLocation("minecraft:jump_boost"), 2));
 		
 		ArsenalBlocks.CROP_WOLFSBANE.setHarvestItems(EnumPoisonPlant.WOLFSBANE.getRoot(), EnumIngredient.PETAL_WOLFSBANE.getItem());
 		ArsenalBlocks.CROP_NIGHTSHADE.setHarvestItems(EnumPoisonPlant.NIGHTSHADE.getRoot(), EnumIngredient.BERRY_NIGHTSHADE.getItem());

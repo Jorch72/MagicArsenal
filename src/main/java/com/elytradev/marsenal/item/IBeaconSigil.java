@@ -25,8 +25,10 @@
 package com.elytradev.marsenal.item;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 public interface IBeaconSigil {
 	public float getColorHue();
-	public void applyEffect(Entity entity);
+	public void applyEffect(Entity entity, ItemStack stack, BlockPos beacon);
 }

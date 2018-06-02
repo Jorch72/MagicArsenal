@@ -24,6 +24,7 @@
 
 package com.elytradev.marsenal.tile;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import com.elytradev.concrete.inventory.IContainerInventoryHolder;
@@ -32,29 +33,51 @@ import com.elytradev.marsenal.capability.impl.FlexibleItemHandler;
 import com.elytradev.marsenal.capability.impl.ValidatedInventoryWrapperTakeTwo;
 import com.elytradev.marsenal.item.IBeaconSigil;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkParticipant, ITickable, IContainerInventoryHolder {
 	protected BlockPos controller = null;
 	protected long lastControllerPing = 0L;
 	protected BlockPos beamTo = null;
-	Predicate<ItemStack> BEACON_LENS = it->it.getItem() instanceof IBeaconSigil;
+	Predicate<ItemStack> BEACON_SIGIL = it->it.getItem() instanceof IBeaconSigil;
 	
 	protected float radius;
 	protected float effectiveRadius;
 	
+	protected int timer = 0;
+	
 	protected FlexibleItemHandler storage = new FlexibleItemHandler(6)
 			.setName("tile.magicarsenal.beacon.name")
 			.setCanExtract(true, true, true, true, true, true)
-			.setValidators(BEACON_LENS, BEACON_LENS, BEACON_LENS, BEACON_LENS, BEACON_LENS, BEACON_LENS)
+			.setValidators(BEACON_SIGIL, BEACON_SIGIL, BEACON_SIGIL, BEACON_SIGIL, BEACON_SIGIL, BEACON_SIGIL)
 			.setMaxStackSize(1);
 	
 	public TileEntityRadiantBeacon() {
+		storage.listen(this::markDirty);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 		
+		if (compound.hasKey("Inventory")) {
+			storage.deserializeNBT(compound.getCompoundTag("Inventory"));
+		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		NBTTagCompound tag = super.writeToNBT(compound);
+		tag.setTag("Inventory", storage.serializeNBT());
+		
+		return tag;
 	}
 	
 	@Override
@@ -89,12 +112,39 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 
 	@Override
 	public void pollAuxRadiance(int radiance) {
-		radius = radiance;
+		radius = Math.max(radiance, 100);
+		if (world!=null) this.lastControllerPing = world.getTotalWorldTime();
 	}
 	
 	@Override
 	public void update() {
+		if (world==null || world.isRemote) return;
 		
+		if (effectiveRadius<radius) {
+			float delta = radius-effectiveRadius;
+			effectiveRadius += delta/16d;
+		} else if (effectiveRadius>radius) {
+			float delta = effectiveRadius-radius;
+			effectiveRadius -= delta/16d;
+		}
+		
+		timer--;
+		if (timer<=0) {
+			timer = 20*10;
+			
+			AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()+0.5-effectiveRadius, pos.getY()+0.5-effectiveRadius, pos.getZ()+0.5-effectiveRadius, pos.getX()+0.5+effectiveRadius, pos.getY()+0.5+effectiveRadius, pos.getZ()+0.5+effectiveRadius);
+			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb, (it)->it.getDistanceSqToCenter(pos)<effectiveRadius*effectiveRadius);
+			System.out.println("Ticking beacon on "+entities.size()+" entities.");
+			for(int i=0; i<storage.getSlots(); i++) {
+				ItemStack stack = storage.getStackInSlot(i);
+				if (stack.isEmpty()) continue;
+				if (stack.getItem() instanceof IBeaconSigil) {
+					for(Entity entity : entities) {
+						((IBeaconSigil)stack.getItem()).applyEffect(entity, stack, pos);
+					}
+				}
+			}
+		}
 	}
 	
 	public float getRadius() {

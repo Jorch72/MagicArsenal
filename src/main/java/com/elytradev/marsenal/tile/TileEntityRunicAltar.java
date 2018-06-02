@@ -227,6 +227,7 @@ public class TileEntityRunicAltar extends TileEntity implements ITickable, ICont
 			
 			if (te instanceof IAuxNetworkParticipant) {
 				participantCache.add(te.getPos());
+				((IAuxNetworkParticipant)te).pollNetwork(getPos(), pos);
 			} else {
 				INetworkParticipant cur = (INetworkParticipant)te;
 				if (lastProducerCache.contains(te.getPos())) {

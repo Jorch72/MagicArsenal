@@ -44,6 +44,11 @@ item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 #Spell Baubles
 item.magicarsenal.spellbauble.gravitymantle.name=Gravity Mantle
 
+#Sigils
+item.magicarsenal.sigil.gravitycontrol=Gravity Control Sigil
+item.magicarsenal.sigil.speed=Speed Sigil
+item.magicarsenal.sigil.jumpboost=Jump Boost Sigil
+
 #Blocks
 tile.magicarsenal.runestone.name=Runestone
 tile.magicarsenal.rosettastone.name=Rosetta Stone

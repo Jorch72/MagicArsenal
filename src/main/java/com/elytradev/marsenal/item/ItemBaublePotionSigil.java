@@ -24,28 +24,30 @@
 
 package com.elytradev.marsenal.item;
 
-import net.minecraft.util.IStringSerializable;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.common.Optional;
 
-public enum EnumSpellBauble implements IStringSerializable {
-	GRAVITY_MANTLE("gravitymantle", "body"),
-	
-	;
-	
-	private String name;
-	private String type;
-	EnumSpellBauble(String name, String type) {
-		this.name = name;
-		this.type = type;
-	}
-	
-	public String getType() { return type; }
-	
-	public static EnumSpellBauble byId(int id) {
-		return values()[id%values().length];
+@Optional.Interface(modid="baubles", iface="baubles.api.IBauble")
+public class ItemBaublePotionSigil extends ItemPotionSigil implements  IBauble {
+	public ItemBaublePotionSigil(String id, Potion potion, int amplifier) {
+		super(id, potion, amplifier);
 	}
 
+	@Optional.Method(modid="baubles")
 	@Override
-	public String getName() {
-		return name;
+	public BaubleType getBaubleType(ItemStack stack) {
+		return BaubleType.CHARM;
+	}
+	
+	@Optional.Method(modid="baubles")
+	@Override
+	public void onWornTick(ItemStack stack, EntityLivingBase player) {
+		if (player.world.isRemote) return;
+		player.addPotionEffect(new PotionEffect(potion, 20*5, amplifier, true, false));
 	}
 }
