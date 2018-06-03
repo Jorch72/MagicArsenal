@@ -24,10 +24,12 @@
 
 package com.elytradev.marsenal.client.star;
 
+import java.util.Objects;
+
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 
-public abstract strictfp class AbstractStar implements IStar {
+public abstract strictfp class AbstractStar implements IStar, Comparable<IStar> {
 	protected float x = 0;
 	protected float y = 0;
 	protected float z = 0;
@@ -164,5 +166,10 @@ public abstract strictfp class AbstractStar implements IStar {
 	@Override
 	public boolean isDead() {
 		return timeRemaining<0;
+	}
+	
+	@Override
+	public int compareTo(IStar star) {
+		return Objects.compare(this, star, (a,b)->Integer.compare(a.hashCode(), b.hashCode()));
 	}
 }

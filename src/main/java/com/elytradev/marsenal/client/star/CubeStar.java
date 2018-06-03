@@ -24,6 +24,8 @@
 
 package com.elytradev.marsenal.client.star;
 
+import java.util.Objects;
+
 import com.elytradev.marsenal.client.Draw;
 
 import net.minecraft.client.Minecraft;

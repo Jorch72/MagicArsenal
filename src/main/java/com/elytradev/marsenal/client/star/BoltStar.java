@@ -25,6 +25,7 @@
 package com.elytradev.marsenal.client.star;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import com.elytradev.marsenal.client.Draw;
 
@@ -122,6 +123,4 @@ public strictfp class BoltStar extends AbstractStar {
 			previous = cur;
 		}
 	}
-	
-	
 }
