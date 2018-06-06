@@ -198,6 +198,8 @@ public class MagicArsenal {
 			}
 			
 		});
+		
+		
 	}
 	
 	@Mod.EventHandler
@@ -208,8 +210,10 @@ public class MagicArsenal {
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_WOLFSBANE), 2);
 		MinecraftForge.addGrassSeed(new ItemStack(ArsenalItems.ROOT_NIGHTSHADE), 2);
 		
-		LootTableList.register(new ResourceLocation(MODID, "inject/simple_dungeon"));
-		LootTableList.register(new ResourceLocation(MODID, "inject/mob_death"));
+		if (!ArsenalConfig.local().general.simpleBookRecipe) {
+			LootTableList.register(new ResourceLocation(MODID, "inject/simple_dungeon"));
+			LootTableList.register(new ResourceLocation(MODID, "inject/mob_death"));
+		}
 	}
 	
 	@Mod.EventHandler
@@ -355,6 +359,7 @@ public class MagicArsenal {
 	
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent event) {
+		if (ArsenalConfig.local().general.simpleBookRecipe) return;
 		String entityPrefix = "minecraft:entities/";
 		if (event.getName().toString().startsWith(entityPrefix)) {
 			String tableName = event.getName().toString().substring(event.getName().toString().indexOf(entityPrefix) + entityPrefix.length());

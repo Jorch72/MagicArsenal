@@ -165,8 +165,6 @@ public class ArsenalConfig {
 		public StatusSpellEntry stun        = new StatusSpellEntry( 0, 20*10, 120, (int)(20* 3.5));
 	}
 	
-	public SpellsSection spells = new SpellsSection();
-	
 	public static class ResourcesSection {
 		public int maxStamina   =  600;
 		public int maxBlood     = 1000;
@@ -174,6 +172,13 @@ public class ArsenalConfig {
 		public int maxChaos     = 1000;
 		public int maxVengeance = 1000;
 	}
+	
+	public static class GeneralSection {
+		public boolean simpleBookRecipe = false;
+	}
+	
+	public GeneralSection general = new GeneralSection();
+	public SpellsSection spells = new SpellsSection();
 	public ResourcesSection resources = new ResourcesSection();
 
 	

@@ -66,6 +66,7 @@ public class ParticleEmitters {
 		
 		GlStateManager.translate(-dx, -dy, -dz);
 		
+		
 		StarFlinger.startBatch();
 		StarFlinger.paintAndTickGlobalStars();
 		StarFlinger.endBatch();

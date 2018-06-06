@@ -141,8 +141,10 @@ public class StarFlinger {
 		
 		GlStateManager.enableCull();
 		GlStateManager.depthMask(true);
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
+		//GlStateManager.enableLighting(); //Breaks Astral Sorcery effects!
+		GlStateManager.disableLighting();
 		GlStateManager.enableTexture2D();
 		
 		buffer = null;

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.elytradev.concrete.recipe.ItemIngredient;
+import com.elytradev.marsenal.ArsenalConfig;
 import com.elytradev.marsenal.MagicArsenal;
 import com.elytradev.marsenal.block.ArsenalBlocks;
 import com.elytradev.marsenal.block.EnumPoisonPlant;
@@ -284,14 +285,21 @@ public class ArsenalItems {
 				lastItem
 				).setRegistryName("runecarving_loop_"+0));
 		
-		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "initialcodex"),
-				new ItemStack(CODEX),
-				EnumIngredient.PORTAL_SEARED_TOME.getItem(),
-				EnumIngredient.PORTAL_SEARED_TOME.getItem()
-				).setRegistryName("initalcodex"));
-		
-		r.register(new CodexRecipe());
-		
+		if (ArsenalConfig.local().general.simpleBookRecipe) { //Recipes are done far too early to sync with the server
+			r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "simplecodex"),
+				new ItemStack(CODEX, 1, 9000),
+				new ItemStack(Items.BOOK),
+				"dyePurple"
+			).setRegistryName("simplecodex"));
+		} else {
+			r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "initialcodex"),
+					new ItemStack(CODEX),
+					EnumIngredient.PORTAL_SEARED_TOME.getItem(),
+					EnumIngredient.PORTAL_SEARED_TOME.getItem()
+					).setRegistryName("initalcodex"));
+			
+			r.register(new CodexRecipe());
+		}
 		
 		ItemStack wolfsbanePotion = new ItemStack(Items.POTIONITEM);
 		PotionUtils.addPotionToItemStack(wolfsbanePotion, POTIONTYPE_WOLFSBANE1);
