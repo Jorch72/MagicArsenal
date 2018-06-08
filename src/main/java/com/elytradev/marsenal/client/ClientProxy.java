@@ -40,6 +40,7 @@ import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
+import com.elytradev.marsenal.item.ItemChisel;
 import com.elytradev.marsenal.item.ItemCodex;
 
 import net.minecraft.block.Block;
@@ -94,13 +95,14 @@ public class ClientProxy extends Proxy {
 	@SubscribeEvent
 	public void registerItemModels(ModelRegistryEvent event) {
 		for(Item item : ArsenalItems.itemsForModels()) {
+			
 			if (item instanceof ItemCodex) {
 				ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
 				for(int i=0; i<ContainerCodex.CODEX_PAGES.size()+100; i++) { //TODO: This will break eventually!
 					ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(loc, "inventory"));
 				}
 				ModelLoader.setCustomModelResourceLocation(item, 9000, new ModelResourceLocation(loc, "inventory")); //"Simple" book meta
-				return;
+				continue;
 			}
 			
 			if (item instanceof IMetaItemModel) {

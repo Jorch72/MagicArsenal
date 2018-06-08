@@ -357,6 +357,14 @@ public class ArsenalItems {
 				EnumRuneCarving.RAIDHO.getUnwardedItem()
 				).setRegistryName("ward.raidho"));
 		
+		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "ward.jera"),
+				new ItemStack(ArsenalBlocks.STELE_JERA),
+				new ItemStack(Items.MELON),
+				new ItemStack(Items.CARROT),
+				wolfsbaneIngredient,
+				EnumRuneCarving.JERA.getUnwardedItem()
+				).setRegistryName("ward.jera"));
+		
 		r.register(new ShapedOreRecipe(new ResourceLocation(MagicArsenal.MODID, "runicaltar"),
 				new ItemStack(ArsenalBlocks.RUNIC_ALTAR),
 				"s s", "sss", "rrr",
@@ -414,6 +422,41 @@ public class ArsenalItems {
 				ItemIngredient.of(ArsenalBlocks.ROSETTA_STONE)
 				));
 		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SIGIL_GRAVITY),
+				100, 3200,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Items.GOLD_NUGGET),
+				ItemIngredient.of(Items.STRING),
+				
+				ItemIngredient.of(Items.SHULKER_SHELL),
+				ItemIngredient.of(Items.SHULKER_SHELL),
+				ItemIngredient.of(Items.FEATHER)
+				));
+		
+		ItemStack speedPotion = new ItemStack(Items.POTIONITEM);
+		PotionUtils.addPotionToItemStack(speedPotion, PotionTypes.STRONG_SWIFTNESS);
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SIGIL_SPEED),
+				100, 3200,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Items.GOLD_NUGGET),
+				ItemIngredient.of(Items.STRING),
+				
+				ItemIngredient.of(speedPotion),
+				ItemIngredient.of(Items.SUGAR),
+				ItemIngredient.of(Items.SUGAR)
+				));
+		
+		RunicAltarRecipes.register(new ShapelessAltarRecipe(new ItemStack(SIGIL_JUMPBOOST),
+				100, 3200,
+				ItemIngredient.of(new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal())),
+				ItemIngredient.of(Items.GOLD_NUGGET),
+				ItemIngredient.of(Items.STRING),
+				
+				ItemIngredient.of(Items.RABBIT_FOOT),
+				ItemIngredient.of(Items.CARROT),
+				ItemIngredient.of(Items.CARROT)
+				));
 		/*//Old recipe
 		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
 				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
@@ -425,6 +468,7 @@ public class ArsenalItems {
 	
 	
 	public static Iterable<Item> itemsForModels() {
+		System.out.println(itemsForModels.toString());
 		return itemsForModels;
 	}
 	

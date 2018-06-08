@@ -45,9 +45,9 @@ item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 item.magicarsenal.spellbauble.gravitymantle.name=Gravity Mantle
 
 #Sigils
-item.magicarsenal.sigil.gravitycontrol=Gravity Control Sigil
-item.magicarsenal.sigil.speed=Speed Sigil
-item.magicarsenal.sigil.jumpboost=Jump Boost Sigil
+item.magicarsenal.sigil.gravitycontrol.name=Gravity Control Sigil
+item.magicarsenal.sigil.speed.name=Speed Sigil
+item.magicarsenal.sigil.jumpboost.name=Jump Boost Sigil
 
 #Blocks
 tile.magicarsenal.runestone.name=Runestone
@@ -59,6 +59,7 @@ tile.magicarsenal.stele.raidho.name=Raidho Stele
 tile.magicarsenal.stele.kenaz.name=Kenaz Stele
 tile.magicarsenal.stele.wunjo.name=Wunjo Stele
 tile.magicarsenal.stele.berkano.name=Berkano Stele
+tile.magicarsenal.stele.jera.name=Jera Stele
 
 tile.magicarsenal.chaosorb.name=Chaos Nexus Crystal
 tile.magicarsenal.chaosresonator.name=Chaos Resonator

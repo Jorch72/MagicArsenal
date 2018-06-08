@@ -112,7 +112,7 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 
 	@Override
 	public void pollAuxRadiance(int radiance) {
-		radius = Math.max(radiance, 100);
+		radius = Math.min(radiance, 100);
 		if (world!=null) this.lastControllerPing = world.getTotalWorldTime();
 	}
 	

@@ -48,6 +48,6 @@ public class ItemBaublePotionSigil extends ItemPotionSigil implements  IBauble {
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		if (player.world.isRemote) return;
-		player.addPotionEffect(new PotionEffect(potion, 20*5, amplifier, true, false));
+		player.addPotionEffect(new PotionEffect(potion, 20*5, Math.max(0, amplifier-1), true, false));
 	}
 }

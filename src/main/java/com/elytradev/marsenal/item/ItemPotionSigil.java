@@ -70,6 +70,7 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 		this.setRegistryName(new ResourceLocation("magicarsenal:sigil."+id));
 		this.setUnlocalizedName("magicarsenal.sigil."+id);
 		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
+		this.setMaxStackSize(1);
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class ItemChisel extends ItemTool {
 		this.setRegistryName("chisel."+(material.name().toLowerCase(Locale.ROOT)));
 		this.setUnlocalizedName("magicarsenal.chisel."+(material.name().toLowerCase(Locale.ROOT)));
 		this.setMaxStackSize(1);
-		this.setMaxDamage(EnumMode.values().length-1);
+		//this.setMaxDamage(EnumMode.values().length-1);
 		this.setHasSubtypes(false);
 		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);
 		this.efficiency = 0f;
@@ -297,14 +297,15 @@ public class ItemChisel extends ItemTool {
 	}
 	
 	public Set<BlockPos> blocksConnected(World world, BlockPos pos, IBlockState original) {
-		
+		int searched = 0;
 		Set<BlockPos> result = new HashSet<>();
 		List<BlockPos> work = new ArrayList<>();
 		
 		result.add(pos);
 		for(EnumFacing face : EnumFacing.VALUES) work.add(pos.offset(face));
 		
-		while(!work.isEmpty()) {
+		while(!work.isEmpty() && searched < (connectedEffectiveness*2)) {
+			searched++;
 			//for(int i=0; i<connectedEffectiveness; i++) {
 			//if (work.isEmpty()) break;
 			if (result.size()>connectedEffectiveness+1) break;
