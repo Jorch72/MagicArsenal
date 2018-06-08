@@ -34,14 +34,13 @@ import com.elytradev.marsenal.block.IItemVariants;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.elytradev.marsenal.capability.impl.MagicResources;
 import com.elytradev.marsenal.client.codex.XMLResourceLoader;
-import com.elytradev.marsenal.client.tesr.RenderChaosOrb;
 import com.elytradev.marsenal.entity.EntityFrostShard;
 import com.elytradev.marsenal.entity.EntityWillOWisp;
+import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
 import com.elytradev.marsenal.item.ItemCodex;
-import com.elytradev.marsenal.tile.TileEntityChaosOrb;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -58,7 +57,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -96,9 +94,14 @@ public class ClientProxy extends Proxy {
 	@SubscribeEvent
 	public void registerItemModels(ModelRegistryEvent event) {
 		for(Item item : ArsenalItems.itemsForModels()) {
-			//if (item instanceof ItemCodex) {
-			//	ModelLoader.setCustomModelResourceLocation(item, metadata, model);
-			//}
+			if (item instanceof ItemCodex) {
+				ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
+				for(int i=0; i<ContainerCodex.CODEX_PAGES.size()+100; i++) { //TODO: This will break eventually!
+					ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(loc, "inventory"));
+				}
+				ModelLoader.setCustomModelResourceLocation(item, 9000, new ModelResourceLocation(loc, "inventory")); //"Simple" book meta
+				return;
+			}
 			
 			if (item instanceof IMetaItemModel) {
 				String[] models = ((IMetaItemModel)item).getModelLocations();

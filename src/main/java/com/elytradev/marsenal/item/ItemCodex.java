@@ -108,13 +108,13 @@ public class ItemCodex extends Item {
 	public boolean isDamaged(ItemStack stack) {
 		return false;
 	}
-	
+	/*
 	@Override
 	public int getMetadata(ItemStack stack) {
 		// TODO Auto-generated method stub
 		return 0;
 		//return super.getMetadata(stack);
-	}
+	}*/
 	
 	@SideOnly(Side.CLIENT)
 	@Override
