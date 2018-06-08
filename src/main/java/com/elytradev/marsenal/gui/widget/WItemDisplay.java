@@ -22,48 +22,53 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.gui.widget;
+
+import com.elytradev.concrete.inventory.gui.ConcreteContainer;
+import com.elytradev.concrete.inventory.gui.widget.WWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WButton extends WSwappableImage {
-	private boolean enabled;
-	private Runnable onClick;
-	private ResourceLocation disabledImage;
+public class WItemDisplay extends WWidget {
+	private ItemStack stack = ItemStack.EMPTY;
 	
-	public boolean isEnabled() {
-		return enabled;
-	}
+	public WItemDisplay() {}
 	
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	public void setOnClick(Runnable r) {
-		this.onClick = r;
+	public static WItemDisplay of(ItemStack stack) {
+		WItemDisplay w = new WItemDisplay();
+		w.stack = stack;
+		
+		return w;
 	}
 	
 	@Override
-	public void onClick(int x, int y, int button) { //PURELY CLIENTSIDE
-		if (enabled) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			if (onClick!=null) onClick.run();
-		}
+	public int getWidth() {
+		return 18;
 	}
 	
+	@Override
+	public int getHeight() {
+		return 18;
+	}
+	
+	@Override
+	public void createPeers(ConcreteContainer c) {}
+	
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void paintBackground(int x, int y) {
-		if (enabled) {
-			super.paintBackground(x, y);
-		} else {
-			if (disabledImage!=null) {
-				rect(image, x, y, getWidth(), getHeight(), 0,0,1,1);
-			} else {
-				//No disabled image, so draw nothing
-			}
+		if (stack!=null) {
+			RenderHelper.enableGUIStandardItemLighting();
+			Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+			RenderHelper.disableStandardItemLighting();
 		}
+	}
+
+	public void setItemStack(ItemStack stack) {
+		this.stack = stack;
 	}
 }

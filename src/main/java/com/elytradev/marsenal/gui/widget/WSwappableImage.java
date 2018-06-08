@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.gui.widget;
 
 import org.lwjgl.opengl.GL11;
 

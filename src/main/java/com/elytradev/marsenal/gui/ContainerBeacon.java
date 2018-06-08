@@ -27,6 +27,7 @@ package com.elytradev.marsenal.gui;
 import com.elytradev.concrete.inventory.gui.ConcreteContainer;
 import com.elytradev.concrete.inventory.gui.widget.WGridPanel;
 import com.elytradev.concrete.inventory.gui.widget.WItemSlot;
+import com.elytradev.marsenal.gui.widget.WSprite;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;

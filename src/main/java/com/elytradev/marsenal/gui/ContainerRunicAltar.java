@@ -25,11 +25,12 @@
 package com.elytradev.marsenal.gui;
 
 import com.elytradev.concrete.inventory.gui.ConcreteContainer;
-import com.elytradev.concrete.inventory.gui.widget.WFieldedLabel;
 import com.elytradev.concrete.inventory.gui.widget.WGridPanel;
 import com.elytradev.concrete.inventory.gui.widget.WImage;
 import com.elytradev.concrete.inventory.gui.widget.WItemSlot;
 import com.elytradev.concrete.inventory.gui.widget.WPlainPanel;
+import com.elytradev.marsenal.gui.widget.WLabel;
+import com.elytradev.marsenal.gui.widget.WRadianceBar;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
@@ -65,7 +66,9 @@ public class ContainerRunicAltar extends ConcreteContainer {
 		centerPanel.add(WItemSlot.of(container, 6), leftMargin + 18*2 + 8, topMargin + 18*1 + 7, 18, 18);
 		
 		centerPanel.add(new WRadianceBar(container, 1).withTooltip("Radiance: %s"), 0, 18*5, 64, 8);
-		centerPanel.add(new WFieldedLabel(container, 0, "EMC: %f", 0xFF8cb5b3),  18*5, 18*5, 18*4, 18);
+		WLabel emcLabel = new WLabel("EMC: %s", 0xFF8cb5b3);
+		emcLabel.withFields(container, 0, -1);
+		centerPanel.add(emcLabel, 18*5, 18*5, 18*4, 18);
 		
 		root.add(centerPanel, 0, 1, 9, 4);
 		//root.add(new WImage(BG_IMAGE), 1, 1, 6, 4);

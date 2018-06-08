@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.elytradev.marsenal.gui;
+package com.elytradev.marsenal.gui.widget;
 
 import com.elytradev.concrete.inventory.gui.client.GuiDrawing;
 import com.elytradev.concrete.inventory.gui.widget.WWidget;

@@ -32,6 +32,10 @@ import com.elytradev.concrete.inventory.gui.widget.WImage;
 import com.elytradev.concrete.inventory.gui.widget.WPanel;
 import com.elytradev.concrete.inventory.gui.widget.WPlainPanel;
 import com.elytradev.marsenal.block.ArsenalBlocks;
+import com.elytradev.marsenal.gui.widget.WButton;
+import com.elytradev.marsenal.gui.widget.WItemDisplay;
+import com.elytradev.marsenal.gui.widget.WSwappableImage;
+import com.elytradev.marsenal.gui.widget.WTextArea;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.EnumSpellFocus;
 
