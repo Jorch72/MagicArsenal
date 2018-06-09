@@ -30,6 +30,7 @@ import java.util.List;
 import com.elytradev.concrete.recipe.ItemIngredient;
 import com.elytradev.concrete.recipe.impl.ItemStackIngredient;
 import com.elytradev.concrete.recipe.impl.OreItemIngredient;
+import com.elytradev.marsenal.item.LooseItemIngredient;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -61,6 +62,8 @@ public class ShapelessAltarRecipe implements IRecipeWrapper {
 			List<ItemStack> items = new ArrayList<>();
 			if (ingredient instanceof ItemStackIngredient) {
 				items.add(((ItemStackIngredient)ingredient).getItem());
+			} else if (ingredient instanceof LooseItemIngredient) {
+				items.add(((LooseItemIngredient)ingredient).getItem());
 			} else if (ingredient instanceof OreItemIngredient) {
 				String key = ((OreItemIngredient)ingredient).getKey();
 				if (!OreDictionary.doesOreNameExist(key)) continue;

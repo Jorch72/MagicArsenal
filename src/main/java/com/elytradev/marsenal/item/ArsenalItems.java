@@ -386,7 +386,7 @@ public class ArsenalItems {
 				100, 3600,
 				ItemIngredient.of(new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.LIT_BOLT.ordinal())),
 				ItemIngredient.of(Blocks.GLOWSTONE),
-				ItemIngredient.of(Items.CLOCK),
+				LooseItemIngredient.of(Items.CLOCK),
 				ItemIngredient.of(Items.EMERALD)
 				));
 		
@@ -457,12 +457,6 @@ public class ArsenalItems {
 				ItemIngredient.of(Items.CARROT),
 				ItemIngredient.of(Items.CARROT)
 				));
-		/*//Old recipe
-		r.register(new ShapelessOreRecipe(new ResourceLocation(MagicArsenal.MODID, "spellfocus"), new ItemStack(SPELL_FOCUS, 1, EnumSpellFocus.CHAIN_LIGHTNING.ordinal()),
-				new ItemStack(INGREDIENT, 1, EnumIngredient.FOCUS_CORE.ordinal()),
-				Items.CLOCK,
-				Items.GLOWSTONE_DUST
-				).setRegistryName("magicarsenal_spellfocus_chain_lightning"));*/
 	}
 	
 	

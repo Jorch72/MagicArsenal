@@ -41,6 +41,9 @@ item.magicarsenal.spellfocus.frost_shards.name=Frost Shards Spell Focus
 item.magicarsenal.spellfocus.will_o_wisp.name=Will O' Wisp Spell Focus
 item.magicarsenal.spellfocus.chain_lightning.name=Chain Lightning Spell Focus
 
+item.magicarsenal.spellfocus.lit_bolt.name=Lit-Bolt Spell Focus
+item.magicarsenal.spellfocus.stun.name=Stun Spell Focus
+
 #Spell Baubles
 item.magicarsenal.spellbauble.gravitymantle.name=Gravity Mantle
 

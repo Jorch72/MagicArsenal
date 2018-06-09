@@ -134,7 +134,7 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 			
 			AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()+0.5-effectiveRadius, pos.getY()+0.5-effectiveRadius, pos.getZ()+0.5-effectiveRadius, pos.getX()+0.5+effectiveRadius, pos.getY()+0.5+effectiveRadius, pos.getZ()+0.5+effectiveRadius);
 			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb, (it)->it.getDistanceSqToCenter(pos)<effectiveRadius*effectiveRadius);
-			System.out.println("Ticking beacon on "+entities.size()+" entities.");
+			//System.out.println("Ticking beacon on "+entities.size()+" entities.");
 			for(int i=0; i<storage.getSlots(); i++) {
 				ItemStack stack = storage.getStackInSlot(i);
 				if (stack.isEmpty()) continue;
