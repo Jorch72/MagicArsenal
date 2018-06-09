@@ -42,9 +42,11 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.gui.elements.DrawableResource;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -53,8 +55,14 @@ import net.minecraft.util.text.translation.I18n;
 @JEIPlugin
 public class JEICompat implements IModPlugin {
 	
+	//@Override
+	//public void registerIngredients(IModIngredientRegistration registry) {
+	//	registry.register(Integer.class, allIngredients, ingredientHelper, ingredientRenderer);
+	//}
+	
 	@Override
 	public void register(IModRegistry registry) {
+		
 		registry.addIngredientInfo(
 				new ItemStack(ArsenalItems.SPELL_FOCUS, 1, EnumSpellFocus.DRAIN_LIFE.ordinal()),
 				ItemStack.class,
@@ -230,6 +238,9 @@ public class JEICompat implements IModPlugin {
 
 	public void registerCategories(IRecipeCategoryRegistration registry) {
 		registry.addRecipeCategories(new IRecipeCategory<ShapelessAltarRecipe>() {
+			protected int radiance;
+			protected int emc;
+			
 			@Override
 			public String getUid() {
 				return "magicarsenal:altar";
@@ -265,7 +276,23 @@ public class JEICompat implements IModPlugin {
 				
 				recipeLayout.getItemStacks().set(ingredients);
 				
+				recipeLayout.setShapeless();
+				
 				recipeLayout.setRecipeTransferButton(184-16, topMargin + 18*4);
+				
+				radiance = recipeWrapper.getRadiance();
+				emc = recipeWrapper.getEMC();
+			}
+			
+			@Override
+			public void drawExtras(Minecraft minecraft) {
+				IRecipeCategory.super.drawExtras(minecraft);
+				
+				//TODO FIXME: Localize
+				//TODO: Show a radiance bar instead of a number?
+				minecraft.fontRenderer.drawString("Radiance: "+radiance, 10, 18*6 + 4, 0xFF444444);
+				minecraft.fontRenderer.drawString("EMC: "+emc, 10, 18*7 + 4, 0xFF444444);
+				
 			}
 			
 		});
