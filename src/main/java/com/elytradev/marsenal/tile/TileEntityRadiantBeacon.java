@@ -159,4 +159,8 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 		}
 		return result;
 	}
+
+	public FlexibleItemHandler getStorage() {
+		return storage;
+	}
 }

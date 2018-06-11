@@ -134,8 +134,8 @@ public class BlockRadiantBeacon extends BlockSimple implements ITileEntityProvid
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		if (!world.isRemote) {
 			TileEntity te = world.getTileEntity(pos);
-			if (te!=null && te instanceof TileEntityRunicAltar) {
-				FlexibleItemHandler storage = ((TileEntityRunicAltar)te).getStorage();
+			if (te!=null && te instanceof TileEntityRadiantBeacon) {
+				FlexibleItemHandler storage = ((TileEntityRadiantBeacon)te).getStorage();
 				for(int i=0; i<storage.getSlots(); i++) {
 					ItemStack stack = storage.getStackInSlot(i);
 					if (!stack.isEmpty()) InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
