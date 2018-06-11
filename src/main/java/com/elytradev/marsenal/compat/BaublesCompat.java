@@ -26,12 +26,15 @@ package com.elytradev.marsenal.compat;
 
 import java.util.Map;
 
+import org.lwjgl.input.Keyboard;
+
 import com.elytradev.concrete.reflect.accessor.Accessor;
 import com.elytradev.concrete.reflect.accessor.Accessors;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.google.common.collect.MapMaker;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -111,6 +114,10 @@ public class BaublesCompat {
 		}
 	}
 	
+	public static boolean keyDirect(KeyBinding key) {
+		return Keyboard.isKeyDown(key.getKeyCode());
+	}
+	
 	@SubscribeEvent
 	public static void onPlayerTick(TickEvent.PlayerTickEvent e) {
 		if (e.phase!=TickEvent.Phase.END) return;
@@ -170,34 +177,36 @@ public class BaublesCompat {
 					double speedLimit = (e.player.isSprinting()) ? FLIGHT_SPEED_SPRINTING : FLIGHT_SPEED;
 					Vec3d impulse = new Vec3d(0,0,0);
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindForward)) {
 						Vec3d flight = e.player.getLookVec();
 						flight = flight.scale(acceleration);
 						impulse = impulse.add(flight);
 					}
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindBack.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindBack)) {
 						Vec3d flight = e.player.getLookVec();
 						flight = flight.scale(-acceleration/2);
 						impulse = impulse.add(flight);
 					}
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindRight.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindRight)) {
 						Vec3d flight = e.player.getLookVec().crossProduct(UP).scale(acceleration/2);
 						impulse = impulse.add(flight);
 					}
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindLeft.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindLeft)) {
 						Vec3d flight = e.player.getLookVec().crossProduct(UP).scale(-acceleration/2);
 						impulse = impulse.add(flight);
 					}
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindJump)) {
+					//if (Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown()) {
 						Vec3d flight = UP.scale(acceleration);
 						impulse = impulse.add(flight);
+					//}
 					}
 					
-					if (Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown()) {
+					if (keyDirect(Minecraft.getMinecraft().gameSettings.keyBindSneak)) {
 						Vec3d flight = UP.scale(-acceleration);
 						impulse = impulse.add(flight);
 					}
@@ -214,6 +223,11 @@ public class BaublesCompat {
 							//System.out.println("Capping speed from "+magnitude+" to "+MAX_IMPULSE);
 							impulse = impulse.normalize().scale(MAX_IMPULSE);
 						}
+					}
+					
+					if (e.player.onGround && e.player.isSneaking()) {
+						if (flightData.flying) flightData.flying = false;
+						return;
 					}
 					
 					flightData.velocity = addSoftCap(prevMotion, impulse, speedLimit);

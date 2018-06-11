@@ -42,7 +42,6 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.gui.elements.DrawableResource;
@@ -54,11 +53,6 @@ import net.minecraft.util.text.translation.I18n;
 @SuppressWarnings("deprecation")
 @JEIPlugin
 public class JEICompat implements IModPlugin {
-	
-	//@Override
-	//public void registerIngredients(IModIngredientRegistration registry) {
-	//	registry.register(Integer.class, allIngredients, ingredientHelper, ingredientRenderer);
-	//}
 	
 	@Override
 	public void register(IModRegistry registry) {
