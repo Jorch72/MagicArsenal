@@ -28,7 +28,6 @@ import com.elytradev.concrete.inventory.gui.client.GuiDrawing;
 import com.elytradev.concrete.inventory.gui.widget.WWidget;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.text.ITextComponent;
 
 public class WLabel extends WWidget {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;

@@ -42,6 +42,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BaublesCompat {
 	private static final Accessor<Integer> LEVITATING_SINCE = Accessors.findField(EntityPlayerMP.class, "field_193108_cu", "levitatingSince", "ct");
@@ -114,6 +115,7 @@ public class BaublesCompat {
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static boolean keyDirect(KeyBinding key) {
 		return Keyboard.isKeyDown(key.getKeyCode());
 	}

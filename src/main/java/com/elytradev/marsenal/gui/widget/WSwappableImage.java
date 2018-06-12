@@ -29,7 +29,6 @@ import org.lwjgl.opengl.GL11;
 import com.elytradev.concrete.inventory.gui.widget.WWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -89,5 +88,5 @@ public class WSwappableImage extends WWidget {
 		
 		GlStateManager.enableAlpha();
 		GlStateManager.disableBlend();
-}
+	}
 }

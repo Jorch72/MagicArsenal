@@ -130,7 +130,7 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 			break;
 		case BALANCE:
 			//Try to keep power at 50% by pulling from the orb or pushing to consumers
-			long halfPower = storage.getCapacity()/2;
+			long halfPower = storage.getMax()/2;
 			if (storage.getLevel()>halfPower) {
 				pushEnergyOut(storage.getLevel()-halfPower, front);
 			} else if (storage.getLevel()<halfPower) {
@@ -254,7 +254,7 @@ public class TileEntityChaosResonator  extends TileEntity implements ITickable, 
 				break;
 			}
 			case BALANCE: {
-				long halfPower = storage.getCapacity()/2;
+				long halfPower = storage.getMax()/2;
 				if (storage.getLevel()>halfPower) {
 					//Push energy back towards the orb
 					long amount = storage.getLevel() - halfPower;
