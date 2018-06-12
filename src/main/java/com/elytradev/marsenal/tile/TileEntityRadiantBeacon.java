@@ -31,16 +31,24 @@ import com.elytradev.concrete.inventory.IContainerInventoryHolder;
 import com.elytradev.concrete.inventory.ValidatedInventoryView;
 import com.elytradev.marsenal.capability.impl.FlexibleItemHandler;
 import com.elytradev.marsenal.capability.impl.ValidatedInventoryWrapperTakeTwo;
+import com.elytradev.marsenal.client.star.StarFlinger;
 import com.elytradev.marsenal.item.IBeaconSigil;
+import com.google.common.base.Predicates;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 
 public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkParticipant, ITickable, IContainerInventoryHolder {
 	protected BlockPos controller = null;
@@ -48,10 +56,11 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 	protected BlockPos beamTo = null;
 	Predicate<ItemStack> BEACON_SIGIL = it->it.getItem() instanceof IBeaconSigil;
 	
-	protected float radius;
-	protected float effectiveRadius;
+	protected double radius;
+	protected double effectiveRadius;
 	
 	protected int timer = 0;
+	protected int radiusTicks = 0;
 	
 	protected FlexibleItemHandler storage = new FlexibleItemHandler(6)
 			.setName("tile.magicarsenal.beacon.name")
@@ -121,10 +130,10 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 		if (world==null || world.isRemote) return;
 		
 		if (effectiveRadius<radius) {
-			float delta = radius-effectiveRadius;
+			double delta = radius-effectiveRadius;
 			effectiveRadius += delta/16d;
 		} else if (effectiveRadius>radius) {
-			float delta = effectiveRadius-radius;
+			double delta = effectiveRadius-radius;
 			effectiveRadius -= delta/16d;
 		}
 		
@@ -145,10 +154,70 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 				}
 			}
 		}
+		
+		radiusTicks--;
+		if (radiusTicks<=0) {
+			radiusTicks = 20;
+			if (world instanceof WorldServer) {
+				WorldServer ws = (WorldServer)world;
+				Chunk c = world.getChunkFromBlockCoords(pos);
+				SPacketUpdateTileEntity updatePacket = getUpdatePacket();
+				
+				for (EntityPlayerMP player : getWorld().getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
+					if (ws.getPlayerChunkMap().isPlayerWatchingChunk(player, c.x, c.z)) {
+						player.connection.sendPacket(updatePacket);
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setDouble("Radius", radius);
+		
+		//Mix hues in the most obnoxious way possible
+		Vec3d result = new Vec3d(0,0,0);
+		for(int i=0; i<6; i++) {
+			ItemStack stack = storage.getStackInSlot(i);
+			if (stack.isEmpty()) continue;
+			if (stack.getItem() instanceof IBeaconSigil) {
+				IBeaconSigil sigil = (IBeaconSigil) stack.getItem();
+				float hue = sigil.getColorHue();
+				Vec3d hueVec = Vec3d.fromPitchYaw(0, hue);
+				result = result.add(hueVec);
+			}
+		}
+		double finalHue = 0;
+		if (result.x!=0 || result.z!=0) {
+			finalHue = Math.atan2(result.z, result.x) * (360d/(2d*Math.PI)) + 180d;
+		}
+		
+		tag.setDouble("Hue", finalHue);
+		
+		return tag;
+	}
+	
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+	}
+	
+	@Override
+	public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt) {
+		handleUpdateTag(pkt.getNbtCompound());
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		radius = tag.getDouble("Radius");
+		if (effectiveRadius==0) effectiveRadius = radius;
+		StarFlinger.spawnWorldEmitter(pos, "radiantbeacon", tag);
 	}
 	
 	public float getRadius() {
-		return effectiveRadius;
+		return (float)effectiveRadius;
 	}
 	
 	@Override

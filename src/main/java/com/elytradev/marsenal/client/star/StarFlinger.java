@@ -70,6 +70,7 @@ public class StarFlinger {
 		GlStateManager.enableBlend();
 		GlStateManager.depthMask(false);
 		GlStateManager.disableCull();
+		GlStateManager.disableAlpha();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		
 		Tessellator tess = Tessellator.getInstance();
@@ -143,6 +144,7 @@ public class StarFlinger {
 		GlStateManager.depthMask(true);
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
 		//GlStateManager.enableLighting(); //Breaks Astral Sorcery effects!
 		GlStateManager.disableLighting();
 		GlStateManager.enableTexture2D();

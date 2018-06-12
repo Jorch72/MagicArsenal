@@ -40,7 +40,6 @@ import com.elytradev.marsenal.gui.ContainerCodex;
 import com.elytradev.marsenal.item.ArsenalItems;
 import com.elytradev.marsenal.item.IMetaItemModel;
 import com.elytradev.marsenal.item.ISpellFocus;
-import com.elytradev.marsenal.item.ItemChisel;
 import com.elytradev.marsenal.item.ItemCodex;
 
 import net.minecraft.block.Block;
@@ -78,6 +77,7 @@ public class ClientProxy extends Proxy {
 		Emitter.register("coalesce", CoalesceEmitter.class);
 		
 		Emitter.registerWorldEmitter("chaosorb", ChaosOrbEmitter.class);
+		Emitter.registerWorldEmitter("radiantbeacon", RadiantBeaconEmitter.class);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrostShard.class, RenderFrostShard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWillOWisp.class,  RenderWillOWisp::new);
