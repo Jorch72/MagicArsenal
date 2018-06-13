@@ -52,7 +52,7 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 		
 		float alpha = 0.5f*(2*r - g - b);
 		float beta = ((float)Math.sqrt(3)/2f) * (g - b);
-		hue = (float)Math.atan2(beta, alpha);
+		hue = (float)Math.atan2(beta, alpha) * (360f / ((float)Math.PI*2f));
 		
 		float max = Math.max(r, Math.max(g, b));
 		float min = Math.min(r, Math.min(g, b));
@@ -66,6 +66,8 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 		this.potion = potion;
 		this.amplifier = amplifier;
 		//this.effect = new PotionEffect(potion, 20*15, amplifier, true, false);
+		
+		System.out.println("### Potion: "+potion.getName()+", Color: "+Integer.toHexString(rgb)+", Hue:"+hue+", Saturation: "+saturation+", Value: "+value+", Chroma: "+chroma);
 		
 		this.setRegistryName(new ResourceLocation("magicarsenal:sigil."+id));
 		this.setUnlocalizedName("magicarsenal.sigil."+id);

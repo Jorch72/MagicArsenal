@@ -53,6 +53,7 @@ public class RadiantBeaconEmitter extends WorldEmitter {
 		
 		//HSV -> RGB
 		double hue = tag.getDouble("Hue");
+		if (hue<0) hue+= 360d;
 		double chroma = 1.0d*1.0d; //value == 1.0, saturation == 1.0
 		double hueSegment = hue/60d;
 		double chromaX = chroma * (1 - Math.abs((hueSegment % 2) - 1));

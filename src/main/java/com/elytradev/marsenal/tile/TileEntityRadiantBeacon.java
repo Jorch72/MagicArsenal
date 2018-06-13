@@ -121,7 +121,7 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 
 	@Override
 	public void pollAuxRadiance(int radiance) {
-		radius = Math.min(radiance, 100);
+		radius = Math.min(radiance/8, 100);
 		if (world!=null) this.lastControllerPing = world.getTotalWorldTime();
 	}
 	
@@ -178,20 +178,28 @@ public class TileEntityRadiantBeacon extends TileEntity implements IAuxNetworkPa
 		tag.setDouble("Radius", radius);
 		
 		//Mix hues in the most obnoxious way possible
-		Vec3d result = new Vec3d(0,0,0);
+		double resultX = 0;
+		double resultY = 0;
+		//Vec3d result = new Vec3d(0,0,0);
 		for(int i=0; i<6; i++) {
 			ItemStack stack = storage.getStackInSlot(i);
 			if (stack.isEmpty()) continue;
 			if (stack.getItem() instanceof IBeaconSigil) {
 				IBeaconSigil sigil = (IBeaconSigil) stack.getItem();
 				float hue = sigil.getColorHue();
-				Vec3d hueVec = Vec3d.fromPitchYaw(0, hue);
-				result = result.add(hueVec);
+				double hueRadians = hue * (Math.PI/180d);
+				resultX += Math.cos(hueRadians);
+				resultY += Math.sin(hueRadians);
+				
+				
+				
+				//Vec3d hueVec = Vec3d.fromPitchYaw(0, hue*(float)(Math.PI/180d));
+				//result = result.add(hueVec);
 			}
 		}
 		double finalHue = 0;
-		if (result.x!=0 || result.z!=0) {
-			finalHue = Math.atan2(result.z, result.x) * (360d/(2d*Math.PI)) + 180d;
+		if (resultX!=0 || resultY!=0) {
+			finalHue = Math.atan2(resultY, resultX) * (360d/(2d*Math.PI));
 		}
 		
 		tag.setDouble("Hue", finalHue);
