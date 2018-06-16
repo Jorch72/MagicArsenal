@@ -67,8 +67,6 @@ public class ItemPotionSigil extends Item implements IBeaconSigil {
 		this.amplifier = amplifier;
 		//this.effect = new PotionEffect(potion, 20*15, amplifier, true, false);
 		
-		System.out.println("### Potion: "+potion.getName()+", Color: "+Integer.toHexString(rgb)+", Hue:"+hue+", Saturation: "+saturation+", Value: "+value+", Chroma: "+chroma);
-		
 		this.setRegistryName(new ResourceLocation("magicarsenal:sigil."+id));
 		this.setUnlocalizedName("magicarsenal.sigil."+id);
 		this.setCreativeTab(MagicArsenal.TAB_MARSENAL);

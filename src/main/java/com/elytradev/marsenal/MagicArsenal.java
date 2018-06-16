@@ -53,6 +53,7 @@ import com.elytradev.marsenal.magic.SpellScheduler;
 import com.elytradev.marsenal.network.ConfigMessage;
 import com.elytradev.marsenal.network.MagicResourcesMessage;
 import com.elytradev.marsenal.network.SpawnParticleEmitterMessage;
+import com.elytradev.marsenal.recipe.ArsenalRecipes;
 import com.elytradev.probe.api.IProbeDataProvider;
 import com.google.common.collect.ImmutableSet;
 
@@ -218,6 +219,8 @@ public class MagicArsenal {
 	
 	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent e) {
+		ArsenalRecipes.registerEMC();
+		
 		if (e.getSide()==Side.SERVER) {
 			//Only gets called this way on dedicated server(!!!)
 			ArsenalConfig.resolve(ArsenalConfig.local().toString());

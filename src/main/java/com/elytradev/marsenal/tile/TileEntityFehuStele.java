@@ -24,40 +24,33 @@
 
 package com.elytradev.marsenal.tile;
 
-import java.util.HashMap;
+import com.elytradev.marsenal.recipe.EmcRegistry;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 public class TileEntityFehuStele extends TileEntityAbstractStele {
-	protected HashMap<Block, Integer> EMC_VALUES = new HashMap<>();
+	//protected static HashMap<Block, Integer> EMC_VALUES = new HashMap<>();
+	public static final EmcRegistry REGISTRY = new EmcRegistry();
 	
 	public TileEntityFehuStele() {
 		/* This list should be *very* short and uncontroversial. However, it will need to expand greatly for modded
 		 * blocks, as a great many of them aim to be Expensive, and should thus fall under the nature of this stele.
 		 */
-		EMC_VALUES.put(Blocks.DIAMOND_BLOCK,      73_728);
-		EMC_VALUES.put(Blocks.DIAMOND_ORE,         8_192);
-		EMC_VALUES.put(Blocks.EMERALD_BLOCK,      73_728);
-		EMC_VALUES.put(Blocks.EMERALD_ORE,         8_192);
-		EMC_VALUES.put(Blocks.GOLD_BLOCK,         18_432);
-		EMC_VALUES.put(Blocks.GOLD_ORE,            2_048);
-		EMC_VALUES.put(Blocks.IRON_BLOCK,          2_304);
-		EMC_VALUES.put(Blocks.IRON_BARS,              96);
-		EMC_VALUES.put(Blocks.IRON_ORE,              256);
-		EMC_VALUES.put(Blocks.LAPIS_BLOCK,         7_776);
-		EMC_VALUES.put(Blocks.LAPIS_ORE,             864);
+		
 	}
 	
 	@Override
 	public int getEffectiveEMC(BlockPos pos, IBlockState state) {
+		return REGISTRY.get(state);
+		/*
 		if (EMC_VALUES.containsKey(state.getBlock())) {
 			return EMC_VALUES.get(state.getBlock());
 		} else {
+			
+			
 			return 0;
-		}
+		}*/
 	}
 
 	@Override
@@ -69,5 +62,6 @@ public class TileEntityFehuStele extends TileEntityAbstractStele {
 	public void scan() {
 		super.scanBlocks();
 	}
+	
 	
 }

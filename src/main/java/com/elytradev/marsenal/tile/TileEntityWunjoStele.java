@@ -24,6 +24,8 @@
 
 package com.elytradev.marsenal.tile;
 
+import com.elytradev.marsenal.recipe.EmcRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -32,6 +34,7 @@ import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.math.BlockPos;
 
 public class TileEntityWunjoStele extends TileEntityAbstractStele {
+	public static final EmcRegistry REGISTRY = new EmcRegistry();
 	
 	@Override
 	public void scan() {
@@ -52,8 +55,7 @@ public class TileEntityWunjoStele extends TileEntityAbstractStele {
 				return 1440;
 			}
 		} else {
-			//TODO: Look for modded trophies
-			return 0;
+			return REGISTRY.get(state);
 		}
 	}
 
