@@ -82,6 +82,7 @@ shadowJar {
 	classifier = "";
 	relocate "com.elytradev.concrete", "${project_package}.repackage.com.elytradev.concrete";
 	relocate "org.hjson", "${project_package}.repackage.org.hjson";
+	relocate "blue.endless.jankson", "${project_package}.repackage.blue.endless.jankson";
 	configurations = [project.configurations.shadow];
 }
 

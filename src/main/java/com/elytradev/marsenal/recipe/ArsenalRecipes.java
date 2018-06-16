@@ -27,6 +27,7 @@ package com.elytradev.marsenal.recipe;
 import com.elytradev.marsenal.tile.TileEntityBerkanoStele;
 import com.elytradev.marsenal.tile.TileEntityFehuStele;
 import com.elytradev.marsenal.tile.TileEntityJeraStele;
+import com.elytradev.marsenal.tile.TileEntityKenazStele;
 import com.elytradev.marsenal.tile.TileEntityWunjoStele;
 
 import net.minecraft.init.Blocks;
@@ -37,8 +38,8 @@ public class ArsenalRecipes {
 		
 		fehu.register(Blocks.DIAMOND_BLOCK,      73_728);
 		fehu.register(Blocks.DIAMOND_ORE,         8_192);
-		fehu.register(Blocks.EMERALD_BLOCK,      73_728);
-		fehu.register(Blocks.EMERALD_ORE,         8_192);
+		fehu.register(Blocks.EMERALD_BLOCK,     147_456);
+		fehu.register(Blocks.EMERALD_ORE,        16_384);
 		fehu.register(Blocks.GOLD_BLOCK,         18_432);
 		fehu.register(Blocks.GOLD_ORE,            2_048);
 		fehu.register(Blocks.IRON_BLOCK,          2_304);
@@ -47,15 +48,25 @@ public class ArsenalRecipes {
 		fehu.register(Blocks.LAPIS_BLOCK,         7_776);
 		fehu.register(Blocks.LAPIS_ORE,             864);
 		
-		fehu.register("thermalfoundation:storage", 0, 2_304); //Copper   **Correct ProjectE value
-		fehu.register("thermalfoundation:storage", 1, 2_048); //Tin
-		fehu.register("thermalfoundation:storage", 2, 2_048); //Silver
+		fehu.register("thermalfoundation:storage", 0, 2_304); //Copper   - ProjectE default
+		fehu.register("thermalfoundation:storage", 1, 2_304); //Tin      - ProjectE default
+		fehu.register("thermalfoundation:storage", 2, 2_048); //Silver   
 		fehu.register("thermalfoundation:storage", 3, 2_048); //Lead
 		fehu.register("thermalfoundation:storage", 4, 2_048); //Aluminum
 		fehu.register("thermalfoundation:storage", 5, 2_048); //Nickel
-		fehu.register("thermalfoundation:storage", 6, 2_304); //Platinum **Correct ProjectE value
-		fehu.register("thermalfoundation:storage", 7, 9_216); //Iridium  **Correct ProjectE value
+		fehu.register("thermalfoundation:storage", 6, 2_304); //Platinum - ProjectE default
+		fehu.register("thermalfoundation:storage", 7, 9_216); //Iridium  - ProjectE default
 		fehu.register("thermalfoundation:storage", 8, 2_048); //Mithril
+		
+		fehu.register("immersiveengineering:storage", 0,  2_304); //Copper   - ProjectE default
+		fehu.register("immersiveengineering:storage", 1,  2_048); //Aluminum
+		fehu.register("immersiveengineering:storage", 2,  2_048); //Lead
+		fehu.register("immersiveengineering:storage", 3,  2_048); //Silver
+		fehu.register("immersiveengineering:storage", 4,  2_048); //Nickel
+		fehu.register("immersiveengineering:storage", 5, 36_864); //Uranium  - ProjectE default
+		fehu.register("immersiveengineering:storage", 6,  2_048); //Constantan
+		fehu.register("immersiveengineering:storage", 7,  2_048); //Electrum
+		fehu.register("immersiveengineering:storage", 8,  2_048); //Steel
 		
 		fehu.register("draconicevolution:draconium_block", 10_000);
 		fehu.register("draconicevolution:draconic_block",  40_000);
@@ -64,7 +75,15 @@ public class ArsenalRecipes {
 		//THURISAZ NYI
 		//ANSUZ    NYI
 		//RAIDHO   DOES NOT SURVEY
-		//KENAZ    COMPLETELY HEURISTIC
+		
+		EmcRegistry kenaz = TileEntityKenazStele.REGISTRY;
+		//Uses additional heuristics to reward enchanting levels or, failing that, light level
+		kenaz.register(Blocks.SEA_LANTERN,       3_584);
+		kenaz.register(Blocks.GLOWSTONE,         1_536);
+		kenaz.register(Blocks.TORCH,                 9);
+		kenaz.register(Blocks.LIT_REDSTONE_LAMP, 1_792); //Only value it when it's on, but value it at the correct amount.
+		kenaz.register(Blocks.LIT_PUMPKIN,         153); //It's not much, but it's better than 9.
+		
 		//GEBO     DOES NOT SURVEY
 		
 		EmcRegistry wunjo = TileEntityWunjoStele.REGISTRY;
@@ -83,11 +102,11 @@ public class ArsenalRecipes {
 		jera.register(Blocks.BROWN_MUSHROOM_BLOCK, 32*9);
 		jera.register(Blocks.CACTUS,                8);
 		jera.register(Blocks.CARROTS,              24); //wheat
-		jera.register(Blocks.CHORUS_FLOWER,       240); //  should be pretty expensive, 
-		jera.register(Blocks.CHORUS_PLANT,          1); //  but then once you get it it's easy to grow
-		jera.register(Blocks.COCOA,                 8); //less than wheat
+		jera.register(Blocks.CHORUS_FLOWER,        96); //from chorus fruit
+		jera.register(Blocks.CHORUS_PLANT,         64);
+		jera.register(Blocks.COCOA,               128);
 		jera.register(Blocks.DEADBUSH,              1);
-		jera.register(Blocks.DOUBLE_PLANT,         16); //From short flower
+		jera.register(Blocks.DOUBLE_PLANT,         32);
 		jera.register(Blocks.FARMLAND,              2); //1 more than it would normally be to make EMC obtainable
 		jera.register(Blocks.LIT_PUMPKIN,         144);
 		jera.register(Blocks.MELON_BLOCK,         144);
@@ -95,13 +114,13 @@ public class ArsenalRecipes {
 		jera.register(Blocks.MYCELIUM,              3);
 		jera.register(Blocks.NETHER_WART,           1); //Doesn't match our nature very well
 		jera.register(Blocks.NETHER_WART_BLOCK,     1*9);//Ditto, just 9 times not-very-much
-		jera.register(Blocks.POTATOES,             24); //wheat
+		jera.register(Blocks.POTATOES,             64);
 		jera.register(Blocks.PUMPKIN,             144);
 		jera.register(Blocks.PUMPKIN_STEM,         16); //custom
 		jera.register(Blocks.RED_FLOWER,           16);
 		jera.register(Blocks.RED_MUSHROOM,         32);
 		jera.register(Blocks.RED_MUSHROOM_BLOCK,   32*9);
-		jera.register(Blocks.REEDS,                 2); //1 more than it would normally be to make EMC obtainable
+		jera.register(Blocks.REEDS,                32);
 		jera.register(Blocks.SPONGE,             1000); //Potentially controversial
 		jera.register(Blocks.TALLGRASS,             1);
 		jera.register(Blocks.VINE,                  8);
