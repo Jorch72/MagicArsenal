@@ -56,9 +56,9 @@ repositories {
 	}
 	
 	ivy {
-		//Resolves baubles. Consider just dropping Baubles in your libs folder or rehosting it
+		//Resolves baubles and jankson
 		name "endless.blue dependency mirror";
-		artifactPattern "https://endless.blue/files/rehost/[module]-[revision].[ext]";
+		artifactPattern "https://endless.blue/files/ivy/[module]-[revision].[ext]";
 	}
 }
 
@@ -117,11 +117,14 @@ dependencies {
 	
 	shadow "org.hjson:hjson:1.0.0";
 	compile "org.hjson:hjson:1.0.0";
+	
+	shadow "blue.endless:Jankson:0.0.3";
+	compile "blue.endless:Jankson:0.0.3";
 }
 
 group = "com.elytradev";
 archivesBaseName = "MagicArsenal";
-version = "MC1.12_ver1.2.5";
+version = "MC1.12_ver1.2.6";
 
 sourceCompatibility = 1.8;
 targetCompatibility = 1.8;

@@ -37,6 +37,10 @@ import org.hjson.JsonValue;
 import com.elytradev.marsenal.capability.IMagicResources;
 import com.google.gson.GsonBuilder;
 
+import blue.endless.jankson.Jankson;
+import blue.endless.jankson.JsonObject;
+import blue.endless.jankson.impl.SyntaxError;
+
 /** Configuration options. Before connecting to a server, such as in the main menu, only LOCAL will be available. But
  * once a player is connected to the world, *RESOLVED should be used for everything* except cosmetic tweaks. This will
  * allow network resolution of the config later on.
@@ -80,8 +84,8 @@ public class ArsenalConfig {
 			if (!f.exists()) {
 				ArsenalConfig result = new ArsenalConfig();
 				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-				out.write("# Default config file generated for version "+MagicArsenal.VERSION+"\n");
-				out.write("# This file is hjson. Commas are optional, and comments can be added in #config format, //java format, or /* c format */\n");
+				out.write("// Default config file generated for version "+MagicArsenal.VERSION+"\n");
+				out.write("// This file is hjson. Commas are optional, and comments can be added in #config format, //java format, or /* c format */\n");
 				new GsonBuilder()
 					.setPrettyPrinting()
 					.create()
@@ -90,15 +94,21 @@ public class ArsenalConfig {
 				
 				return result;
 			} else {
-				String value = JsonValue.readHjson(new InputStreamReader(new FileInputStream(f))).toString();
+				JsonObject obj = Jankson.builder().build().load(new FileInputStream(f));
+				String value = obj.toJson(false, false);
+				
+				// value = JsonValue.readHjson(new InputStreamReader(new FileInputStream(f))).toString();
 				
 				return new GsonBuilder()
-					
 					.create()
 					.fromJson(value, ArsenalConfig.class);
 			}
 		} catch (IOException e) {
 			MagicArsenal.LOG.error("There was trouble reading the config file.", e);
+			return new ArsenalConfig();
+		} catch (SyntaxError e) {
+			MagicArsenal.LOG.error(e.getMessage());
+			MagicArsenal.LOG.error(e.getLineMessage());
 			return new ArsenalConfig();
 		}
 	}
